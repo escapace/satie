@@ -58,13 +58,11 @@ const wrap = (value: string[], key: string): string | undefined => {
 
   switch (key) {
     case 'style':
-      return `<style>${new CleanCSS().minify(value.join('')).styles}</style>`
+      return `${new CleanCSS().minify(value.join('')).styles}`
     case 'fontFace':
-      return `<style>${new CleanCSS().minify(value.join('')).styles}</style>`
+      return `${new CleanCSS().minify(value.join('')).styles}`
     case 'noScriptStyle':
-      return `<noscript><style>${
-        new CleanCSS().minify(value.join('')).styles
-      }</style></noscript>`
+      return `${new CleanCSS().minify(value.join('')).styles}`
     case 'resourceHint':
       return value.join('')
     default:

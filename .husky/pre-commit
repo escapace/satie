@@ -10,5 +10,5 @@ git add package.json example/package.json pnpm-lock.yaml
 
 pnpm run lint || exit 1
 pnpm exec lint-staged || exit 1
-pnpm run typecheck && cd example && npm run typecheck && cd ../ || exit 1
+pnpm run typecheck || exit 1
 pnpm run test || exit 1
