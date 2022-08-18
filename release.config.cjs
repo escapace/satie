@@ -10,14 +10,10 @@ module.exports = {
       {
         shell: true,
         publishCmd: [
-          'docker tag GITHUB_REPOSITORY:latest GITHUB_REPOSITORY:${nextRelease.version}',
           'docker tag GITHUB_REPOSITORY:latest ghcr.io/GITHUB_REPOSITORY:latest',
           'docker tag GITHUB_REPOSITORY:latest ghcr.io/GITHUB_REPOSITORY:${nextRelease.version}',
           'docker push ghcr.io/GITHUB_REPOSITORY:latest',
-          'docker push ghcr.io/GITHUB_REPOSITORY:${nextRelease.version}',
-          'docker push GITHUB_REPOSITORY:latest',
-          'docker push GITHUB_REPOSITORY:${nextRelease.version}',
-          // 'npm run example:deploy'
+          'docker push ghcr.io/GITHUB_REPOSITORY:${nextRelease.version}'
         ]
           .map((string) =>
             string.replace(/GITHUB_REPOSITORY/g, GITHUB_REPOSITORY)

@@ -53,12 +53,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: dockerhub login
-        if: ${{ github.event_name == 'push' }}
-        env:
-          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-        run: |
-          echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u escpc --password-stdin
       - name: release
         if: ${{ github.event_name == 'push' }}
         env:
