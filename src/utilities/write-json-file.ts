@@ -3,7 +3,7 @@ import { mkdirp, writeJSON } from 'fs-extra'
 import path, { dirname } from 'path'
 import { TextDecoder } from 'util'
 import { Data, State } from '../types'
-import { map, omit } from 'lodash-es'
+import { mapValues, omit } from 'lodash-es'
 
 const buildToString = (value: { outputFiles: OutputFile[] }): string =>
   new TextDecoder('utf-8')
@@ -31,7 +31,7 @@ export const writeJSONFile = async (
   )
 
   const json = {
-    locales: map(data.locales, (locale) => ({
+    locales: mapValues(data.locales, (locale) => ({
       ...omit(locale, 'resourceHint'),
       resourceHints: locale.resourceHint
     })),
