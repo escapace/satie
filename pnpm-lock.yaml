@@ -11,7 +11,7 @@ specifiers:
   '@types/fontfaceobserver': 2.1.0
   '@types/fs-extra': 9.0.13
   '@types/lodash-es': 4.17.6
-  '@types/mocha': 9.1.1
+  '@types/mocha': 10.0.0
   '@types/node': 17.0.31
   '@types/url-join': 4.0.1
   '@types/wrap-ansi': 8.0.1
@@ -69,7 +69,7 @@ devDependencies:
   '@types/fontfaceobserver': 2.1.0
   '@types/fs-extra': 9.0.13
   '@types/lodash-es': 4.17.6
-  '@types/mocha': 9.1.1
+  '@types/mocha': 10.0.0
   '@types/node': 17.0.31
   '@types/url-join': 4.0.1
   '@types/wrap-ansi': 8.0.1
@@ -928,8 +928,8 @@ packages:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
 
-  /@types/mocha/9.1.1:
-    resolution: {integrity: sha512-Z61JK7DKDtdKTWwLeElSEBcWGRLY8g95ic5FoQqI9CMx0ns/Ghep3B4DfcEimiKMvtamNVULVNKEsiwV3aQmXw==}
+  /@types/mocha/10.0.0:
+    resolution: {integrity: sha512-rADY+HtTOA52l9VZWtgQfn4p+UDVM2eDVkMZT1I6syp0YKxW2F9v+0pbRZLsvskhQv/vMb6ZfCay81GHbz5SHg==}
     dev: true
 
   /@types/node/14.18.30:
