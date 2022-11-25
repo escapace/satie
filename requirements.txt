@@ -1,4 +1,4 @@
-zopfli==0.2.1
+zopfli==0.2.2
 unicodedata2==15.0.0
 Brotli==1.0.9
 fonttools==4.38.0
