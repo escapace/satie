@@ -1,4 +1,4 @@
-FROM node:17-alpine
+FROM node:18-alpine
 
 ENV PYTHONUNBUFFERED=1
 RUN apk add --update --no-cache \

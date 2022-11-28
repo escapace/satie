@@ -1,37 +1,48 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   enabledManagers: ['npm'],
   extends: [
+    'github>whitesource/merge-confidence:beta',
+    'github>renovatebot/spring-remediations',
     'config:base',
     'schedule:weekly',
-    ':automergeLinters',
-    ':automergeMinor',
-    ':automergeTesters',
     ':enableVulnerabilityAlerts',
     ':rebaseStalePrs',
     ':semanticCommits',
     ':updateNotScheduled',
     'group:allNonMajor'
   ],
-  major: {
-    automerge: false
-  },
+  automerge: false,
+  stabilityDays: 7,
   packageRules: [
     {
       matchDepTypes: ['devDependencies'],
-      rangeStrategy: 'pin'
+      rangeStrategy: 'pin',
+      semanticCommitType: 'chore'
     },
     {
       matchDepTypes: ['dependencies'],
-      rangeStrategy: 'bump'
+      rangeStrategy: 'bump',
+      semanticCommitType: 'fix'
+    },
+    {
+      matchDepTypes: ['peerDependencies'],
+      rangeStrategy: 'widen',
+      semanticCommitType: 'fix'
     }
   ],
+  vulnerabilityAlerts: {
+    stabilityDays: 0
+  },
   lockFileMaintenance: {
     enabled: true
   },
-  dependencyDashboard: false,
+  internalChecksFilter: 'strict',
+  dependencyDashboard: true,
   ignorePresets: [':prHourlyLimit2'],
   labels: ['dependencies'],
-  node: false,
+  node: {
+    enabled: false
+  },
+  prCreation: 'not-pending',
   rebaseWhen: 'conflicted'
 }
