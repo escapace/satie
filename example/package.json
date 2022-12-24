@@ -10,7 +10,7 @@
     "fastify-etag": "^2.2.0",
     "fastify-sensible": "3.2.0",
     "fastify-static": "4.7.0",
-    "fs-extra": "10.1.0",
+    "fs-extra": "11.1.0",
     "js-cookie": "^3.0.1",
     "lodash-es": "4.17.21",
     "mustache": "4.2.0",

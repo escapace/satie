@@ -42,7 +42,7 @@
     "execa": "6.1.0",
     "fast-glob": "3.2.12",
     "find-up": "6.3.0",
-    "fs-extra": "10.1.0",
+    "fs-extra": "11.1.0",
     "gzip-size": "7.0.0",
     "hashids": "2.2.10",
     "husky": "8.0.2",
