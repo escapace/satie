@@ -36,6 +36,7 @@ jobs:
         --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}
   github-release:
     needs:
+      - context
       - build-container
     if: needs.build-container.result == 'success'
     uses: ./.github/workflows/workflow-call-github-release.yaml
