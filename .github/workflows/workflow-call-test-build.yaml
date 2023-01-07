@@ -68,6 +68,8 @@ jobs:
         run: >-
           tar --exclude=node_modules
           -czvf context.tar.gz
+          ./Dockerfile
+          ./.dockerignore
           ./lib
           ./src/utilities/font-loader.ts
           ./src/utilities/font-strip.py
