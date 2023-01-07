@@ -68,14 +68,15 @@ jobs:
         run: >-
           tar --exclude=node_modules
           -czvf context.tar.gz
-          ./Dockerfile
           ./.dockerignore
+          ./Dockerfile
           ./lib
-          ./src/utilities/font-loader.ts
-          ./src/utilities/font-strip.py
           ./package.json
           ./pnpm-lock.yaml
+          ./requirements.txt
           ./scripts/docker-entrypoint.sh
+          ./src/utilities/font-loader.ts
+          ./src/utilities/font-strip.py
       - name: upload context.tar
         if: inputs.artifact-name != ''
         uses: actions/upload-artifact@v3
