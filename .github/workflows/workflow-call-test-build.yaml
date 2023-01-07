@@ -1,0 +1,82 @@
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+      node-version:
+        required: true
+        type: string
+      pnpm-version:
+        required: true
+        type: string
+      artifact-name:
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.0'
+          cache: 'pip'
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+      - name: install pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: ${{ inputs.pnpm-version }}
+          run_install: false
+      - name: get pnpm store directory
+        id: pnpm-store-path
+        run: |
+          echo "value=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - name: pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-store-path.outputs.value }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store
+      - name: install dependencies
+        run: |
+          pip3 install --upgrade pip
+          pip3 install -r requirements.txt
+          pnpm install
+      - name: typecheck
+        run: pnpm run typecheck
+      # - name: lint
+      #   run: pnpm run lint
+      # - name: test
+      #   run: pnpm run test
+      - name: build
+        run: pnpm run build
+      - name: archive context
+        if: inputs.artifact-name != ''
+        run: >-
+          tar --exclude=node_modules
+          -czvf context.tar.gz
+          ./lib
+          ./src/utilities/font-loader.ts
+          ./src/utilities/font-strip.py
+          ./package.json
+          ./pnpm-lock.yaml
+          ./scripts/docker-entrypoint.sh
+      - name: upload context.tar
+        if: inputs.artifact-name != ''
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: context.tar.gz

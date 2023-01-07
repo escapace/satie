@@ -1,0 +1,89 @@
+on:
+  workflow_call:
+    inputs:
+      file:
+        required: true
+        type: string
+        description: 'Path to Dockerfile, relative to the GITHUB_WORKSPACE directory.'
+      artifact-name:
+        required: true
+        type: string
+      args:
+        required: false
+        type: string
+        default: ''
+jobs:
+  main:
+    permissions:
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: download context archive
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact-name }}
+      - name: extract context
+        run: |
+          tar -xzvf context.tar.gz
+          rm -f context.tar.gz
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: setup qemu
+        uses: docker/setup-qemu-action@v2
+      - name: docker buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      - name: available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: cache buildx
+        uses: actions/cache@v3
+        with:
+          path: ~/.buildx
+          key: ${{ runner.os }}-buildx-${{ hashFiles(inputs.file) }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-${{ hashFiles(inputs.file) }}
+            ${{ runner.os }}-buildx-
+      - name: filter args
+        id: filter
+        shell: bash
+        run: |
+          declare -A ARGS
+
+          filter () {
+            while [[ $# -gt 0 ]]; do
+              case $1 in
+                --tag|--build-arg)
+                  ARGS["$1 $2"]=0
+                  shift 2
+                  ;;
+                *)
+                  echo "Unknown option $1"
+                  exit 1
+              esac
+            done
+
+            echo "value=${!ARGS[@]}" >> $GITHUB_OUTPUT
+          }
+
+          split () {
+            IFS=$'\n ' read -r -a array <<< "$*"
+
+            echo "${array[@]}"
+          }
+
+          filter $(split ${{ inputs.args }})
+      # TODO: https://github.com/moby/moby/issues/28394
+      # --output type=image,oci-mediatypes=true,compression=zstd,compression-level=3,force-compression=true
+      - name: build and push
+        run: >-
+          docker buildx build
+          --file ${{ inputs.file }}
+          --platform linux/amd64,linux/arm64
+          --cache-from type=local,src=$HOME/.buildx
+          --cache-to   type=local,dest=$HOME/.buildx,mode=max
+          ${{ steps.filter.outputs.value }}
+          --push .
