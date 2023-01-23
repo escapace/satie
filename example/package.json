@@ -15,7 +15,7 @@
     "lodash-es": "4.17.21",
     "mustache": "4.2.0",
     "point-of-view": "^6.3.0",
-    "prettier": "2.8.2"
+    "prettier": "2.8.3"
   },
   "devDependencies": {
     "@types/js-cookie": "3.0.2",
@@ -23,10 +23,10 @@
     "@types/mustache": "4.2.2",
     "@types/node": "18.11.18",
     "@types/prettier": "2.7.2",
-    "@typescript-eslint/eslint-plugin": "5.48.0",
-    "@typescript-eslint/parser": "5.48.0",
-    "esbuild": "0.16.15",
-    "eslint": "8.31.0",
+    "@typescript-eslint/eslint-plugin": "5.48.1",
+    "@typescript-eslint/parser": "5.48.1",
+    "esbuild": "0.17.0",
+    "eslint": "8.32.0",
     "eslint-config-escapace": "3.16.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-editorconfig": "4.0.2",
