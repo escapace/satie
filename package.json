@@ -19,7 +19,7 @@
     "@types/chai": "4.3.4",
     "@types/clean-css": "4.2.6",
     "@types/fontfaceobserver": "2.1.0",
-    "@types/fs-extra": "9.0.13",
+    "@types/fs-extra": "11.0.1",
     "@types/lodash-es": "4.17.6",
     "@types/mocha": "10.0.1",
     "@types/node": "18.11.18",

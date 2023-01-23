@@ -8,7 +8,7 @@ specifiers:
   '@types/chai': 4.3.4
   '@types/clean-css': 4.2.6
   '@types/fontfaceobserver': 2.1.0
-  '@types/fs-extra': 9.0.13
+  '@types/fs-extra': 11.0.1
   '@types/lodash-es': 4.17.6
   '@types/mocha': 10.0.1
   '@types/node': 18.11.18
@@ -65,7 +65,7 @@ devDependencies:
   '@types/chai': 4.3.4
   '@types/clean-css': 4.2.6
   '@types/fontfaceobserver': 2.1.0
-  '@types/fs-extra': 9.0.13
+  '@types/fs-extra': 11.0.1
   '@types/lodash-es': 4.17.6
   '@types/mocha': 10.0.1
   '@types/node': 18.11.18
@@ -850,14 +850,21 @@ packages:
     resolution: {integrity: sha512-Vqf183RAiFdIjUi4asKqogf2HIfLDnxn+dQo9GCpnsU5QrrsLMA2bkJU1dHRudQlizLybWD61Csd1zAgUQ3JKQ==}
     dev: true
 
-  /@types/fs-extra/9.0.13:
-    resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
+  /@types/fs-extra/11.0.1:
+    resolution: {integrity: sha512-MxObHvNl4A69ofaTRU8DFqvgzzv8s9yRtaPPm5gud9HDNvpB3GPQFvNuTWAI59B9huVGV5jXYJwbCsmBsOGYWA==}
     dependencies:
+      '@types/jsonfile': 6.1.1
       '@types/node': 18.11.18
     dev: true
 
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
+    dev: true
+
+  /@types/jsonfile/6.1.1:
+    resolution: {integrity: sha512-GSgiRCVeapDN+3pqA35IkQwasaCh/0YFH5dEF6S88iDvEn901DjOeH3/QPY+XYP1DFzDZPvIvfeEgk+7br5png==}
+    dependencies:
+      '@types/node': 18.11.18
     dev: true
 
   /@types/lodash-es/4.17.6:
