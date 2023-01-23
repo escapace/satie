@@ -11,11 +11,11 @@ import {
   uniqBy,
   values
 } from 'lodash-es'
-import { Data, DataFont, DataLocales, State } from '../types'
+import { Data, DataFont, DataLocales, ResourceHint, State } from '../types'
 import { createClass } from '../utilities/create-class'
 
 interface Accumulator {
-  resourceHint: string[]
+  resourceHint: ResourceHint[]
   fontFace: string[]
   noScriptStyle: string[]
   style: string[]
@@ -29,7 +29,7 @@ const accumulate = (
   accumulator: Accumulator,
   value: Accumulator
 ): Accumulator => {
-  const resourceHint: string[] = uniq([
+  const resourceHint: ResourceHint[] = uniq([
     ...accumulator.resourceHint,
     ...value.resourceHint
   ])
@@ -114,7 +114,7 @@ export const createData = (state: State): Data => {
   const locales: DataLocales = mapValues(localeAccumulator, (value) => ({
     ...value,
     ...mapValues(
-      pick(value, ['style', 'fontFace', 'noScriptStyle', 'resourceHint']),
+      pick(value, ['style', 'fontFace', 'noScriptStyle']),
       (value, key) => wrap(value, key)
     )
   })) as DataLocales

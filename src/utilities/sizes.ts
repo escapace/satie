@@ -35,10 +35,7 @@ export const sizes = async (
             locale,
             (value, key): value is string =>
               value !== undefined &&
-              includes(
-                ['fontFace', 'noScriptStyle', 'resourceHint', 'style'],
-                key
-              )
+              includes(['fontFace', 'noScriptStyle', 'style'], key)
           )
         )
 

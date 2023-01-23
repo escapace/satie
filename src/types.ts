@@ -105,7 +105,7 @@ export interface DataLocales {
     fontFace: string
     style: string | undefined
     noScriptStyle: string | undefined
-    resourceHint: string | undefined
+    resourceHint: ResourceHint[] | undefined
     fonts: DataFont[]
   }
 }
@@ -173,11 +173,19 @@ export interface Data {
   style: string | undefined
 }
 
+export interface ResourceHint {
+  as: 'font'
+  crossorigin: 'anonymous'
+  href: string
+  rel: 'prefetch' | 'preload'
+  type: string
+}
+
 export interface TypeInferFontExtended
   extends Omit<TypeInferFont, 'resourceHint'> {
   slug: string
   fontFace: string
-  resourceHint: string[]
+  resourceHint: ResourceHint[]
 }
 
 export type SlugParts = 'family' | 'style' | 'weight' | 'unicodeRange'

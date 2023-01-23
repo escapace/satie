@@ -1,7 +1,12 @@
 import { compact, isEqual, pick } from 'lodash-es'
 import urljoin from 'url-join'
 import { SLUG_NON_PARTS } from '../constants'
-import { State, TypeInferFont, TypeInferFontExtended } from '../types'
+import {
+  ResourceHint,
+  State,
+  TypeInferFont,
+  TypeInferFontExtended
+} from '../types'
 import { createSlug } from './create-slug'
 import { describeFont } from './describe-font'
 import { fontFaceSrc } from './font-face-src'
@@ -17,12 +22,16 @@ const createFontExtended = (
 
   const src: string[] = value.formats.map((format) => srcOfFormat(format))
 
-  const resourceHint = compact([
+  const resourceHint: ResourceHint[] = compact([
     value.resourceHint === undefined
       ? undefined
-      : `<link rel="${value.resourceHint}" href="${srcOfFormat(
-          value.formats[0]
-        )}" as="font" type="font/${value.formats[0]}" crossorigin>`
+      : {
+          as: 'font',
+          href: srcOfFormat(value.formats[0]),
+          rel: value.resourceHint,
+          type: `font/${value.formats[0]}`,
+          crossorigin: 'anonymous'
+        }
   ])
 
   const fontFace = [

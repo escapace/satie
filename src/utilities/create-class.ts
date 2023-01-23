@@ -1,5 +1,5 @@
 import { find, flatMap, map, uniq } from 'lodash-es'
-import { State, TypeInferClass } from '../types'
+import { ResourceHint, State, TypeInferClass } from '../types'
 import { combinations } from './combinations'
 import { createBlock } from './create-block'
 import { createFont } from './create-font'
@@ -18,7 +18,7 @@ export const createClass = (
   const classWeight = newValue.fonts[0].weight
   const classStyle = newValue.fonts[0].style
 
-  const resourceHint: string[] = flatMap(
+  const resourceHint: ResourceHint[] = flatMap(
     newValue.fonts,
     (value) => value.resourceHint
   )
