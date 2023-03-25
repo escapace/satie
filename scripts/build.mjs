@@ -1,31 +1,48 @@
 import { build } from 'esbuild'
-import { remove } from 'fs-extra'
+import { execa } from 'execa'
+import fse from 'fs-extra'
 import { mkdir } from 'fs/promises'
 import path from 'path'
-import { fileURLToPath } from 'url'
-
-const WD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../')
+import { cwd, target, external } from './constants.mjs'
 
 process.umask(0o022)
-process.chdir(WD)
+process.chdir(cwd)
 
-const OUTDIR_CLI = path.join(WD, 'lib/cli')
+const outdir = path.join(cwd, 'lib/esm')
 
-await remove(OUTDIR_CLI)
-await mkdir(OUTDIR_CLI, { recursive: true })
+await fse.remove(outdir)
+await mkdir(outdir, { recursive: true })
 
 await build({
-  entryPoints: ['src/cli.ts'],
-  absWorkingDir: WD,
-  sourcemap: true,
   bundle: true,
+  entryPoints: ['src/index.ts', 'src/cli.ts'],
+  treeShaking: true,
+  splitting: true,
+  external: ['esbuild', ...external],
+  format: 'esm',
+  logLevel: 'info',
+  outExtension: { '.js': '.mjs' },
+  outbase: path.join(cwd, 'src'),
+  outdir,
   platform: 'node',
-  target: 'node17',
-  format: 'cjs',
-  tsconfig: path.join(WD, 'tsconfig.json'),
-  external: ['esbuild'],
-  outbase: path.join(WD, 'src'),
-  outdir: OUTDIR_CLI,
-  outExtension: { '.js': '.cjs' },
-  logLevel: 'info'
+  sourcemap: true,
+  target,
+  tsconfig: path.join(cwd, 'tsconfig-build.json')
+})
+
+await fse.remove(path.join(cwd, 'lib/types'))
+
+await execa(
+  path.join(cwd, 'node_modules', '.bin', 'tsc'),
+  [
+    '-p',
+    './tsconfig-build.json',
+    '--emitDeclarationOnly',
+    '--declarationDir',
+    'lib/types'
+  ],
+  { all: true, cwd }
+).catch((reason) => {
+  console.error(reason.all)
+  process.exit(reason.exitCode)
 })

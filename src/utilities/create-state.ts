@@ -1,6 +1,7 @@
 import { findUp } from 'find-up'
 import { includes, isString } from 'lodash-es'
 import path from 'path'
+import { fileURLToPath } from 'url'
 import {
   DEFAULT_JSON_FILE,
   DEFAULT_OUTPUT_DIR,
@@ -11,6 +12,7 @@ import { configuration } from './configuration'
 import { Console } from './console'
 
 export const createState = async (options: Options): Promise<State> => {
+  const dirname = path.dirname(fileURLToPath(import.meta.url))
   const console = new Console(options)
   const declaration = options.declaration === true
   const cwd = options.cwd ?? process.cwd()
@@ -47,7 +49,7 @@ export const createState = async (options: Options): Promise<State> => {
 
   console.spinner.text = 'starting up'
 
-  const packageJSON = await findUp('package.json', { cwd: __dirname })
+  const packageJSON = await findUp('package.json', { cwd: dirname })
 
   if (packageJSON === undefined) {
     return console.exit('Damaged installation')

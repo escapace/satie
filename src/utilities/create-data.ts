@@ -1,4 +1,3 @@
-import CleanCSS from 'clean-css'
 import {
   flatMap,
   fromPairs,
@@ -13,6 +12,7 @@ import {
 } from 'lodash-es'
 import { Data, DataFont, DataLocales, ResourceHint, State } from '../types'
 import { createClass } from '../utilities/create-class'
+import { minifyCss } from './minify-css'
 
 interface Accumulator {
   resourceHint: ResourceHint[]
@@ -58,11 +58,11 @@ const wrap = (value: string[], key: string): string | undefined => {
 
   switch (key) {
     case 'style':
-      return `${new CleanCSS().minify(value.join('')).styles}`
+      return minifyCss(value.join(''))
     case 'fontFace':
-      return `${new CleanCSS().minify(value.join('')).styles}`
+      return minifyCss(value.join(''))
     case 'noScriptStyle':
-      return `${new CleanCSS().minify(value.join('')).styles}`
+      return minifyCss(value.join(''))
     case 'resourceHint':
       return value.join('')
     default:

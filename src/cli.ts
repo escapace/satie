@@ -18,7 +18,7 @@ const help = (code: 0 | 1 = 0, message?: string): never => {
   per-locale styles and resource hints.
 
   Requires a ${chalk.yellow(
-    'web-fonts.config.(ts|mjs|cjs|js|json)'
+    'web-fonts.config.(ts|mjs|js|json)'
   )} configuration file
   in the current working directory.
 

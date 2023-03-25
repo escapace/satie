@@ -1,5 +1,6 @@
 import { execa } from 'execa'
-import { mkdirp, pathExists, readFile } from 'fs-extra'
+import { mkdirp, pathExists } from 'fs-extra'
+import { readFile } from 'fs/promises'
 import { compact, includes, map } from 'lodash-es'
 import path from 'path'
 import { SizeFont, State, TypeInferFont } from '../types'
@@ -63,7 +64,7 @@ export const writeFont = async (
 
       return {
         file,
-        ...(await size(await readFile(outputFile)))
+        ...size(await readFile(outputFile))
       }
     })
   )

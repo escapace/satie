@@ -93,7 +93,6 @@ const updateSubscribers = (fonts: WebFont[]) =>
           return FONTS.get(font.slug)!
         }
 
-        // eslint-disable-next-line no-useless-return
         return
       })
     )

@@ -15,8 +15,8 @@ ENV UID=1000
 ENV GID=1000
 ENV UMASK=0022
 
-COPY lib/cli/cli.cjs /web-fonts/lib/cli
-COPY lib/cli/cli.cjs.map /web-fonts/lib/cli
+COPY lib/esm/cli.mjs /web-fonts/lib/cli
+COPY lib/esm/cli.mjs.map /web-fonts/lib/cli
 COPY src/utilities/font-loader.ts /web-fonts/src/utilities
 COPY src/utilities/font-strip.py /web-fonts/src/utilities
 COPY package.json /web-fonts

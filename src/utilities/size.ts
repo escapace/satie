@@ -1,13 +1,11 @@
-import brotliSize from 'brotli-size'
-import { gzipSize } from 'gzip-size'
-import { assign } from 'lodash-es'
+import zlib from 'zlib'
 import { Size } from '../types'
 
-export const size = async (contents: string | Buffer): Promise<Size> =>
-  assign(
-    {},
-    ...(await Promise.all([
-      brotliSize(contents).then((brotli) => ({ brotli })),
-      gzipSize(contents).then((gzip) => ({ gzip }))
-    ]))
-  )
+const brotliSize = (value: string | Buffer) =>
+  zlib.brotliCompressSync(value).length
+const gzipSize = (value: string | Buffer) => zlib.gzipSync(value).length
+
+export const size = (contents: string | Buffer): Size => ({
+  brotli: brotliSize(contents),
+  gzip: gzipSize(contents)
+})

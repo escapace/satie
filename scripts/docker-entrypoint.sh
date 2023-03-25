@@ -19,4 +19,4 @@ addgroup -S -g "${GID}" node \
   && mkdir -p /wd \
   && chown node:node /wd \
   && cd /wd \
-  && exec sudo -u node node /web-fonts/lib/cli/cli.cjs "$@"
+  && exec sudo -u node node --no-warnings --experimental-vm-modules --enable-source-maps /web-fonts/lib/cli/cli.cjs "$@"

@@ -39,16 +39,16 @@ export const sizes = async (
           )
         )
 
-        const totalParts: Size = await size(
+        const totalParts: Size = size(
           Buffer.concat(
             map(values(recordParts), (string) => Buffer.from(string))
           )
         )
 
         const parts = (await Promise.all(
-          map(recordParts, async (value, key) => ({
+          map(recordParts, (value, key) => ({
             key,
-            ...(await size(value))
+            ...size(value)
           }))
         )) as SizePart[]
 
