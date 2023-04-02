@@ -1,0 +1,178 @@
+import {
+  flatMap,
+  fromPairs,
+  map,
+  mapValues,
+  omit,
+  pick,
+  reduce,
+  uniq,
+  uniqBy,
+  values
+} from 'lodash-es'
+import { Data, DataFont, DataLocales, ResourceHint, State } from '../types'
+import { createClass } from '../utilities/create-class'
+import { minifyCss } from './minify-css'
+
+interface Accumulator {
+  resourceHint: ResourceHint[]
+  fontFace: string[]
+  noScriptStyle: string[]
+  style: string[]
+}
+
+interface AccumulatorWithFonts extends Accumulator {
+  fonts: DataFont[]
+}
+
+const accumulate = (
+  accumulator: Accumulator,
+  value: Accumulator
+): Accumulator => {
+  const resourceHint: ResourceHint[] = uniq([
+    ...accumulator.resourceHint,
+    ...value.resourceHint
+  ])
+
+  const fontFace: string[] = uniq([...accumulator.fontFace, ...value.fontFace])
+
+  const noScriptStyle: string[] = uniq([
+    ...accumulator.noScriptStyle,
+    ...value.noScriptStyle
+  ])
+
+  const style: string[] = uniq([...accumulator.style, ...value.style])
+
+  return {
+    fontFace,
+    noScriptStyle,
+    resourceHint,
+    style
+  }
+}
+
+const wrap = (
+  value: string[],
+  key: string,
+  state: State
+): string | undefined => {
+  if (value.length === 0) {
+    return undefined
+  }
+
+  switch (key) {
+    case 'style':
+      return minifyCss(value.join(''), state.targets.lightningCSS)
+    case 'fontFace':
+      return minifyCss(value.join(''), state.targets.lightningCSS)
+    case 'noScriptStyle':
+      return minifyCss(value.join(''), state.targets.lightningCSS)
+    case 'resourceHint':
+      return value.join('')
+    default:
+      return undefined
+  }
+}
+
+export const createData = (state: State): Data => {
+  const localeAccumulator = fromPairs(
+    map(state.locales, (value, locale): [string, AccumulatorWithFonts] => {
+      const classes = map(value, (value, className) =>
+        createClass(locale, className, value, state)
+      )
+
+      const withFonts: AccumulatorWithFonts = reduce(
+        classes,
+        (acc, value) => {
+          const values = accumulate(acc, value)
+
+          const fonts = uniqBy(
+            [
+              ...acc.fonts,
+              ...map(value.fonts, (value) =>
+                pick(value, [
+                  'family',
+                  'slug',
+                  'stretch',
+                  'style',
+                  'tech',
+                  'testString',
+                  'weight'
+                ])
+              )
+            ],
+            (value) => value.slug
+          )
+
+          return {
+            ...values,
+            fonts
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        {
+          fontFace: [],
+          fonts: [],
+          noScriptStyle: [],
+          resourceHint: [],
+          style: []
+        } as AccumulatorWithFonts
+      )
+
+      return [locale, withFonts]
+    })
+  )
+
+  const locales: DataLocales = mapValues(localeAccumulator, (value) => ({
+    ...value,
+    ...mapValues(
+      pick(value, ['style', 'fontFace', 'noScriptStyle']),
+      (value, key) => wrap(value, key, state)
+    )
+  })) as DataLocales
+
+  const fontsIndex: Array<[string, DataFont]> = flatMap(locales, (value) =>
+    map(value.fonts, (value): [string, DataFont] => [value.slug, value])
+  )
+
+  const localeIndex: Array<[string, string[]]> = map(
+    locales,
+    (value, locale): [string, string[]] => [
+      locale,
+      map(value.fonts, (value) => value.slug)
+    ]
+  )
+
+  const fonts = uniqBy(
+    flatMap(fontsIndex, ([_, value]) => value),
+    ({ slug }) => slug
+  )
+
+  const { style, fontFace, noScriptStyle } = mapValues(
+    omit(
+      reduce(
+        values(localeAccumulator),
+        (accumulator, value) => accumulate(accumulator, value),
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        {
+          fontFace: [],
+          noScriptStyle: [],
+          resourceHint: [],
+          style: []
+        } as Accumulator
+      ),
+      ['resourceHint']
+    ),
+    (value, key) => wrap(value, key, state)
+  )
+
+  return {
+    style,
+    fontFace,
+    noScriptStyle,
+    fonts,
+    fontsIndex,
+    localeIndex,
+    locales
+  }
+}

@@ -4,7 +4,7 @@ on:
       file:
         required: true
         type: string
-        description: 'Path to Dockerfile, relative to the GITHUB_WORKSPACE directory.'
+        description: 'Path to Dockerfile.'
       artifact-name:
         required: true
         type: string

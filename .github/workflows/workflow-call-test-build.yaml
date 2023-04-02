@@ -28,7 +28,7 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11.0'
+          python-version: '3.10.10'
           cache: 'pip'
       - name: setup node
         uses: actions/setup-node@v3
@@ -53,26 +53,25 @@ jobs:
       - name: install dependencies
         run: |
           pip3 install --upgrade pip
-          pip3 install -r requirements.txt
+          pip3 install -r packages/container/requirements.txt
           pnpm install
       - name: typecheck
         run: pnpm run typecheck
-      # - name: lint
-      #   run: pnpm run lint
-      # - name: test
-      #   run: pnpm run test
+      - name: lint
+        run: pnpm run lint
+      - name: test
+        run: pnpm run test
       - name: build
         run: pnpm run build
       - name: archive context
         if: inputs.artifact-name != ''
         run: >-
-          tar --exclude=node_modules
+          tar -C packages/container --exclude=node_modules
           -czvf context.tar.gz
           ./.dockerignore
           ./Dockerfile
           ./lib
           ./package.json
-          ./pnpm-lock.yaml
           ./requirements.txt
           ./scripts/docker-entrypoint.sh
           ./src/utilities/font-loader.ts

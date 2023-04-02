@@ -33,6 +33,7 @@ jobs:
       artifact-name: ${{ needs.context.outputs.version }}
       file: Dockerfile
       args: >-
+        --build-arg PNPM_VERSION=${{ needs.context.outputs.pnpm-version }}
         --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}
   github-release:
     needs:
@@ -41,6 +42,7 @@ jobs:
     if: needs.build-container.result == 'success'
     uses: ./.github/workflows/workflow-call-github-release.yaml
     with:
+      version: ${{ needs.context.outputs.version }}
       environment: ${{ needs.context.outputs.environment }}
       node-version: ${{ needs.context.outputs.node-version }}
       pnpm-version: ${{ needs.context.outputs.pnpm-version }}

@@ -3,10 +3,7 @@ import path from 'path'
 import semver from 'semver'
 import { fileURLToPath } from 'url'
 
-export const cwd = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '../'
-)
+export const cwd = process.cwd()
 
 export const packageJSON = await fse.readJSON(path.join(cwd, 'package.json'))
 export const external = [
