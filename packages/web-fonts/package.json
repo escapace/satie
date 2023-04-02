@@ -1,32 +1,32 @@
 {
   "name": "@escapace/web-fonts",
-  "homepage": "https://github.com/escapace/web-fonts",
+  "description": "",
+  "version": "1.0.0",
   "author": "escapace <opensource@escapace.com>",
   "bugs": "https://github.com/escapace/web-fonts/issues",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "release": "node ../../scripts/release.mjs",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
-    "build": "cp node_modules/@escapace/web-fonts-container/lib/types/types-public.d.ts lib/types/types.d.ts"
+  "dependencies": {
+    "csstype": "3.1.2",
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@escapace/web-fonts-container": "workspace:*",
     "typescript": "5.0.3"
   },
+  "files": [
+    "lib/types"
+  ],
+  "homepage": "https://github.com/escapace/web-fonts",
   "keywords": [],
   "license": "MPL-2.0",
   "private": false,
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "lib/types"
-  ],
-  "types": "lib/types/index.d.ts",
+  "scripts": {
+    "build": "cp node_modules/@escapace/web-fonts-container/lib/types/types-public.d.ts lib/types/types.d.ts",
+    "release": "node ../../scripts/release.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
   "sideEffects": false,
-  "dependencies": {
-    "csstype": "3.1.2",
-    "zod": "3.21.4"
-  }
+  "types": "lib/types/index.d.ts"
 }
