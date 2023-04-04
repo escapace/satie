@@ -51,13 +51,13 @@ jobs:
       - name: build
         run: pnpm run build
       - name: release
-        if: needs.context.outputs.environment == 'production'
+        if: inputs.environment == 'production'
         run: |
           cat << EOF > "$HOME/.npmrc"
             @escapace:registry=https://npm.pkg.github.com/
             //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
           EOF
-          pnpm run release ${{ needs.context.outputs.version }}
+          pnpm run release ${{ inputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: github release
