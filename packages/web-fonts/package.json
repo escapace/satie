@@ -19,9 +19,6 @@
   "keywords": [],
   "license": "MPL-2.0",
   "private": false,
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "build": "cp node_modules/@escapace/web-fonts-container/lib/types/types-public.d.ts lib/types/types.d.ts",
     "release": "node ../../scripts/release.mjs",

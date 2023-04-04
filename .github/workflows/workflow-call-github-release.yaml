@@ -48,21 +48,18 @@ jobs:
             ${{ runner.os }}-pnpm-store
       - name: install dependencies
         run: pnpm install
-      # - name: build
-      #   run: pnpm run build
-      # - name: write .npmrc
-      #   if: inputs.environment == 'production'
-      #   run: |
-      #     cat << EOF > "$HOME/.npmrc"
-      #     registry-url: https:///
-      #       //npm.pkg.github.com/:_authToken=$NPM_TOKEN
-      #     EOF
-      #   env:
-      #     NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      # - name: pnpm release
-      #   if: inputs.environment == 'production'
-      #   run: |
-      #     pnpm run release -- ${{ inputs.version }}
+      - name: build
+        run: pnpm run build
+      - name: release
+        if: needs.context.outputs.environment == 'production'
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            @escapace:registry=https://npm.pkg.github.com/
+            //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
+          EOF
+          pnpm run release ${{ needs.context.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: github release
         run: |
           if [[ "${{ inputs.environment }}" == "staging" ]]; then
