@@ -52,7 +52,7 @@
     "mocha": "10.2.0",
     "prettier": "2.8.7",
     "prettier-config-escapace": "1.0.5",
-    "tsx": "^3.12.6",
+    "tsx": "3.12.6",
     "typescript": "5.0.4",
     "utility-types": "3.10.0"
   },

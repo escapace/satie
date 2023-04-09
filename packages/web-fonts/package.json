@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@escapace/web-fonts-container": "workspace:*",
-    "typescript": "5.0.3"
+    "typescript": "5.0.4"
   },
   "files": [
     "lib/types"
