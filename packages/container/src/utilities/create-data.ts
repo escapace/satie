@@ -1,6 +1,8 @@
 import {
   flatMap,
   fromPairs,
+  keys,
+  last,
   map,
   mapValues,
   omit,
@@ -10,15 +12,24 @@ import {
   uniqBy,
   values
 } from 'lodash-es'
-import { Data, DataFont, DataLocales, ResourceHint, State } from '../types'
+import {
+  Data,
+  DataFont,
+  DataLocale,
+  DataLocales,
+  ResourceHint,
+  State
+} from '../types'
 import { createClass } from '../utilities/create-class'
 import { minifyCss } from './minify-css'
+import { toposort } from './toposort'
 
 interface Accumulator {
   resourceHint: ResourceHint[]
   fontFace: string[]
   noScriptStyle: string[]
   style: string[]
+  graph: Map<string, string[]>
 }
 
 interface AccumulatorWithFonts extends Accumulator {
@@ -43,11 +54,24 @@ const accumulate = (
 
   const style: string[] = uniq([...accumulator.style, ...value.style])
 
+  const graph: Map<string, string[]> = new Map()
+
+  uniq([...value.graph.keys(), ...accumulator.graph.keys()]).forEach((key) => {
+    graph.set(
+      key,
+      uniq([
+        ...(accumulator.graph.get(key) ?? []),
+        ...(value.graph.get(key) ?? [])
+      ])
+    )
+  })
+
   return {
     fontFace,
     noScriptStyle,
     resourceHint,
-    style
+    style,
+    graph
   }
 }
 
@@ -74,6 +98,27 @@ const wrap = (
   }
 }
 
+const transpose = (map: Map<string, string[]>): Map<string, string[]> => {
+  const result: Map<string, string[]> = new Map()
+
+  for (const [key, values] of map.entries()) {
+    for (const value of values) {
+      if (!result.has(value)) {
+        result.set(value, [])
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const array = result.get(value)!
+
+      if (!array.includes(key)) {
+        array.push(key)
+      }
+    }
+  }
+
+  return result
+}
+
 export const createData = (state: State): Data => {
   const localeAccumulator = fromPairs(
     map(state.locales, (value, locale): [string, AccumulatorWithFonts] => {
@@ -89,8 +134,9 @@ export const createData = (state: State): Data => {
           const fonts = uniqBy(
             [
               ...acc.fonts,
-              ...map(value.fonts, (value) =>
-                pick(value, [
+              ...map(value.fonts, (value) => ({
+                prefer: [],
+                ...pick(value, [
                   'family',
                   'slug',
                   'stretch',
@@ -99,7 +145,7 @@ export const createData = (state: State): Data => {
                   'testString',
                   'weight'
                 ])
-              )
+              }))
             ],
             (value) => value.slug
           )
@@ -111,6 +157,7 @@ export const createData = (state: State): Data => {
         },
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         {
+          graph: new Map(),
           fontFace: [],
           fonts: [],
           noScriptStyle: [],
@@ -123,24 +170,42 @@ export const createData = (state: State): Data => {
     })
   )
 
-  const locales: DataLocales = mapValues(localeAccumulator, (value) => ({
-    ...value,
-    ...mapValues(
-      pick(value, ['style', 'fontFace', 'noScriptStyle']),
-      (value, key) => wrap(value, key, state)
-    )
-  })) as DataLocales
-
-  const fontsIndex: Array<[string, DataFont]> = flatMap(locales, (value) =>
-    map(value.fonts, (value): [string, DataFont] => [value.slug, value])
+  const localeIndex: Array<[string, string[]]> = map(
+    keys(localeAccumulator),
+    (locale): [string, string[]] => [
+      locale,
+      last(
+        toposort(localeAccumulator[locale].graph).map((value) =>
+          Array.from(value)
+        )
+      ) as string[]
+    ]
   )
 
-  const localeIndex: Array<[string, string[]]> = map(
-    locales,
-    (value, locale): [string, string[]] => [
-      locale,
-      map(value.fonts, (value) => value.slug)
-    ]
+  const localeIndexMap = new Map(localeIndex)
+
+  const locales: DataLocales = mapValues(localeAccumulator, (value, key) => {
+    const graph = transpose(value.graph)
+
+    const locale: DataLocale = {
+      ...omit(value, ['graph']),
+      ...mapValues(
+        pick(value, ['style', 'fontFace', 'noScriptStyle']),
+        (value, key) => wrap(value, key, state)
+      ),
+      fonts: value.fonts.map((font) => ({
+        ...font,
+        prefer: graph.get(font.slug) ?? []
+      })),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      order: localeIndexMap.get(key)!
+    }
+
+    return locale
+  })
+
+  const fontsIndex: Array<[string, DataFont]> = flatMap(locales, (locale) =>
+    map(locale.fonts, (value): [string, DataFont] => [value.slug, value])
   )
 
   const fonts = uniqBy(
@@ -155,13 +220,14 @@ export const createData = (state: State): Data => {
         (accumulator, value) => accumulate(accumulator, value),
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         {
+          graph: new Map(),
           fontFace: [],
           noScriptStyle: [],
           resourceHint: [],
           style: []
         } as Accumulator
       ),
-      ['resourceHint']
+      ['resourceHint', 'graph']
     ),
     (value, key) => wrap(value, key, state)
   )

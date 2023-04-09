@@ -11,6 +11,7 @@ export * from './types-public'
 export interface DataFont {
   family: string
   slug: string
+  prefer: string[]
   stretch?: number | number[] | undefined
   style?: number | number[] | 'normal' | 'italic' | 'oblique' | undefined
   tech?: Array<'variations'>
@@ -18,14 +19,17 @@ export interface DataFont {
   weight?: number | number[] | undefined
 }
 
+export interface DataLocale {
+  fontFace: string | undefined
+  style: string | undefined
+  noScriptStyle: string | undefined
+  resourceHint: ResourceHint[] | undefined
+  fonts: DataFont[]
+  order: string[]
+}
+
 export interface DataLocales {
-  [x: string]: {
-    fontFace: string
-    style: string | undefined
-    noScriptStyle: string | undefined
-    resourceHint: ResourceHint[] | undefined
-    fonts: DataFont[]
-  }
+  [x: string]: DataLocale
 }
 
 export interface Options {

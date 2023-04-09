@@ -9,6 +9,7 @@ import {
 } from 'lodash-es'
 import {
   Data,
+  DataLocale,
   RecordSizeFont,
   RecordSizeLocale,
   Size,
@@ -31,7 +32,7 @@ export const sizes = async (
 
         const recordParts: Record<string, string> = assign(
           { script },
-          pickBy(
+          pickBy<Pick<DataLocale, 'fontFace' | 'noScriptStyle' | 'style'>>(
             locale,
             (value, key): value is string =>
               value !== undefined &&

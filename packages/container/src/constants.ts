@@ -36,7 +36,7 @@ export const LOADER_DECLARATION = `export interface WebFont {
 
 export type WebFontLoaderSubscribe = (cb: (webFonts: WebFont[]) => void) => void
 
-export type WebFontLoader = (locale: string) => WebFont[]
+export type WebFontLoader = (locale: string) => Promise<WebFont[]>
 
 export declare const webFontLoaderSubscribe: WebFontLoaderSubscribe
 export declare const webFontLoader: WebFontLoader

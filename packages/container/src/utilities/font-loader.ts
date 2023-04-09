@@ -1,37 +1,28 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/promise-function-async */
+
 import FontFaceObserver from 'fontfaceobserver'
 import type { DataFont as Font } from '../types'
 
-declare const __DATA_LOCALE_INDEX__: Array<readonly [string, string[]]>
-declare const __DATA_FONTS__: Array<readonly [string, Font]>
-
-enum FONT_STATE {
-  ALREADY_LOADED,
-  LOADED,
-  FAILED
-}
-
 interface WebFont extends Font {
-  promise: Promise<FONT_STATE>
+  state?: Promise<boolean>
 }
+
+declare const __DATA_LOCALE_INDEX__: Array<readonly [string, string[]]>
+declare const __DATA_FONTS__: Array<readonly [string, WebFont]>
 
 type Callback = (webFonts: Font[]) => unknown
 
 declare global {
   interface Window {
     FontFaceObserver: typeof FontFaceObserver
-    webFontLoader: (locale: string) => WebFont[]
+    webFontLoader: (locale: string) => Promise<Font[]>
     webFontLoaderSubscribe: (cb: Callback) => void
   }
 }
 
 const LOCALE_INDEX = new Map(__DATA_LOCALE_INDEX__)
 const FONTS = new Map(__DATA_FONTS__)
-
-const CACHE_FONT = new Map<Font, WebFont['promise']>()
-const LOG = new Set<string>()
 const SUBSCRIBERS: Callback[] = []
 
 const getDataFontsLoaded = () =>
@@ -50,112 +41,143 @@ const updateDataFontsLoaded = (value: string) => {
         .sort()
         .join(' ')
     )
-
-    return FONT_STATE.LOADED
   }
-
-  return FONT_STATE.ALREADY_LOADED
 }
 
-const createPromise = (font: Font): Promise<FONT_STATE> =>
-  getDataFontsLoaded().includes(font.slug)
-    ? Promise.resolve(FONT_STATE.ALREADY_LOADED)
-    : CACHE_FONT.has(font)
-    ? CACHE_FONT.get(font)!
-    : // if the font is variable font and variable fonts are not not supported
-    font.tech?.includes('variations') === true &&
+const createPromise = async (slug: string): Promise<boolean> => {
+  const font = FONTS.get(slug)
+
+  if (font === undefined) {
+    return false
+  }
+
+  if (font.state !== undefined) {
+    return await font.state
+  }
+
+  font.state = (async () => {
+    if (getDataFontsLoaded().includes(slug)) {
+      updateDataFontsLoaded(slug)
+
+      return true
+    } else if (
+      font.tech?.includes('variations') === true &&
       !CSS.supports('(font-variation-settings: normal)')
-    ? Promise.resolve(FONT_STATE.FAILED)
-    : (() => {
-        const createPromise = new FontFaceObserver(font.family, {
-          weight:
-            font.weight === undefined
-              ? undefined
-              : (Array.isArray(font.weight)
-                  ? font.weight[0]
-                  : font.weight
-                ).toString(),
-          stretch:
-            font.stretch === undefined
-              ? undefined
-              : `${
-                  Array.isArray(font.stretch) ? font.stretch[0] : font.stretch
-                }%`,
-          style:
-            font.style === undefined
-              ? undefined
-              : typeof font.style === 'string'
-              ? font.style
-              : `oblique ${
-                  Array.isArray(font.style) ? font.style[0] : font.style
-                }deg`
-        })
-          .load(
-            typeof font.testString === 'string' ? font.testString : null,
-            10000
-          )
-          .then(() => updateDataFontsLoaded(font.slug))
-          .catch(() => {
-            CACHE_FONT.delete(font)
+    ) {
+      return false
+    } else {
+      try {
+        const weight =
+          font.weight === undefined
+            ? undefined
+            : (Array.isArray(font.weight)
+                ? font.weight[0]
+                : font.weight
+              ).toString()
 
-            return FONT_STATE.FAILED
-          })
+        const stretch =
+          font.stretch === undefined
+            ? undefined
+            : `${Array.isArray(font.stretch) ? font.stretch[0] : font.stretch}%`
 
-        CACHE_FONT.set(font, createPromise)
+        const style =
+          font.style === undefined
+            ? undefined
+            : typeof font.style === 'string'
+            ? font.style
+            : `oblique ${
+                Array.isArray(font.style) ? font.style[0] : font.style
+              }deg`
 
-        return createPromise
-      })()
+        await new FontFaceObserver(font.family, {
+          weight,
+          stretch,
+          style
+        }).load(
+          typeof font.testString === 'string' ? font.testString : null,
+          10000
+        )
 
-const updateSubscribers = (fonts: WebFont[]) =>
-  void Promise.all(
-    fonts.map((font) =>
-      font.promise.then((state) => {
-        if (state === FONT_STATE.LOADED && !LOG.has(font.slug)) {
-          LOG.add(font.slug)
+        updateDataFontsLoaded(slug)
+        return true
+      } catch {
+        return false
+      }
+    }
+  })()
 
-          return FONTS.get(font.slug)!
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+  return await font.state!
+}
+
+const iterateFonts = async (): Promise<WebFont[]> =>
+  (
+    await Promise.all(
+      Array.from(FONTS.values()).map(async (font) => {
+        if (font.state !== undefined && (await font.state)) {
+          return font
         }
 
-        return
+        return undefined
       })
     )
-  ).then((_fonts) => {
-    const fonts = _fonts.filter((value) => value !== undefined) as Font[]
+  ).filter((value): value is WebFont => value !== undefined)
 
-    if (fonts.length > 0) {
-      SUBSCRIBERS.forEach((cb) => cb(fonts))
-    }
-  })
+const updateSubscribers = async () => {
+  const fonts = await iterateFonts()
+
+  if (fonts.length > 0) {
+    SUBSCRIBERS.forEach((cb) => cb(fonts))
+  }
+
+  return fonts
+}
 
 export const webFontLoaderSubscribe = (cb: Callback) => {
   if (!SUBSCRIBERS.includes(cb)) {
-    const loadedFonts = [...LOG].map((slug) => FONTS.get(slug)!)
-
-    if (loadedFonts.length !== 0) {
-      cb(loadedFonts)
-    }
-
     SUBSCRIBERS.push(cb)
+
+    void iterateFonts().then((fonts) => {
+      if (fonts.length !== 0) {
+        cb(fonts)
+      }
+    })
   }
 }
 
-export const webFontLoader = (locale: string) => {
+// const uniqBy = <T>(arr: T[], prop: keyof T): T[] => {
+//   const fn = (item: T) => item[prop]
+//
+//   return arr.filter(
+//     (value, index, array) =>
+//       index === array.findIndex((y) => fn(value) === fn(y))
+//   )
+// }
+
+const next = async (slug: string): Promise<boolean> => {
+  const font = FONTS.get(slug)!
+
+  for (const preference of font.prefer) {
+    const success = await next(preference)
+
+    if (success) {
+      return success
+    }
+  }
+
+  return await createPromise(slug)
+}
+
+export const webFontLoader = async (locale: string): Promise<Font[]> => {
   if (locale === undefined || !LOCALE_INDEX.has(locale)) {
     throw new Error('Font Loader: No locale')
   }
 
-  const fonts = LOCALE_INDEX.get(locale)!
-    .map((slug) => FONTS.get(slug)!)
-    .map(
-      (font): WebFont => ({
-        ...font,
-        promise: createPromise(font)
-      })
-    )
+  const slugs = LOCALE_INDEX.get(locale)!
 
-  updateSubscribers(fonts)
+  await Promise.all(slugs.map(async (slug) => await next(slug)))
 
-  return fonts
+  return await updateSubscribers()
 }
 
 window.FontFaceObserver = FontFaceObserver
