@@ -76,6 +76,7 @@ jobs:
           ./scripts/docker-entrypoint.sh
           ./src/utilities/font-loader.ts
           ./src/utilities/font-strip.py
+          ./src/metrics.json
       - name: upload context.tar
         if: inputs.artifact-name != ''
         uses: actions/upload-artifact@v3
