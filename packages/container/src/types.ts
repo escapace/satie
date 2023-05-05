@@ -8,6 +8,29 @@ import { Console } from './utilities/console'
 
 export * from './types-public'
 
+export interface FontMetrics {
+  /** The font family name as authored by font creator */
+  familyName: string
+  /**
+   * The style of the font: serif, sans-serif, monospace, display, or handwriting.
+   */
+  category?: string
+  /** The height of the ascenders above baseline */
+  ascent: number
+  /** The descent of the descenders below baseline */
+  descent: number
+  /** The amount of space included between lines */
+  lineGap: number
+  /** The size of the font’s internal coordinate grid */
+  unitsPerEm: number
+  /** The height of capital letters above the baseline */
+  capHeight: number
+  /** The height of the main body of lower case letters above baseline */
+  xHeight: number
+  /** The average width of lowercase characters (currently derived from latin character frequencies in English language) */
+  xWidthAvg: number
+}
+
 export interface DataFont {
   family: string
   slug: string
@@ -100,6 +123,7 @@ export interface State {
   sourceWebFontLoader: string
   console: Console
   declaration: boolean
+  metrics: Map<string, FontMetrics>
 }
 
 export interface Data {
@@ -122,8 +146,8 @@ export interface ResourceHint {
 
 export interface TypeInferFontExtended
   extends Omit<TypeInferFont, 'resourceHint'> {
+  metrics: FontMetrics
   slug: string
-  fontFace: string
   resourceHint: ResourceHint[]
 }
 

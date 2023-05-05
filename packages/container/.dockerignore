@@ -7,3 +7,4 @@
 !/scripts/docker-entrypoint.sh
 !/src/utilities/font-loader.ts
 !/src/utilities/font-strip.py
+!/src/metrics.json

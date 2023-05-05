@@ -19,6 +19,8 @@ ENV UMASK=0022
 COPY lib/esm /web-fonts/lib/esm
 COPY src/utilities/font-loader.ts /web-fonts/src/utilities
 COPY src/utilities/font-strip.py /web-fonts/src/utilities
+COPY src/metrics.json /web-fonts/src
+
 COPY package.json /web-fonts
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
 
