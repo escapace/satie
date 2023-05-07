@@ -1,11 +1,11 @@
 import { assert } from 'chai'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { webFonts } from './index'
+import { webFonts } from './web-fonts'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
-describe('src/index.spec.ts', function () {
+describe('src/web-fonts.spec.ts', function () {
   this.timeout(30000)
 
   it('happy-path', async () => {

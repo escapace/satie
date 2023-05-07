@@ -8,6 +8,16 @@ import { Console } from './utilities/console'
 
 export * from './types-public'
 
+export const enum TypeFontIssue {
+  Error,
+  Warning
+}
+
+export interface FontIssue {
+  type: TypeFontIssue
+  description: string
+}
+
 export interface FontMetrics {
   /** The font family name as authored by font creator */
   familyName: string
@@ -29,6 +39,7 @@ export interface FontMetrics {
   xHeight: number
   /** The average width of lowercase characters (currently derived from latin character frequencies in English language) */
   xWidthAvg: number
+  issues?: FontIssue[]
 }
 
 export interface DataFont {

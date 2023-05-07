@@ -8,7 +8,7 @@ import {
   DEFAULT_OUTPUT_DIR,
   DEFAULT_PUBLIC_PATH
 } from './constants'
-import { webFonts } from './index'
+import { webFonts } from './web-fonts'
 import { Options } from './types'
 
 const help = (code: 0 | 1 = 0, message?: string): never => {
