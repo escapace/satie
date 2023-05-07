@@ -55,14 +55,14 @@ jobs:
           pip3 install --upgrade pip
           pip3 install -r packages/container/requirements.txt
           pnpm install
+      - name: build
+        run: pnpm run build
       - name: typecheck
         run: pnpm run typecheck
       - name: lint
         run: pnpm run lint
       - name: test
         run: pnpm run test
-      - name: build
-        run: pnpm run build
       - name: archive context
         if: inputs.artifact-name != ''
         run: >-
