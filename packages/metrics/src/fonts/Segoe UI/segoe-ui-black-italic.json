@@ -1,0 +1,17 @@
+{
+  "names": ["SegoeUIBlack-Italic", "Segoe UI Black Italic"],
+  "weight": 900,
+  "italic": true,
+  "familyName": "Segoe UI Black",
+  "postscriptName": "SegoeUIBlack-Italic",
+  "fullName": "Segoe UI Black Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1434,
+  "ascent": 2210,
+  "descent": -514,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1024,
+  "xWidthAvg": 1009,
+  "issues": []
+}

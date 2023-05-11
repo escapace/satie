@@ -1,0 +1,17 @@
+{
+  "names": ["DroidSansMono", "Droid Sans Mono", "Droid Sans Mono Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Droid Sans Mono",
+  "postscriptName": "DroidSansMono",
+  "fullName": "Droid Sans Mono",
+  "subfamilyName": "Regular",
+  "capHeight": 1462,
+  "ascent": 1900,
+  "descent": -500,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1098,
+  "xWidthAvg": 1229,
+  "issues": []
+}

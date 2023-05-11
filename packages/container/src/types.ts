@@ -1,3 +1,4 @@
+import { AtRule } from 'csstype'
 import {
   LightningCSSTargets,
   TypeFont,
@@ -18,13 +19,15 @@ export interface FontIssue {
   description: string
 }
 
+export type FontFace = Omit<AtRule.FontFace, 'src' | 'fontFamily'> &
+  Required<Pick<AtRule.FontFace, 'src' | 'fontFamily'>>
+
 export interface FontMetrics {
-  /** The font family name as authored by font creator */
   familyName: string
-  /**
-   * The style of the font: serif, sans-serif, monospace, display, or handwriting.
-   */
-  category?: string
+  fullName: string
+  postscriptName: string
+  subfamilyName: string
+
   /** The height of the ascenders above baseline */
   ascent: number
   /** The descent of the descenders below baseline */

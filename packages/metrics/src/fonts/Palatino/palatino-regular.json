@@ -1,0 +1,17 @@
+{
+  "names": ["Palatino-Roman", "Palatino", "Palatino Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Palatino",
+  "postscriptName": "Palatino-Roman",
+  "fullName": "Palatino",
+  "subfamilyName": "Regular",
+  "capHeight": 1423,
+  "ascent": 1685,
+  "descent": -568,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 965,
+  "xWidthAvg": 909,
+  "issues": []
+}

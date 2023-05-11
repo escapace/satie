@@ -1,0 +1,17 @@
+{
+  "names": ["HelveticaNeue-Italic", "Helvetica Neue Italic"],
+  "weight": 400,
+  "italic": true,
+  "familyName": "Helvetica Neue",
+  "postscriptName": "HelveticaNeue-Italic",
+  "fullName": "Helvetica Neue Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 714,
+  "ascent": 957,
+  "descent": -213,
+  "lineGap": 28,
+  "unitsPerEm": 1000,
+  "xHeight": 517,
+  "xWidthAvg": 444,
+  "issues": []
+}

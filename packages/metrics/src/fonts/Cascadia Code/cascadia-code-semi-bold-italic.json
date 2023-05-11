@@ -1,0 +1,17 @@
+{
+  "names": ["CascadiaCode-SemiBoldItalic", "Cascadia Code SemiBold Italic"],
+  "weight": 600,
+  "italic": true,
+  "familyName": "Cascadia Code SemiBold",
+  "postscriptName": "CascadiaCode-SemiBoldItalic",
+  "fullName": "Cascadia Code SemiBold Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1420,
+  "ascent": 1900,
+  "descent": -480,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1060,
+  "xWidthAvg": 1200,
+  "issues": []
+}

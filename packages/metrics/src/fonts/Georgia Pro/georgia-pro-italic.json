@@ -1,0 +1,17 @@
+{
+  "names": ["GeorgiaPro-Italic", "Georgia Pro Italic"],
+  "weight": 400,
+  "italic": true,
+  "familyName": "Georgia Pro",
+  "postscriptName": "GeorgiaPro-Italic",
+  "fullName": "Georgia Pro Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1419,
+  "ascent": 1878,
+  "descent": -449,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1010,
+  "xWidthAvg": 918,
+  "issues": []
+}

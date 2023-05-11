@@ -1,0 +1,17 @@
+{
+  "names": ["CascadiaMono-ExtraLightItalic", "Cascadia Mono ExtraLight Italic"],
+  "weight": 200,
+  "italic": true,
+  "familyName": "Cascadia Mono ExtraLight",
+  "postscriptName": "CascadiaMono-ExtraLightItalic",
+  "fullName": "Cascadia Mono ExtraLight Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1420,
+  "ascent": 1900,
+  "descent": -480,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1060,
+  "xWidthAvg": 1200,
+  "issues": []
+}

@@ -1,0 +1,17 @@
+{
+  "names": ["CascadiaCode-Regular", "Cascadia Code Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Cascadia Code",
+  "postscriptName": "CascadiaCode-Regular",
+  "fullName": "Cascadia Code Regular",
+  "subfamilyName": "Regular",
+  "capHeight": 1420,
+  "ascent": 1900,
+  "descent": -480,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1060,
+  "xWidthAvg": 1200,
+  "issues": []
+}

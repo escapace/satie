@@ -1,6 +1,6 @@
 FROM node:18-alpine
 
-ARG PNPM_VERSION=8.0.0
+ARG PNPM_VERSION=8.4.0
 ENV PYTHONUNBUFFERED=1
 RUN apk add --update --no-cache \
   libxslt-dev libxml2-dev py3-brotli \

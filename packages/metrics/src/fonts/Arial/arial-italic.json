@@ -1,0 +1,17 @@
+{
+  "names": ["Arial-ItalicMT", "Arial Italic"],
+  "weight": 400,
+  "italic": true,
+  "familyName": "Arial",
+  "postscriptName": "Arial-ItalicMT",
+  "fullName": "Arial Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1466,
+  "ascent": 1854,
+  "descent": -434,
+  "lineGap": 67,
+  "unitsPerEm": 2048,
+  "xHeight": 1062,
+  "xWidthAvg": 904,
+  "issues": []
+}

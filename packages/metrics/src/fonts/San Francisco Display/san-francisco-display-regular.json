@@ -1,0 +1,17 @@
+{
+  "names": ["SanFranciscoDisplay-Regular", "San Francisco Display Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "San Francisco Display",
+  "postscriptName": "SanFranciscoDisplay-Regular",
+  "fullName": "San Francisco Display Regular",
+  "subfamilyName": "Regular",
+  "capHeight": 1364,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1047,
+  "xWidthAvg": 868,
+  "issues": []
+}

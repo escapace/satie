@@ -1,0 +1,17 @@
+{
+  "names": ["CascadiaCode-Italic", "Cascadia Code Italic"],
+  "weight": 400,
+  "italic": true,
+  "familyName": "Cascadia Code",
+  "postscriptName": "CascadiaCode-Italic",
+  "fullName": "Cascadia Code Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1420,
+  "ascent": 1900,
+  "descent": -480,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1060,
+  "xWidthAvg": 1200,
+  "issues": []
+}

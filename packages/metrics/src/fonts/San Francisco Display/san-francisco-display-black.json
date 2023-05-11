@@ -1,0 +1,17 @@
+{
+  "names": ["SanFranciscoDisplay-Black", "San Francisco Display Black"],
+  "weight": 900,
+  "italic": false,
+  "familyName": "San Francisco Display",
+  "postscriptName": "SanFranciscoDisplay-Black",
+  "fullName": "San Francisco Display Black",
+  "subfamilyName": "Black",
+  "capHeight": 1365,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1078,
+  "xWidthAvg": 973,
+  "issues": []
+}

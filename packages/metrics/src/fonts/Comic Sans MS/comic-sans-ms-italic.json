@@ -1,0 +1,17 @@
+{
+  "names": ["ComicSansMS-Italic", "Comic Sans MS Italic"],
+  "weight": 400,
+  "italic": true,
+  "familyName": "Comic Sans MS",
+  "postscriptName": "ComicSansMS-Italic",
+  "fullName": "Comic Sans MS Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1554,
+  "ascent": 2257,
+  "descent": -597,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1105,
+  "xWidthAvg": 958,
+  "issues": []
+}

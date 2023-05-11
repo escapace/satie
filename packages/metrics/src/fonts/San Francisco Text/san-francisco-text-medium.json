@@ -1,0 +1,17 @@
+{
+  "names": ["SanFranciscoText-Medium", "San Francisco Text Medium"],
+  "weight": 500,
+  "italic": false,
+  "familyName": "San Francisco Text",
+  "postscriptName": "SanFranciscoText-Medium",
+  "fullName": "San Francisco Text Medium",
+  "subfamilyName": "Medium",
+  "capHeight": 1365,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1056,
+  "xWidthAvg": 948,
+  "issues": []
+}

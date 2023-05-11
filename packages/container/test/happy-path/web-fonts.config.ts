@@ -69,7 +69,7 @@ const RU_NOTO_SANS_BOLD_ITALIC: TypeFont = {
   testString: '‎Русскийязык'
 }
 
-const EN_FALLBACK = ['-apple-system', 'BlinkMacSystemFont', 'segoe ui', 'helvetica neue', 'helvetica', 'Cantarell', 'Ubuntu', 'roboto', 'arial']
+const EN_FALLBACK = ['segoe ui', 'helvetica neue', 'helvetica', 'Cantarell', 'Ubuntu', 'roboto', 'arial']
 const RU_FALLBACK = EN_FALLBACK
 
 const locales: TypeLocales = {

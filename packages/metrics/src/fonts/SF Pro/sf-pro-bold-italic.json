@@ -1,0 +1,17 @@
+{
+  "names": ["SFPro-BoldItalic", "SF Pro Bold Italic"],
+  "weight": 700,
+  "italic": true,
+  "familyName": "SF Pro",
+  "postscriptName": "SFPro-BoldItalic",
+  "fullName": "SF Pro Bold Italic",
+  "subfamilyName": "Bold Italic",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1040,
+  "xWidthAvg": 937,
+  "issues": []
+}

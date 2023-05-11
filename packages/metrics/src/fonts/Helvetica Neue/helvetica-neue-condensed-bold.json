@@ -1,0 +1,26 @@
+{
+  "names": ["HelveticaNeue-CondensedBold", "Helvetica Neue Condensed Bold"],
+  "weight": 700,
+  "italic": false,
+  "familyName": "Helvetica Neue",
+  "postscriptName": "HelveticaNeue-CondensedBold",
+  "fullName": "Helvetica Neue Condensed Bold",
+  "subfamilyName": "Condensed Bold",
+  "capHeight": 714,
+  "ascent": 961,
+  "descent": -221,
+  "lineGap": 28,
+  "unitsPerEm": 1000,
+  "xHeight": 538,
+  "xWidthAvg": 400,
+  "issues": [
+    {
+      "type": 1,
+      "description": "xHeight is missing, relying on 'x' character height."
+    },
+    {
+      "type": 1,
+      "description": "capHeight is missing, relying on 'H' character height."
+    }
+  ]
+}

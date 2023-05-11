@@ -1,36 +1,24 @@
-import path from 'path'
-import { URL } from 'url'
-import { TypeInferFont } from '../types'
+import urljoin from 'url-join'
+import { State, TypeInferFontExtended } from '../types'
 
 export const fontFaceSrc = (
-  src: string[],
-  tech: TypeInferFont['tech'] = []
+  font: TypeInferFontExtended,
+  state: State
 ): string =>
-  src
-    .map((value) => {
-      switch (path.extname(new URL(value, 'https://example.org').pathname)) {
-        case '.woff2':
-          return `url(${value}) ${
-            tech.includes('variations')
-              ? 'format("woff2-variations")'
-              : 'format("woff2")'
-          }`
-        case '.woff':
-          return `url(${value}) ${
-            tech.includes('variations')
-              ? 'format("woff-variations")'
-              : 'format("woff")'
-          }`
-        // case '.ttf':
-        //   return `url(${value}) format("truetype")`
-        // case '.otf':
-        //   return `url(${value}) format("opentype")`
-        // case '.eot':
-        //   return `url(${value}) format("embedded-opentype")`
-        // case '.svg':
-        //   return `url(${value}) format("svg")`
-        default:
-          return `local(${value})`
+  font.format
+    .map((format) => ({
+      ...font,
+      format,
+      url: urljoin(state.publicPath, `${font.slug}.${format}`)
+    }))
+    .flatMap(({ url, format, tech }) => {
+      if ((tech ?? []).includes('variations')) {
+        return [
+          `url("${url}") format("${format}") tech("variations")`,
+          `url("${url}") format("${format}-variations")`
+        ]
+      } else {
+        return `url("${url}") format("${format}")`
       }
     })
     .join(', ')

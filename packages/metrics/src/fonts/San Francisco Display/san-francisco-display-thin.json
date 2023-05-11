@@ -1,0 +1,17 @@
+{
+  "names": ["SanFranciscoDisplay-Thin", "San Francisco Display Thin"],
+  "weight": 200,
+  "italic": false,
+  "familyName": "San Francisco Display",
+  "postscriptName": "SanFranciscoDisplay-Thin",
+  "fullName": "San Francisco Display Thin",
+  "subfamilyName": "Thin",
+  "capHeight": 1360,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1035,
+  "xWidthAvg": 845,
+  "issues": []
+}

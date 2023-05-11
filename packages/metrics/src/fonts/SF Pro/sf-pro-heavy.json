@@ -1,0 +1,17 @@
+{
+  "names": ["SFPro-Heavy", "SF Pro Heavy"],
+  "weight": 800,
+  "italic": false,
+  "familyName": "SF Pro",
+  "postscriptName": "SFPro-Heavy",
+  "fullName": "SF Pro Heavy",
+  "subfamilyName": "Heavy",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1040,
+  "xWidthAvg": 958,
+  "issues": []
+}

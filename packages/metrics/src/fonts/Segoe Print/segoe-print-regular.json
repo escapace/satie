@@ -1,0 +1,17 @@
+{
+  "names": ["SegoePrint", "Segoe Print", "Segoe Print Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Segoe Print",
+  "postscriptName": "SegoePrint",
+  "fullName": "Segoe Print",
+  "subfamilyName": "Regular",
+  "capHeight": 1392,
+  "ascent": 2555,
+  "descent": -1014,
+  "lineGap": 46,
+  "unitsPerEm": 2048,
+  "xHeight": 1020,
+  "xWidthAvg": 1054,
+  "issues": []
+}

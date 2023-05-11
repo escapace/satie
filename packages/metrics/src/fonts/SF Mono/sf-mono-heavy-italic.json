@@ -1,0 +1,17 @@
+{
+  "names": ["SFMono-HeavyItalic", "SF Mono Heavy Italic"],
+  "weight": 900,
+  "italic": true,
+  "familyName": "SF Mono",
+  "postscriptName": "SFMono-HeavyItalic",
+  "fullName": "SF Mono Heavy Italic",
+  "subfamilyName": "Heavy Italic",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1113,
+  "xWidthAvg": 1266,
+  "issues": []
+}

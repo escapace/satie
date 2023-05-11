@@ -1,0 +1,17 @@
+{
+  "names": ["SegoeUI-SemiboldItalic", "Segoe UI Semibold Italic"],
+  "weight": 600,
+  "italic": true,
+  "familyName": "Segoe UI Semibold",
+  "postscriptName": "SegoeUI-SemiboldItalic",
+  "fullName": "Segoe UI Semibold Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1434,
+  "ascent": 2210,
+  "descent": -514,
+  "lineGap": 9,
+  "unitsPerEm": 2048,
+  "xHeight": 1024,
+  "xWidthAvg": 923,
+  "issues": []
+}

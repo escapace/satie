@@ -1,0 +1,17 @@
+{
+  "names": ["Georgia", "Georgia Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Georgia",
+  "postscriptName": "Georgia",
+  "fullName": "Georgia",
+  "subfamilyName": "Regular",
+  "capHeight": 1419,
+  "ascent": 1878,
+  "descent": -449,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 986,
+  "xWidthAvg": 899,
+  "issues": []
+}

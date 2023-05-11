@@ -1,22 +1,22 @@
-import { AtRule } from 'csstype'
 import { openSync } from 'fontkit'
-import { transform } from 'lightningcss'
 import {
   compact,
   find,
   flatMap,
-  forEach,
+  intersection,
   isEqual,
   kebabCase,
   map,
   pick,
   toLower,
-  uniq
+  uniq,
+  uniqBy
 } from 'lodash-es'
 import path from 'path'
 import urljoin from 'url-join'
 import { SLUG_NON_PARTS } from '../constants'
 import {
+  FontFace,
   ResourceHint,
   State,
   TypeFontIssue,
@@ -29,12 +29,12 @@ import { combinations } from './combinations'
 import { createSlug } from './create-slug'
 import { describeFont } from './describe-font'
 import { fontFaceSrc } from './font-face-src'
+import { fontFamilyToCamelCase } from './font-family-to-camel-case'
 import { metricsFromFont } from './metrics-from-fonts'
 import { quoteFontFamily } from './quote-font-family'
 import { style } from './style'
 import { toposort } from './toposort'
 import { writeFont } from './write-font'
-import { fontFamilyToCamelCase } from './font-family-to-camel-case'
 
 const createFontExtended = (
   slug: string,
@@ -157,9 +157,6 @@ const orederFonts = (initial: TypeInferFont[], state: State) => {
   return { fonts: sortedFonts, graph }
 }
 
-type FontFace = Omit<AtRule.FontFace, 'src' | 'fontFamily'> &
-  Required<Pick<AtRule.FontFace, 'src' | 'fontFamily'>>
-
 const createFontFaces = (
   fonts: TypeInferFontExtended[],
   fallbackFontFamilies: string[],
@@ -168,8 +165,8 @@ const createFontFaces = (
   const primaryFont = fonts[0]
   const metrics = fonts[0].metrics
 
-  const fallbackFontFaces = fallbackFontFamilies.map(
-    (fallbackFontFamily): FontFace => {
+  const fallbackFontFaces = uniqBy(
+    fallbackFontFamilies.map((fallbackFontFamily): FontFace => {
       const fallbackMetrics = state.metrics.get(
         toLower(fontFamilyToCamelCase(fallbackFontFamily))
       )
@@ -178,34 +175,45 @@ const createFontFaces = (
         throw new Error(`Unknown fallback font ${fallbackFontFamily}`)
       }
 
+      // TODO: choose closest available fallback font weight and style
+      const bla = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+
+      const qweqwe =
+        typeof primaryFont.weight === 'undefined'
+          ? 400
+          : Array.isArray(primaryFont.weight)
+          ? (primaryFont.weight[1] - primaryFont.weight[0]) / 2
+          : primaryFont.weight
+
+      const closest = bla.reduce(function (prev, curr) {
+        return Math.abs(curr - qweqwe) < Math.abs(prev - qweqwe) ? curr : prev
+      })
+
       return {
         fontFamily: `${primaryFont.slug}-${kebabCase(
           fallbackMetrics.familyName
         )}`,
-        src: `local('${fallbackMetrics.familyName}')`,
+        src: `local("${fallbackMetrics.familyName}")`,
         ...calculateOverrideValues({
           metrics,
           fallbackMetrics
-        })
+        }),
+        fontWeight: closest === 400 ? undefined : closest
       }
-    }
+    }),
+    (value) => value.fontFamily.toLowerCase()
   )
 
   const fontFaces = Object.fromEntries(
     fonts.map((value, index): [string, FontFace] => {
-      const srcOfFormat = (format: 'woff' | 'woff2') =>
-        urljoin(state.publicPath, `${value.slug}.${format}`)
-
-      const src: string[] = value.format.map((format) => srcOfFormat(format))
-
       return [
         value.slug,
         {
-          fontFamily:
-            index === 0
-              ? value.family
-              : `${primaryFont.slug}-${kebabCase(value.family)}`,
-          src: fontFaceSrc(src, value.tech),
+          fontFamily: value.family,
+          // index === 0
+          //   ? value.family
+          //   : `${primaryFont.slug}-${kebabCase(value.family)}`,
+          src: fontFaceSrc(value, state),
           fontWeight:
             value.weight === undefined
               ? undefined
@@ -239,41 +247,21 @@ const createFontFaces = (
     })
   )
 
-  const toCssProperty = (property: string) =>
-    property.replace(/([A-Z])/g, (property) => `-${property.toLowerCase()}`)
+  const toValues = (): FontFace[] => [
+    ...Object.values(fontFaces),
+    ...fallbackFontFaces
+  ]
 
-  const toArray = () =>
-    [...Object.values(fontFaces), ...fallbackFontFaces].map(
-      ({ fontFamily, src, ...restFontFaceProperties }) => {
-        const fontFace = [
-          '@font-face {',
-          `  font-family: ${quoteFontFamily(fontFamily)};`,
-          `  src: ${src};`
-        ]
+  const overlap = intersection(
+    fallbackFontFaces.map((value) => value.fontFamily.toLowerCase()),
+    Object.values(fontFaces).map((value) => value.fontFamily.toLowerCase())
+  )
 
-        forEach(restFontFaceProperties, (value, property) => {
-          if (value !== undefined) {
-            fontFace.push(`${toCssProperty(property)}: ${value?.toString()};`)
-          }
-        })
+  if (overlap.length !== 0) {
+    throw new Error(`Fallback font family conflict for ${overlap.join(', ')}.`)
+  }
 
-        fontFace.push('}')
-
-        const { code } = transform({
-          targets: state.targets.lightningCSS,
-          filename: 'style.css',
-          code: Buffer.from(fontFace.join('\n')),
-          minify: false,
-          drafts: {
-            nesting: true
-          }
-        })
-
-        return code.toString('utf8')
-      }
-    )
-
-  return { fontFaces, fallbackFontFaces, toArray }
+  return { fontFaces, fallbackFontFaces, toValues }
 }
 
 export const createClass = (
@@ -282,7 +270,6 @@ export const createClass = (
   initialClass: TypeInferClass,
   state: State
 ) => {
-  // const fallbacks =
   const ordered = orederFonts(initialClass.fontFamily.fonts, state)
 
   const resourceHint: ResourceHint[] = flatMap(
@@ -290,13 +277,13 @@ export const createClass = (
     (value) => value.resourceHint
   )
 
-  const { fallbackFontFaces, fontFaces, toArray } = createFontFaces(
+  const { fallbackFontFaces, fontFaces, toValues } = createFontFaces(
     ordered.fonts,
     initialClass.fontFamily.fallbacks,
     state
   )
 
-  const fallbacks = uniq(fallbackFontFaces.map((value) => value.fontFamily))
+  const fallbacks = fallbackFontFaces.map((value) => value.fontFamily)
 
   const selectorFallback = `html:lang(${locale}) .${className}`
 
@@ -372,7 +359,7 @@ export const createClass = (
   return {
     className,
     resourceHint: uniq(resourceHint),
-    fontFace: uniq(toArray()),
+    fontFace: toValues(),
     noScriptStyle: uniq(noScriptStyle),
     style: uniq(styles),
     fonts: ordered.fonts,

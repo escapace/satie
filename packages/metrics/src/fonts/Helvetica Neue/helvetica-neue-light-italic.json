@@ -1,0 +1,26 @@
+{
+  "names": ["HelveticaNeue-LightItalic", "Helvetica Neue Light Italic"],
+  "weight": 300,
+  "italic": true,
+  "familyName": "Helvetica Neue",
+  "postscriptName": "HelveticaNeue-LightItalic",
+  "fullName": "Helvetica Neue Light Italic",
+  "subfamilyName": "Light Italic",
+  "capHeight": 714,
+  "ascent": 951,
+  "descent": -213,
+  "lineGap": 28,
+  "unitsPerEm": 1000,
+  "xHeight": 516,
+  "xWidthAvg": 429,
+  "issues": [
+    {
+      "type": 1,
+      "description": "xHeight is missing, relying on 'x' character height."
+    },
+    {
+      "type": 1,
+      "description": "capHeight is missing, relying on 'H' character height."
+    }
+  ]
+}

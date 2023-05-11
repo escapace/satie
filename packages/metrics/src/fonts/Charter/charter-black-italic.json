@@ -1,0 +1,26 @@
+{
+  "names": ["Charter-BlackItalic", "Charter Black Italic"],
+  "weight": 900,
+  "italic": true,
+  "familyName": "Charter Black",
+  "postscriptName": "Charter-BlackItalic",
+  "fullName": "Charter Black Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1374,
+  "ascent": 2007,
+  "descent": -492,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1050,
+  "xWidthAvg": 1056,
+  "issues": [
+    {
+      "type": 1,
+      "description": "xHeight is missing, relying on 'x' character height."
+    },
+    {
+      "type": 1,
+      "description": "capHeight is missing, relying on 'H' character height."
+    }
+  ]
+}

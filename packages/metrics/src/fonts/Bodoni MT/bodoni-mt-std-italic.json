@@ -1,0 +1,17 @@
+{
+  "names": ["BodoniMTStd-Italic", "Bodoni MT Std Italic"],
+  "weight": 400,
+  "italic": true,
+  "familyName": "Bodoni MT Std",
+  "postscriptName": "BodoniMTStd-Italic",
+  "fullName": "BodoniMTStd-Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 655,
+  "ascent": 672,
+  "descent": -328,
+  "lineGap": 200,
+  "unitsPerEm": 1000,
+  "xHeight": 396,
+  "xWidthAvg": 388,
+  "issues": []
+}

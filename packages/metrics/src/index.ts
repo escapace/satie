@@ -1,134 +1,201 @@
-import {
-  FontMetrics,
-  fontFamilyToCamelCase,
-  metricsFromFont,
-  TypeFontIssue
-} from '@escapace/web-fonts-container'
-import { openSync } from 'fontkit'
-import { readFile, writeFile } from 'fs/promises'
-import { intersection, isEqual, keys, omit } from 'lodash-es'
+import { TypeFontIssue, metricsFromFont } from '@escapace/web-fonts-container'
+import arg from 'arg'
+import chalk from 'chalk'
+import { Font, openSync } from 'fontkit'
+import { existsSync, readFileSync, renameSync, writeFileSync } from 'fs'
+import { isEqual, kebabCase, noop, uniq } from 'lodash-es'
 import path from 'path'
-import { fileURLToPath } from 'url'
 
-// function fontFamilyToCamelCase(str: string) {
-//   return str
-//     .split(/[\s|-]/)
-//     .filter(Boolean)
-//     .map(
-//       (s, i) =>
-//         `${s.charAt(0)[i > 0 ? 'toUpperCase' : 'toLowerCase']()}${s.slice(1)}`
-//     )
-//     .join('')
-// }
+const ICON = '>'
 
-const directory = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
-  'fonts'
+const WEIGHTS: Array<[number, string[]]> = [
+  [100, ['thin', 'hairline']],
+  [200, ['extra light', 'ultra light']],
+  [300, ['light']],
+  [400, ['normal', 'regular']],
+  [500, ['medium']],
+  [600, ['semi bold', 'demi bold']],
+  [700, ['bold']],
+  [800, ['extra bold', 'ultra bold']],
+  [900, ['black', 'heavy']],
+  [950, ['extra black', 'ultra black']]
+]
+
+const args = arg(
+  {
+    '--path': String,
+    '--name': String,
+    '--weight': Number,
+    '--italic': Boolean,
+    '--variable': Boolean
+  },
+  {
+    permissive: false
+  }
 )
 
-const from = (
-  filename: string,
-  postscriptName?: string,
-  overrides?: Partial<FontMetrics>
-): FontMetrics => {
+const help = (): never => {
+  console.error('error')
+  process.exit(1)
+}
+
+if (typeof args['--path'] !== 'string') {
+  help()
+}
+
+const filepath = path.resolve(process.cwd(), args['--path'] as string)
+
+if (!existsSync(filepath)) {
+  help()
+}
+
+if (
+  typeof args['--weight'] === 'number' &&
+  !WEIGHTS.map(([weight]) => weight).includes(args['--weight'])
+) {
+  help()
+  process.exit(1)
+}
+
+const extension = path.extname(filepath)
+const filename = path.basename(filepath)
+const directory = path.dirname(filepath)
+
+let RENAME = extension !== '.ttc'
+
+if (extension === '.ttc' && typeof args['--name'] === 'undefined') {
+  help()
+  process.exit(1)
+}
+
+const openFont = (): Font => {
   try {
-    const metrics = {
-      ...metricsFromFont(
-        openSync(path.join(directory, filename), postscriptName)
-      ),
-      ...overrides
+    if (args['--variable'] === true) {
+      RENAME = false
+
+      const font = openSync(filepath)
+      // @ts-expect-error typings
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return (font.getVariation as Function)(args['--name'])
+    } else {
+      const font = openSync(filepath, args['--name'])
+      noop(metricsFromFont(font))
+
+      return font
     }
-
-    const issues = metrics.issues ?? []
-
-    issues.forEach(({ description }) => {
-      console.warn(`${filename} (${metrics.familyName}): ${description}`)
-    })
-
-    issues.forEach(({ type }) => {
-      if (type === TypeFontIssue.Error) {
-        throw new Error(
-          `${filename} (${metrics.familyName}): Critical issue(s).`
-        )
-      }
-    })
-
-    return metrics
-  } catch (e) {
-    console.error(`Issue with ${filename}`)
-
-    throw e
+  } catch {
+    console.log(`${chalk.red(ICON)} ${filename}: unable to load font.`)
+    process.exit(1)
   }
 }
 
-const fonts: FontMetrics[] = [
-  from('Arial Nova.otf'),
-  from('Avenir Next LT Pro.otf'),
-  from('Avenir.ttc', 'Avenir-Roman'),
-  from('Bahnschrift.ttf'),
-  from('Bitstream Charter.otf', undefined, { familyName: 'Bitstream Charter' }),
-  from('Bodoni MT.otf'),
-  from('Bradley Hand.ttf'),
-  from('Cascadia Code.otf'),
-  from('Cascadia Mono.otf'),
-  from('Charter.ttc', 'Charter-Roman'),
-  from('Courier New.ttf'),
-  from('DejaVu Sans Mono.ttf'),
-  from('DejaVu Sans.ttf'),
-  from('DejaVu Serif.ttf'),
-  from('Didot.ttc', 'Didot'),
-  from('DIN Alternate.ttf'),
-  from('Droid Sans Mono.ttf'),
-  from('Gill Sans Nova.ttf'),
-  from('Hiragino Maru Gothic ProN.ttc', 'HiraMaruProN-W4'),
-  from('Lucida Grande.ttc', 'LucidaGrande'),
-  from('Menlo.ttc', 'Menlo-Regular'),
-  from('Optima.ttc', 'Optima-Regular'),
-  from('Palatino.ttc', 'Palatino-Roman'),
-  from('Rockwell.ttc', 'Rockwell-Regular'),
-  from('San Francisco Display.otf'),
-  from('San Francisco Text.otf'),
-  from('SF Mono.otf'),
-  from('SF Pro Display.otf'),
-  from('SF Pro Rounded.otf'),
-  from('SF Pro Text.otf'),
-  from('SF Pro.ttf')
-]
+const font = openFont()
 
-const dirname = path.dirname(fileURLToPath(import.meta.url))
+const content = metricsFromFont(font)
 
-const capsizeFontMetrics = JSON.parse(
-  await readFile(path.join(dirname, 'capsize-font-metrics.json'), 'utf8')
-) as Record<string, FontMetrics>
+const issues = content.issues ?? []
 
-const fontMetrics = Object.fromEntries(
-  fonts
-    .sort((a, b) => {
-      const fontA = a.familyName.toUpperCase()
-      const fontB = b.familyName.toUpperCase()
+issues.forEach(({ description, type }) => {
+  const icon =
+    type === TypeFontIssue.Error ? chalk.red(ICON) : chalk.yellow(ICON)
 
-      return fontA < fontB ? -1 : fontA > fontB ? 1 : 0
-    })
-    .map((value): [string, FontMetrics] => [
-      fontFamilyToCamelCase(value.familyName),
-      value
-    ])
-)
-
-intersection(keys(capsizeFontMetrics), keys(fontMetrics)).forEach((key) => {
-  const capsizeValue = omit(capsizeFontMetrics[key], ['category'])
-  const value = omit(fontMetrics[key], ['issues'])
-
-  if (!isEqual(capsizeValue, value)) {
-    console.error('Conflicting values.')
-    console.error(
-      JSON.stringify({ capsize: capsizeValue, current: value }, null, 2)
-    )
-    process.exit(1)
+  if (type === TypeFontIssue.Error) {
+    console.error(`${icon} ${filename}: ${description}`)
+  } else {
+    console.warn(`${icon} ${filename}: ${description}`)
   }
 })
 
-await writeFile(
-  path.resolve(dirname, '../../container/src/metrics.json'),
-  JSON.stringify({ ...capsizeFontMetrics, ...fontMetrics }, null, 2)
+const hasCriticalIssues = issues.some(
+  ({ type }) => type === TypeFontIssue.Error
 )
+
+if (hasCriticalIssues) {
+  console.error(
+    `${chalk.red(ICON)} ${filename}: unable to continue due to critical issues.`
+  )
+  process.exit(1)
+}
+
+if (args['--variable'] === true) {
+  content.subfamilyName = args['--name'] as string
+  content.fullName = `${content.familyName} ${content.subfamilyName}`
+  content.postscriptName = `${content.familyName.replace(
+    /\s/g,
+    ''
+  )}-${content.subfamilyName.replace(/\s/g, '')}`
+}
+
+const weights = WEIGHTS.filter(
+  ([_, strings]) =>
+    strings.filter(
+      (string) =>
+        content.postscriptName.toLowerCase().includes(string) ||
+        content.postscriptName.toLowerCase().includes(kebabCase(string)) ||
+        kebabCase(content.postscriptName).includes(kebabCase(string)) ||
+        kebabCase(content.subfamilyName).includes(kebabCase(string))
+    ).length !== 0
+).map(([weight]) => weight)
+
+if (
+  typeof args['--weight'] === 'undefined' &&
+  (weights.length === 0 || weights.length > 1)
+) {
+  console.error(
+    `${chalk.red(ICON)} ${filename}: unable to determine the weight.`
+  )
+  process.exit(1)
+}
+
+const weight = args['--weight'] ?? weights[0]
+const italic =
+  args['--italic'] === undefined
+    ? content.postscriptName.toLowerCase().toLowerCase().includes('italic') ||
+      content.subfamilyName.toLowerCase().toLowerCase().includes('italic') ||
+      content.fullName.toLowerCase().toLowerCase().includes('italic') ||
+      content.postscriptName.toLowerCase().toLowerCase().includes('oblique') ||
+      content.subfamilyName.toLowerCase().toLowerCase().includes('oblique') ||
+      content.fullName.toLowerCase().toLowerCase().includes('oblique')
+    : args['--italic']
+
+const newFilename = `${kebabCase(
+  `${content.familyName}-${content.subfamilyName}`
+)}${extension}`
+const newPath = path.join(directory, newFilename)
+const rename = RENAME && filename !== newFilename
+
+const jsonFilename = `${kebabCase(
+  `${content.familyName}-${content.subfamilyName}`
+)}.json`
+const jsonPath = path.join(directory, jsonFilename)
+
+if (rename) {
+  if (existsSync(newPath)) {
+    console.error(
+      `${chalk.red(ICON)} Unable to rename '${filename}' to '${newFilename}'.`
+    )
+    process.exit(1)
+  }
+}
+
+const names = uniq([
+  content.postscriptName,
+  content.fullName,
+  `${content.familyName} ${content.subfamilyName}`
+])
+
+const json = JSON.stringify({ names, weight, italic, ...content }, null, 2)
+
+if (existsSync(jsonPath) && !isEqual(readFileSync(jsonPath, 'utf8'), json)) {
+  console.error(`${chalk.red(ICON)} Unable to write '${jsonFilename}'.`)
+  process.exit(1)
+}
+
+if (rename) {
+  renameSync(filepath, newPath)
+  console.info(`Renamed '${filename}' to '${newFilename}'.`)
+}
+
+writeFileSync(jsonPath, json)
+
+console.info(`Wrote '${jsonFilename}'.`)

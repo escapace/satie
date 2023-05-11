@@ -1,0 +1,17 @@
+{
+  "names": ["Palatino-Italic", "Palatino Italic"],
+  "weight": 400,
+  "italic": true,
+  "familyName": "Palatino",
+  "postscriptName": "Palatino-Italic",
+  "fullName": "Palatino Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1419,
+  "ascent": 1685,
+  "descent": -568,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 976,
+  "xWidthAvg": 818,
+  "issues": []
+}

@@ -1,0 +1,20 @@
+{
+  "names": [
+    "SanFranciscoText-MediumItalic",
+    "San Francisco Text Medium Italic"
+  ],
+  "weight": 500,
+  "italic": true,
+  "familyName": "San Francisco Text",
+  "postscriptName": "SanFranciscoText-MediumItalic",
+  "fullName": "San Francisco Text Medium Italic",
+  "subfamilyName": "Medium Italic",
+  "capHeight": 1366,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1056,
+  "xWidthAvg": 936,
+  "issues": []
+}

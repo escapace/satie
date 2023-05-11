@@ -1,0 +1,17 @@
+{
+  "names": ["CascadiaCode-ExtraLightItalic", "Cascadia Code ExtraLight Italic"],
+  "weight": 200,
+  "italic": true,
+  "familyName": "Cascadia Code ExtraLight",
+  "postscriptName": "CascadiaCode-ExtraLightItalic",
+  "fullName": "Cascadia Code ExtraLight Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1420,
+  "ascent": 1900,
+  "descent": -480,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1060,
+  "xWidthAvg": 1200,
+  "issues": []
+}

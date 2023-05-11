@@ -1,0 +1,20 @@
+{
+  "names": [
+    "SanFranciscoText-SemiboldItalic",
+    "San Francisco Text Semibold Italic"
+  ],
+  "weight": 600,
+  "italic": true,
+  "familyName": "San Francisco Text",
+  "postscriptName": "SanFranciscoText-SemiboldItalic",
+  "fullName": "San Francisco Text Semibold Italic",
+  "subfamilyName": "Semibold Italic",
+  "capHeight": 1365,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1059,
+  "xWidthAvg": 946,
+  "issues": []
+}

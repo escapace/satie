@@ -1,0 +1,21 @@
+{
+  "names": [
+    "SegoeUI-Semibold",
+    "Segoe UI Semibold",
+    "Segoe UI Semibold Regular"
+  ],
+  "weight": 600,
+  "italic": false,
+  "familyName": "Segoe UI Semibold",
+  "postscriptName": "SegoeUI-Semibold",
+  "fullName": "Segoe UI Semibold",
+  "subfamilyName": "Regular",
+  "capHeight": 1434,
+  "ascent": 2210,
+  "descent": -514,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1024,
+  "xWidthAvg": 934,
+  "issues": []
+}

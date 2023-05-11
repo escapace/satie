@@ -1,0 +1,17 @@
+{
+  "names": ["SFProText-Black", "SF Pro Text Black"],
+  "weight": 900,
+  "italic": false,
+  "familyName": "SF Pro Text",
+  "postscriptName": "SFProText-Black",
+  "fullName": "SF Pro Text Black",
+  "subfamilyName": "Black",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1124,
+  "xWidthAvg": 1088,
+  "issues": []
+}

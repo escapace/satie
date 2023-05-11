@@ -1,0 +1,17 @@
+{
+  "names": ["SegoePrint-Bold", "Segoe Print Bold"],
+  "weight": 700,
+  "italic": false,
+  "familyName": "Segoe Print",
+  "postscriptName": "SegoePrint-Bold",
+  "fullName": "Segoe Print Bold",
+  "subfamilyName": "Bold",
+  "capHeight": 1394,
+  "ascent": 2555,
+  "descent": -1014,
+  "lineGap": 46,
+  "unitsPerEm": 2048,
+  "xHeight": 1037,
+  "xWidthAvg": 1050,
+  "issues": []
+}

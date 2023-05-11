@@ -1,0 +1,20 @@
+{
+  "names": [
+    "SanFranciscoDisplay-Ultralight",
+    "San Francisco Display Ultralight"
+  ],
+  "weight": 100,
+  "italic": false,
+  "familyName": "San Francisco Display",
+  "postscriptName": "SanFranciscoDisplay-Ultralight",
+  "fullName": "San Francisco Display Ultralight",
+  "subfamilyName": "Ultralight",
+  "capHeight": 1358,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1030,
+  "xWidthAvg": 836,
+  "issues": []
+}

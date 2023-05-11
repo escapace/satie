@@ -1,0 +1,17 @@
+{
+  "names": ["BodoniMTStd-UltraBoldIt", "Bodoni MT Std Ultra Bold Italic"],
+  "weight": 900,
+  "italic": true,
+  "familyName": "Bodoni MT Std Ultra Bold",
+  "postscriptName": "BodoniMTStd-UltraBoldIt",
+  "fullName": "BodoniMTStd-UltraBoldIt",
+  "subfamilyName": "Italic",
+  "capHeight": 703,
+  "ascent": 719,
+  "descent": -281,
+  "lineGap": 200,
+  "unitsPerEm": 1000,
+  "xHeight": 486,
+  "xWidthAvg": 561,
+  "issues": []
+}

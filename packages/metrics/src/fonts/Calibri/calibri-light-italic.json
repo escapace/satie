@@ -1,0 +1,17 @@
+{
+  "names": ["Calibri-LightItalic", "Calibri Light Italic"],
+  "weight": 300,
+  "italic": true,
+  "familyName": "Calibri Light",
+  "postscriptName": "Calibri-LightItalic",
+  "fullName": "Calibri Light Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1294,
+  "ascent": 1536,
+  "descent": -512,
+  "lineGap": 452,
+  "unitsPerEm": 2048,
+  "xHeight": 951,
+  "xWidthAvg": 817,
+  "issues": []
+}

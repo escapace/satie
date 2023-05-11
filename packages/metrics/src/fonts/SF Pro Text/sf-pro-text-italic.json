@@ -1,0 +1,17 @@
+{
+  "names": ["SFProText-RegularItalic", "SF Pro Text Regular Italic"],
+  "weight": 400,
+  "italic": true,
+  "familyName": "SF Pro Text",
+  "postscriptName": "SFProText-RegularItalic",
+  "fullName": "SF Pro Text Regular Italic",
+  "subfamilyName": "Regular Italic",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1078,
+  "xWidthAvg": 968,
+  "issues": []
+}

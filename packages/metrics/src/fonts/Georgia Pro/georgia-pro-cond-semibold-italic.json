@@ -1,0 +1,20 @@
+{
+  "names": [
+    "GeorgiaPro-CondSemiboldItalic",
+    "Georgia Pro Cond Semibold Italic"
+  ],
+  "weight": 600,
+  "italic": true,
+  "familyName": "Georgia Pro Cond Semibold",
+  "postscriptName": "GeorgiaPro-CondSemiboldItalic",
+  "fullName": "Georgia Pro Cond Semibold Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1419,
+  "ascent": 1878,
+  "descent": -449,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1024,
+  "xWidthAvg": 903,
+  "issues": []
+}

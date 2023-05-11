@@ -1,0 +1,17 @@
+{
+  "names": ["SFProText-Medium", "SF Pro Text Medium"],
+  "weight": 500,
+  "italic": false,
+  "familyName": "SF Pro Text",
+  "postscriptName": "SFProText-Medium",
+  "fullName": "SF Pro Text Medium",
+  "subfamilyName": "Medium",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1086,
+  "xWidthAvg": 988,
+  "issues": []
+}

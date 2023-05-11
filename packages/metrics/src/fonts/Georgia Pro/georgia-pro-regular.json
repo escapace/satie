@@ -1,0 +1,17 @@
+{
+  "names": ["GeorgiaPro-Regular", "Georgia Pro", "Georgia Pro Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Georgia Pro",
+  "postscriptName": "GeorgiaPro-Regular",
+  "fullName": "Georgia Pro",
+  "subfamilyName": "Regular",
+  "capHeight": 1419,
+  "ascent": 1878,
+  "descent": -449,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 985,
+  "xWidthAvg": 898,
+  "issues": []
+}

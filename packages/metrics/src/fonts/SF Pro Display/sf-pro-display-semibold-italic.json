@@ -1,0 +1,17 @@
+{
+  "names": ["SFProDisplay-SemiboldItalic", "SF Pro Display Semibold Italic"],
+  "weight": 600,
+  "italic": true,
+  "familyName": "SF Pro Display",
+  "postscriptName": "SFProDisplay-SemiboldItalic",
+  "fullName": "SF Pro Display Semibold Italic",
+  "subfamilyName": "Semibold Italic",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1062,
+  "xWidthAvg": 910,
+  "issues": []
+}

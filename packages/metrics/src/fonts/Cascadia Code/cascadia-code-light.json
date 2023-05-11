@@ -1,0 +1,21 @@
+{
+  "names": [
+    "CascadiaCode-Light",
+    "Cascadia Code Light",
+    "Cascadia Code Light Regular"
+  ],
+  "weight": 300,
+  "italic": false,
+  "familyName": "Cascadia Code Light",
+  "postscriptName": "CascadiaCode-Light",
+  "fullName": "Cascadia Code Light",
+  "subfamilyName": "Regular",
+  "capHeight": 1420,
+  "ascent": 1900,
+  "descent": -480,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1060,
+  "xWidthAvg": 1200,
+  "issues": []
+}

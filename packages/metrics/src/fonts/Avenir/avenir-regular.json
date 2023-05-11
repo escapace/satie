@@ -1,0 +1,17 @@
+{
+  "names": ["Avenir-Roman", "Avenir Roman", "Avenir Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Avenir",
+  "postscriptName": "Avenir-Roman",
+  "fullName": "Avenir Roman",
+  "subfamilyName": "Regular",
+  "capHeight": 708,
+  "ascent": 1000,
+  "descent": -366,
+  "lineGap": 0,
+  "unitsPerEm": 1000,
+  "xHeight": 468,
+  "xWidthAvg": 450,
+  "issues": []
+}

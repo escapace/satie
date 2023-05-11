@@ -1,0 +1,20 @@
+{
+  "names": [
+    "SFProDisplay-UltralightItalic",
+    "SF Pro Display Ultralight Italic"
+  ],
+  "weight": 100,
+  "italic": true,
+  "familyName": "SF Pro Display",
+  "postscriptName": "SFProDisplay-UltralightItalic",
+  "fullName": "SF Pro Display Ultralight Italic",
+  "subfamilyName": "Ultralight Italic",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1040,
+  "xWidthAvg": 797,
+  "issues": []
+}

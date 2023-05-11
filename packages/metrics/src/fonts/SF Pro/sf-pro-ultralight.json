@@ -1,0 +1,17 @@
+{
+  "names": ["SFPro-Ultralight", "SF Pro Ultralight"],
+  "weight": 100,
+  "italic": false,
+  "familyName": "SF Pro",
+  "postscriptName": "SFPro-Ultralight",
+  "fullName": "SF Pro Ultralight",
+  "subfamilyName": "Ultralight",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1040,
+  "xWidthAvg": 786,
+  "issues": []
+}

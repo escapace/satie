@@ -1,0 +1,30 @@
+{
+  "names": [
+    "DejaVuSerifCondensed",
+    "DejaVu Serif Condensed",
+    "DejaVu Serif Condensed Book"
+  ],
+  "weight": 400,
+  "italic": false,
+  "familyName": "DejaVu Serif Condensed",
+  "postscriptName": "DejaVuSerifCondensed",
+  "fullName": "DejaVu Serif Condensed",
+  "subfamilyName": "Book",
+  "capHeight": 1493,
+  "ascent": 1901,
+  "descent": -483,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1063,
+  "xWidthAvg": 943,
+  "issues": [
+    {
+      "type": 1,
+      "description": "xHeight is missing, relying on 'x' character height."
+    },
+    {
+      "type": 1,
+      "description": "capHeight is missing, relying on 'H' character height."
+    }
+  ]
+}

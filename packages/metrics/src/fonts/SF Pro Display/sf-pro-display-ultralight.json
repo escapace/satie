@@ -1,0 +1,17 @@
+{
+  "names": ["SFProDisplay-Ultralight", "SF Pro Display Ultralight"],
+  "weight": 100,
+  "italic": false,
+  "familyName": "SF Pro Display",
+  "postscriptName": "SFProDisplay-Ultralight",
+  "fullName": "SF Pro Display Ultralight",
+  "subfamilyName": "Ultralight",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1040,
+  "xWidthAvg": 785,
+  "issues": []
+}

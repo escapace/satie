@@ -1,0 +1,26 @@
+{
+  "names": ["Optima-ExtraBlack", "Optima ExtraBlack"],
+  "weight": 900,
+  "italic": false,
+  "familyName": "Optima",
+  "postscriptName": "Optima-ExtraBlack",
+  "fullName": "Optima ExtraBlack",
+  "subfamilyName": "ExtraBlack",
+  "capHeight": 716,
+  "ascent": 961,
+  "descent": -262,
+  "lineGap": 26,
+  "unitsPerEm": 1000,
+  "xHeight": 524,
+  "xWidthAvg": 502,
+  "issues": [
+    {
+      "type": 1,
+      "description": "xHeight is missing, relying on 'x' character height."
+    },
+    {
+      "type": 1,
+      "description": "capHeight is missing, relying on 'H' character height."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "names": ["Monaco", "Monaco Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Monaco",
+  "postscriptName": "Monaco",
+  "fullName": "Monaco",
+  "subfamilyName": "Regular",
+  "capHeight": 1552,
+  "ascent": 2048,
+  "descent": -512,
+  "lineGap": 171,
+  "unitsPerEm": 2048,
+  "xHeight": 1117,
+  "xWidthAvg": 1229,
+  "issues": []
+}

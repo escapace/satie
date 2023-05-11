@@ -1,6 +1,8 @@
 import {
   flatMap,
+  forEach,
   fromPairs,
+  isEqual,
   keys,
   last,
   map,
@@ -10,6 +12,7 @@ import {
   reduce,
   uniq,
   uniqBy,
+  uniqWith,
   values
 } from 'lodash-es'
 import {
@@ -17,16 +20,18 @@ import {
   DataFont,
   DataLocale,
   DataLocales,
+  FontFace,
   ResourceHint,
   State
 } from '../types'
 import { createClass } from '../utilities/create-class'
 import { minifyCss } from './minify-css'
+import { quoteFontFamily } from './quote-font-family'
 import { toposort } from './toposort'
 
 interface Accumulator {
   resourceHint: ResourceHint[]
-  fontFace: string[]
+  fontFace: FontFace[]
   noScriptStyle: string[]
   style: string[]
   graph: Map<string, string[]>
@@ -45,7 +50,27 @@ const accumulate = (
     ...value.resourceHint
   ])
 
-  const fontFace: string[] = uniq([...accumulator.fontFace, ...value.fontFace])
+  // const overlap = intersection(
+  //   keys(accumulator.fontFace),
+  //   keys(value.fontFace)
+  // ).filter((key) => accumulator.fontFace[key] !== value.fontFace[key])
+  //
+  // if (overlap.length !== 0) {
+  //   throw new Error(
+  //     `Conflicting font family values for\n ${JSON.stringify(
+  //       overlap.map((key) => [accumulator.fontFace[key], value.fontFace[key]]),
+  //       null,
+  //       2
+  //     )}.`
+  //   )
+  // }
+
+  // TODO: figure out if there are conflicts
+
+  const fontFace: FontFace[] = uniqWith(
+    [...accumulator.fontFace, ...value.fontFace],
+    (a, b) => isEqual(a, b)
+  )
 
   const noScriptStyle: string[] = uniq([
     ...accumulator.noScriptStyle,
@@ -75,8 +100,31 @@ const accumulate = (
   }
 }
 
+const toCssProperty = (property: string) =>
+  property.replace(/([A-Z])/g, (property) => `-${property.toLowerCase()}`)
+
+const fontFaceToString = (fontFace: FontFace): string => {
+  const { fontFamily, src, ...restFontFaceProperties } = fontFace
+
+  const strings = [
+    '@font-face {',
+    `  font-family: ${quoteFontFamily(fontFamily)};`,
+    `  src: ${src};`
+  ]
+
+  forEach(restFontFaceProperties, (value, property) => {
+    if (value !== undefined) {
+      strings.push(`${toCssProperty(property)}: ${value?.toString()};`)
+    }
+  })
+
+  strings.push('}')
+
+  return strings.join('\n')
+}
+
 const wrap = (
-  value: string[],
+  value: string[] | FontFace[],
   key: string,
   state: State
 ): string | undefined => {
@@ -86,13 +134,18 @@ const wrap = (
 
   switch (key) {
     case 'style':
-      return minifyCss(value.join(''), state.targets.lightningCSS)
+      return minifyCss((value as string[]).join(''), state.targets.lightningCSS)
     case 'fontFace':
-      return minifyCss(value.join(''), state.targets.lightningCSS)
+      return minifyCss(
+        (value as FontFace[])
+          .map((fontFace) => fontFaceToString(fontFace))
+          .join('\n'),
+        state.targets.lightningCSS
+      )
     case 'noScriptStyle':
-      return minifyCss(value.join(''), state.targets.lightningCSS)
+      return minifyCss((value as string[]).join(''), state.targets.lightningCSS)
     case 'resourceHint':
-      return value.join('')
+      return (value as string[]).join('')
     default:
       return undefined
   }

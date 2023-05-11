@@ -1,0 +1,17 @@
+{
+  "names": ["SanFranciscoDisplay-Light", "San Francisco Display Light"],
+  "weight": 300,
+  "italic": false,
+  "familyName": "San Francisco Display",
+  "postscriptName": "SanFranciscoDisplay-Light",
+  "fullName": "San Francisco Display Light",
+  "subfamilyName": "Light",
+  "capHeight": 1363,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1043,
+  "xWidthAvg": 861,
+  "issues": []
+}

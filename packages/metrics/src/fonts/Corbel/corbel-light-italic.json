@@ -1,0 +1,17 @@
+{
+  "names": ["CorbelLight-Italic", "Corbel Light Italic"],
+  "weight": 300,
+  "italic": true,
+  "familyName": "Corbel Light",
+  "postscriptName": "CorbelLight-Italic",
+  "fullName": "Corbel Light Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1338,
+  "ascent": 1523,
+  "descent": -525,
+  "lineGap": 425,
+  "unitsPerEm": 2048,
+  "xHeight": 934,
+  "xWidthAvg": 764,
+  "issues": []
+}

@@ -99,7 +99,16 @@ const issueReducer = (metrics: FontMetrics): FontIssue[] => {
 export const metricsFromFont = (font: FontKitFont): FontMetrics => {
   const issues: FontIssue[] = []
 
-  const { ascent, descent, lineGap, unitsPerEm, familyName } = font
+  const {
+    ascent,
+    descent,
+    lineGap,
+    unitsPerEm,
+    postscriptName,
+    fullName,
+    familyName,
+    subfamilyName
+  } = font
 
   let { capHeight, xHeight } = font
 
@@ -149,6 +158,9 @@ export const metricsFromFont = (font: FontKitFont): FontMetrics => {
 
   const metrics = {
     familyName,
+    postscriptName,
+    fullName,
+    subfamilyName,
     capHeight,
     ascent,
     descent,

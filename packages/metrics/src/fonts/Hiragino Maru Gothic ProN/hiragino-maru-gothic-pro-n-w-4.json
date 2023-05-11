@@ -1,0 +1,21 @@
+{
+  "names": [
+    "HiraMaruProN-W4",
+    "Hiragino Maru Gothic ProN W4",
+    "Hiragino Maru Gothic ProN W4 Regular"
+  ],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Hiragino Maru Gothic ProN W4",
+  "postscriptName": "HiraMaruProN-W4",
+  "fullName": "HiraMaruProN-W4",
+  "subfamilyName": "Regular",
+  "capHeight": 771,
+  "ascent": 880,
+  "descent": -120,
+  "lineGap": 500,
+  "unitsPerEm": 1000,
+  "xHeight": 547,
+  "xWidthAvg": 493,
+  "issues": []
+}

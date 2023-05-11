@@ -1,0 +1,17 @@
+{
+  "names": ["SFPro-CompressedMedium", "SF Pro Compressed Medium"],
+  "weight": 500,
+  "italic": false,
+  "familyName": "SF Pro",
+  "postscriptName": "SFPro-CompressedMedium",
+  "fullName": "SF Pro Compressed Medium",
+  "subfamilyName": "Compressed Medium",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1040,
+  "xWidthAvg": 604,
+  "issues": []
+}

@@ -1,0 +1,17 @@
+{
+  "names": ["Arial Regular", "ArialMT", "Arial"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Arial",
+  "postscriptName": "ArialMT",
+  "fullName": "Arial",
+  "subfamilyName": "Regular",
+  "capHeight": 1467,
+  "ascent": 1854,
+  "descent": -434,
+  "lineGap": 67,
+  "unitsPerEm": 2048,
+  "xHeight": 1062,
+  "xWidthAvg": 904,
+  "issues": []
+}

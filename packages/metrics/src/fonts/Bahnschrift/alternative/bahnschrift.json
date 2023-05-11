@@ -1,0 +1,17 @@
+{
+  "names": ["Bahnschrift", "Bahnschrift Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Bahnschrift",
+  "postscriptName": "Bahnschrift",
+  "fullName": "Bahnschrift",
+  "subfamilyName": "Regular",
+  "capHeight": 1454,
+  "ascent": 2036,
+  "descent": -422,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1038,
+  "xWidthAvg": 920,
+  "issues": []
+}

@@ -1,0 +1,17 @@
+{
+  "names": ["SFProDisplay-ThinItalic", "SF Pro Display Thin Italic"],
+  "weight": 200,
+  "italic": true,
+  "familyName": "SF Pro Display",
+  "postscriptName": "SFProDisplay-ThinItalic",
+  "fullName": "SF Pro Display Thin Italic",
+  "subfamilyName": "Thin Italic",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1040,
+  "xWidthAvg": 812,
+  "issues": []
+}

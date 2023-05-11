@@ -1,0 +1,17 @@
+{
+  "names": ["ComicSansMS-BoldItalic", "Comic Sans MS Bold Italic"],
+  "weight": 700,
+  "italic": true,
+  "familyName": "Comic Sans MS",
+  "postscriptName": "ComicSansMS-BoldItalic",
+  "fullName": "Comic Sans MS Bold Italic",
+  "subfamilyName": "Bold Italic",
+  "capHeight": 1554,
+  "ascent": 2257,
+  "descent": -597,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1105,
+  "xWidthAvg": 1018,
+  "issues": []
+}

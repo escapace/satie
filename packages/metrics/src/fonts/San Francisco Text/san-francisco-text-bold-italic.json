@@ -1,0 +1,17 @@
+{
+  "names": ["SanFranciscoText-BoldItalic", "San Francisco Text Bold Italic"],
+  "weight": 700,
+  "italic": true,
+  "familyName": "San Francisco Text",
+  "postscriptName": "SanFranciscoText-BoldItalic",
+  "fullName": "San Francisco Text Bold Italic",
+  "subfamilyName": "Bold Italic",
+  "capHeight": 1365,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1065,
+  "xWidthAvg": 961,
+  "issues": []
+}

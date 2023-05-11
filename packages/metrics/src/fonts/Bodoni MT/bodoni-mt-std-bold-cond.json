@@ -1,0 +1,21 @@
+{
+  "names": [
+    "BodoniMTStd-BoldCond",
+    "Bodoni MT Std Bold Cond",
+    "Bodoni MT Std Bold Cond Regular"
+  ],
+  "weight": 700,
+  "italic": false,
+  "familyName": "Bodoni MT Std Bold Cond",
+  "postscriptName": "BodoniMTStd-BoldCond",
+  "fullName": "BodoniMTStd-BoldCond",
+  "subfamilyName": "Regular",
+  "capHeight": 636,
+  "ascent": 672,
+  "descent": -328,
+  "lineGap": 200,
+  "unitsPerEm": 1000,
+  "xHeight": 431,
+  "xWidthAvg": 336,
+  "issues": []
+}

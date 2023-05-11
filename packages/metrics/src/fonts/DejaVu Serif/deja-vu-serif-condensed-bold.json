@@ -1,0 +1,26 @@
+{
+  "names": ["DejaVuSerifCondensed-Bold", "DejaVu Serif Condensed Bold"],
+  "weight": 700,
+  "italic": false,
+  "familyName": "DejaVu Serif Condensed",
+  "postscriptName": "DejaVuSerifCondensed-Bold",
+  "fullName": "DejaVu Serif Condensed Bold",
+  "subfamilyName": "Bold",
+  "capHeight": 1493,
+  "ascent": 1923,
+  "descent": -483,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1063,
+  "xWidthAvg": 1041,
+  "issues": [
+    {
+      "type": 1,
+      "description": "xHeight is missing, relying on 'x' character height."
+    },
+    {
+      "type": 1,
+      "description": "capHeight is missing, relying on 'H' character height."
+    }
+  ]
+}

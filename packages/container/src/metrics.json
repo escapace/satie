@@ -1,36 +1,14 @@
 {
-  "appleSystem": {
-    "familyName": "-apple-system",
-    "category": "sans-serif",
-    "capHeight": 1443,
-    "ascent": 1950,
-    "descent": -420,
-    "lineGap": 0,
-    "unitsPerEm": 2048,
-    "xHeight": 1040,
-    "xWidthAvg": 842
-  },
   "arial": {
     "familyName": "Arial",
-    "category": "sans-serif",
     "capHeight": 1467,
     "ascent": 1854,
     "descent": -434,
     "lineGap": 67,
     "unitsPerEm": 2048,
     "xHeight": 1062,
-    "xWidthAvg": 904
-  },
-  "blinkMacSystemFont": {
-    "familyName": "BlinkMacSystemFont",
-    "category": "sans-serif",
-    "capHeight": 1443,
-    "ascent": 1950,
-    "descent": -420,
-    "lineGap": 0,
-    "unitsPerEm": 2048,
-    "xHeight": 1040,
-    "xWidthAvg": 842
+    "xWidthAvg": 904,
+    "issues": []
   },
   "brushScriptMT": {
     "familyName": "Brush Script MT",
@@ -56,36 +34,36 @@
   },
   "georgia": {
     "familyName": "Georgia",
-    "category": "serif",
     "capHeight": 1419,
     "ascent": 1878,
     "descent": -449,
     "lineGap": 0,
     "unitsPerEm": 2048,
     "xHeight": 986,
-    "xWidthAvg": 899
+    "xWidthAvg": 899,
+    "issues": []
   },
   "helvetica": {
     "familyName": "Helvetica",
-    "category": "sans-serif",
     "capHeight": 1469,
     "ascent": 1577,
     "descent": -471,
     "lineGap": 0,
     "unitsPerEm": 2048,
     "xHeight": 1071,
-    "xWidthAvg": 904
+    "xWidthAvg": 904,
+    "issues": []
   },
   "helveticaNeue": {
     "familyName": "Helvetica Neue",
-    "category": "sans-serif",
     "capHeight": 714,
     "ascent": 952,
     "descent": -213,
     "lineGap": 28,
     "unitsPerEm": 1000,
     "xHeight": 517,
-    "xWidthAvg": 447
+    "xWidthAvg": 447,
+    "issues": []
   },
   "lucidaGrande": {
     "familyName": "Lucida Grande",
@@ -131,47 +109,56 @@
   },
   "tahoma": {
     "familyName": "Tahoma",
-    "category": "sans-serif",
     "capHeight": 1489,
     "ascent": 2049,
     "descent": -423,
     "lineGap": 0,
     "unitsPerEm": 2048,
     "xHeight": 1117,
-    "xWidthAvg": 912
+    "xWidthAvg": 912,
+    "issues": []
   },
   "timesNewRoman": {
     "familyName": "Times New Roman",
-    "category": "serif",
     "capHeight": 1356,
     "ascent": 1825,
     "descent": -443,
     "lineGap": 87,
     "unitsPerEm": 2048,
     "xHeight": 916,
-    "xWidthAvg": 819
+    "xWidthAvg": 819,
+    "issues": []
   },
   "trebuchetMS": {
     "familyName": "Trebuchet MS",
-    "category": "sans-serif",
     "capHeight": 1465,
     "ascent": 1923,
     "descent": -455,
     "lineGap": 0,
     "unitsPerEm": 2048,
     "xHeight": 1071,
-    "xWidthAvg": 929
+    "xWidthAvg": 929,
+    "issues": [
+      {
+        "type": 1,
+        "description": "xHeight is missing, relying on 'x' character height."
+      },
+      {
+        "type": 1,
+        "description": "capHeight is missing, relying on 'H' character height."
+      }
+    ]
   },
   "verdana": {
     "familyName": "Verdana",
-    "category": "sans-serif",
     "capHeight": 1489,
     "ascent": 2059,
     "descent": -430,
     "lineGap": 0,
     "unitsPerEm": 2048,
     "xHeight": 1117,
-    "xWidthAvg": 1041
+    "xWidthAvg": 1041,
+    "issues": []
   },
   "abel": {
     "familyName": "Abel",
@@ -16748,6 +16735,17 @@
     "unitsPerEm": 2048,
     "xHeight": 1040,
     "xWidthAvg": 842,
+    "issues": []
+  },
+  "sFProDisplayHeavy": {
+    "familyName": "SF Pro Display Heavy",
+    "capHeight": 1443,
+    "ascent": 1950,
+    "descent": -494,
+    "lineGap": 0,
+    "unitsPerEm": 2048,
+    "xHeight": 1089,
+    "xWidthAvg": 958,
     "issues": []
   },
   "sFProRounded": {

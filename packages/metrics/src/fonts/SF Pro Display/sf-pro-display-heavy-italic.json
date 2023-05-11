@@ -1,0 +1,17 @@
+{
+  "names": ["SFProDisplay-HeavyItalic", "SF Pro Display Heavy Italic"],
+  "weight": 800,
+  "italic": true,
+  "familyName": "SF Pro Display",
+  "postscriptName": "SFProDisplay-HeavyItalic",
+  "fullName": "SF Pro Display Heavy Italic",
+  "subfamilyName": "Heavy Italic",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1089,
+  "xWidthAvg": 977,
+  "issues": []
+}

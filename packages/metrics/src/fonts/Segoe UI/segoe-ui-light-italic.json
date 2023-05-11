@@ -1,0 +1,17 @@
+{
+  "names": ["SegoeUI-LightItalic", "Segoe UI Light Italic"],
+  "weight": 200,
+  "italic": true,
+  "familyName": "Segoe UI Light",
+  "postscriptName": "SegoeUI-LightItalic",
+  "fullName": "Segoe UI Light Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1434,
+  "ascent": 2210,
+  "descent": -514,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1024,
+  "xWidthAvg": 843,
+  "issues": []
+}

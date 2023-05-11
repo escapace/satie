@@ -1,0 +1,17 @@
+{
+  "names": ["ArialNova-Italic", "Arial Nova Italic"],
+  "weight": 400,
+  "italic": true,
+  "familyName": "Arial Nova",
+  "postscriptName": "ArialNova-Italic",
+  "fullName": "Arial Nova Italic",
+  "subfamilyName": "Italic",
+  "capHeight": 1466,
+  "ascent": 2011,
+  "descent": -466,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1061,
+  "xWidthAvg": 902,
+  "issues": []
+}

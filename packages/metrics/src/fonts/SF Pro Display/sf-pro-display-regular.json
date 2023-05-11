@@ -1,0 +1,17 @@
+{
+  "names": ["SFProDisplay-Regular", "SF Pro Display Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "SF Pro Display",
+  "postscriptName": "SFProDisplay-Regular",
+  "fullName": "SF Pro Display Regular",
+  "subfamilyName": "Regular",
+  "capHeight": 1443,
+  "ascent": 1950,
+  "descent": -494,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1040,
+  "xWidthAvg": 842,
+  "issues": []
+}

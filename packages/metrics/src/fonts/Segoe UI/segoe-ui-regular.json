@@ -1,0 +1,17 @@
+{
+  "names": ["SegoeUI", "Segoe UI", "Segoe UI Regular"],
+  "weight": 400,
+  "italic": false,
+  "familyName": "Segoe UI",
+  "postscriptName": "SegoeUI",
+  "fullName": "Segoe UI",
+  "subfamilyName": "Regular",
+  "capHeight": 1434,
+  "ascent": 2210,
+  "descent": -514,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1024,
+  "xWidthAvg": 906,
+  "issues": []
+}

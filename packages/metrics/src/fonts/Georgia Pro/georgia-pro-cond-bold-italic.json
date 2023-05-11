@@ -1,0 +1,17 @@
+{
+  "names": ["GeorgiaPro-CondBoldItalic", "Georgia Pro Cond Bold Italic"],
+  "weight": 700,
+  "italic": true,
+  "familyName": "Georgia Pro Cond",
+  "postscriptName": "GeorgiaPro-CondBoldItalic",
+  "fullName": "Georgia Pro Cond Bold Italic",
+  "subfamilyName": "Bold Italic",
+  "capHeight": 1419,
+  "ascent": 1878,
+  "descent": -449,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1008,
+  "xWidthAvg": 973,
+  "issues": []
+}
