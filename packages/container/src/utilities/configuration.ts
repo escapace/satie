@@ -1,11 +1,39 @@
 import { build } from 'esbuild'
 import fastGlob from 'fast-glob'
-import { filter, find, isEmpty, isObject, isString, map } from 'lodash-es'
+import {
+  filter,
+  find,
+  isEmpty,
+  isObject,
+  isString,
+  map,
+  pickBy
+} from 'lodash-es'
+import { resolvePath } from 'mlly'
 import path, { extname } from 'path'
+import { fileURLToPath, pathToFileURL } from 'url'
 import { TextDecoder } from 'util'
 import { SourceTextModule, createContext } from 'vm'
 import { SchemaLocales } from '../types'
 import { Console } from './console'
+
+export const resolve = async (
+  id: string,
+  basedir?: string
+): Promise<string | undefined> => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const value = await resolvePath(id, {
+      extensions: ['.mjs', '.cjs', '.js', '.json'],
+      conditions: ['node', 'import', 'require'],
+      url: basedir === undefined ? undefined : pathToFileURL(basedir)
+    })
+
+    return typeof value === 'string' ? value : undefined
+  } catch {
+    return undefined
+  }
+}
 
 export const configuration = async (cwd: string, console: Console) => {
   try {
@@ -31,10 +59,27 @@ export const configuration = async (cwd: string, console: Console) => {
 
     const configFile = configFiles[0]
 
+    const alias = pickBy(
+      {
+        '@escapace/web-fonts':
+          (await resolve('@escapace/web-fonts')) ??
+          (await resolve('@escapace/web-fonts', path.dirname(configFile))) ??
+          (await resolve(
+            '@escapace/web-fonts',
+            path.dirname(fileURLToPath(import.meta.url))
+          ))
+      },
+      (value): value is string => typeof value === 'string'
+    )
+
+    // console.log(JSON.stringify(alias))
+
     const { outputFiles } = await build({
       entryPoints: [configFile],
       bundle: true,
       minify: false,
+      alias,
+      // external: ['@escapace/web-fonts'],
       loader: {
         '.js': 'js',
         '.mjs': 'js',

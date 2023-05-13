@@ -8,7 +8,6 @@ import {
   kebabCase,
   map,
   pick,
-  toLower,
   uniq,
   uniqBy
 } from 'lodash-es'
@@ -19,6 +18,7 @@ import {
   FontFace,
   ResourceHint,
   State,
+  TypeFallbackFont,
   TypeFontIssue,
   TypeInferClass,
   TypeInferFont,
@@ -26,10 +26,10 @@ import {
 } from '../types'
 import { calculateOverrideValues } from './calculate-override-values'
 import { combinations } from './combinations'
+import { createHash } from './create-hash'
 import { createSlug } from './create-slug'
 import { describeFont } from './describe-font'
 import { fontFaceSrc } from './font-face-src'
-import { fontFamilyToCamelCase } from './font-family-to-camel-case'
 import { metricsFromFont } from './metrics-from-fonts'
 import { quoteFontFamily } from './quote-font-family'
 import { style } from './style'
@@ -159,92 +159,92 @@ const orederFonts = (initial: TypeInferFont[], state: State) => {
 
 const createFontFaces = (
   fonts: TypeInferFontExtended[],
-  fallbackFontFamilies: string[],
+  fallbackFontFamilies: TypeFallbackFont[],
   state: State
 ) => {
   const primaryFont = fonts[0]
   const metrics = fonts[0].metrics
 
-  const fallbackFontFaces = uniqBy(
-    fallbackFontFamilies.map((fallbackFontFamily): FontFace => {
-      const fallbackMetrics = state.metrics.get(
-        toLower(fontFamilyToCamelCase(fallbackFontFamily))
-      )
-
-      if (fallbackMetrics === undefined) {
-        throw new Error(`Unknown fallback font ${fallbackFontFamily}`)
+  const fontFaces = Object.fromEntries(
+    fonts.map((value, index): [string, FontFace] => {
+      const fontFace = {
+        src: fontFaceSrc(value, state),
+        fontWeight:
+          value.weight === undefined
+            ? undefined
+            : Array.isArray(value.weight)
+            ? `${value.weight[0]} ${value.weight[1]}`
+            : `${value.weight}`,
+        fontStretch:
+          value.stretch === undefined
+            ? undefined
+            : Array.isArray(value.stretch)
+            ? `${value.stretch[0]}% ${value.stretch[1]}%`
+            : `${value.stretch}%`,
+        fontStyle:
+          value.style === undefined
+            ? undefined
+            : typeof value.style === 'string'
+            ? `${value.style}`
+            : Array.isArray(value.style)
+            ? `oblique ${value.style[0]}% ${value.style[1]}%`
+            : `oblique ${value.style}%`,
+        unicodeRange: value.unicodeRange,
+        fontDisplay: value.display,
+        ...(index === 0
+          ? {}
+          : calculateOverrideValues({
+              metrics,
+              fallbackMetrics: value.metrics
+            }))
       }
 
-      // TODO: choose closest available fallback font weight and style
-      const bla = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+      const fontFamily =
+        index === 0
+          ? value.family
+          : `${kebabCase(value.family)}-${createHash(fontFace)}`
 
-      const qweqwe =
-        typeof primaryFont.weight === 'undefined'
-          ? 400
-          : Array.isArray(primaryFont.weight)
-          ? (primaryFont.weight[1] - primaryFont.weight[0]) / 2
-          : primaryFont.weight
+      return [value.slug, { fontFamily, ...fontFace }]
+    })
+  )
 
-      const closest = bla.reduce(function (prev, curr) {
-        return Math.abs(curr - qweqwe) < Math.abs(prev - qweqwe) ? curr : prev
-      })
-
-      return {
-        fontFamily: `${primaryFont.slug}-${kebabCase(
-          fallbackMetrics.familyName
-        )}`,
-        src: `local("${fallbackMetrics.familyName}")`,
+  const fallbackFontFaces = uniqBy(
+    fallbackFontFamilies.map((fallbackMetrics): FontFace => {
+      const fontFace = {
+        src: fallbackMetrics.names.map((name) => `local(${name})`).join(', '),
+        fontWeight:
+          primaryFont.weight === undefined
+            ? undefined
+            : Array.isArray(primaryFont.weight)
+            ? `${primaryFont.weight[0]} ${primaryFont.weight[1]}`
+            : `${primaryFont.weight}`,
+        fontStretch:
+          primaryFont.stretch === undefined
+            ? undefined
+            : Array.isArray(primaryFont.stretch)
+            ? `${primaryFont.stretch[0]}% ${primaryFont.stretch[1]}%`
+            : `${primaryFont.stretch}%`,
+        fontStyle:
+          primaryFont.style === undefined
+            ? undefined
+            : typeof primaryFont.style === 'string'
+            ? `${primaryFont.style}`
+            : Array.isArray(primaryFont.style)
+            ? `oblique ${primaryFont.style[0]}% ${primaryFont.style[1]}%`
+            : `oblique ${primaryFont.style}%`,
         ...calculateOverrideValues({
           metrics,
           fallbackMetrics
-        }),
-        fontWeight: closest === 400 ? undefined : closest
+        })
       }
+
+      const fontFamily = `${kebabCase(fallbackMetrics.id)}-${createHash(
+        fontFace
+      )}`
+
+      return { fontFamily, ...fontFace }
     }),
     (value) => value.fontFamily.toLowerCase()
-  )
-
-  const fontFaces = Object.fromEntries(
-    fonts.map((value, index): [string, FontFace] => {
-      return [
-        value.slug,
-        {
-          fontFamily: value.family,
-          // index === 0
-          //   ? value.family
-          //   : `${primaryFont.slug}-${kebabCase(value.family)}`,
-          src: fontFaceSrc(value, state),
-          fontWeight:
-            value.weight === undefined
-              ? undefined
-              : Array.isArray(value.weight)
-              ? `${value.weight[0]} ${value.weight[1]}`
-              : `${value.weight}`,
-          fontStretch:
-            value.stretch === undefined
-              ? undefined
-              : Array.isArray(value.stretch)
-              ? `${value.stretch[0]}% ${value.stretch[1]}%`
-              : `${value.stretch}%`,
-          fontStyle:
-            value.style === undefined
-              ? undefined
-              : typeof value.style === 'string'
-              ? `${value.style}`
-              : Array.isArray(value.style)
-              ? `oblique ${value.style[0]}% ${value.style[1]}%`
-              : `oblique ${value.style}%`,
-          unicodeRange: value.unicodeRange,
-          fontDisplay: value.display,
-          ...(index === 0
-            ? {}
-            : calculateOverrideValues({
-                metrics,
-                fallbackMetrics: value.metrics
-              }))
-        }
-      ]
-    })
   )
 
   const toValues = (): FontFace[] => [
@@ -260,6 +260,8 @@ const createFontFaces = (
   if (overlap.length !== 0) {
     throw new Error(`Fallback font family conflict for ${overlap.join(', ')}.`)
   }
+
+  // TODO: inconsistency in weights; style; stretch &c.
 
   return { fontFaces, fallbackFontFaces, toValues }
 }

@@ -1,9 +1,9 @@
 import { build } from 'esbuild'
 import { execa } from 'execa'
 import fse from 'fs-extra'
-import { mkdir } from 'fs/promises'
+import { chmod, mkdir } from 'fs/promises'
 import path from 'path'
-import { cwd, target, external } from './constants.mjs'
+import { cwd, external, target, name } from './constants.mjs'
 
 process.umask(0o022)
 process.chdir(cwd)
@@ -15,16 +15,22 @@ await mkdir(outdir, { recursive: true })
 
 await build({
   bundle: true,
-  entryPoints: ['src/index.ts', 'src/cli.ts'],
+  entryPoints:
+    name === '@escapace/web-fonts'
+      ? ['src/index.ts']
+      : name === '@escapace/web-fonts-metrics'
+      ? ['src/web-fonts-json.ts']
+      : ['src/index.ts', 'src/cli.ts'],
   treeShaking: true,
   splitting: true,
-  external: ['esbuild', ...external],
+  external: [...external],
   format: 'esm',
   logLevel: 'info',
   outExtension: { '.js': '.mjs' },
   outbase: path.join(cwd, 'src'),
   outdir,
   platform: 'node',
+  minifySyntax: true,
   sourcemap: true,
   target,
   tsconfig: path.join(cwd, 'tsconfig-build.json')
@@ -46,3 +52,7 @@ await execa(
   console.error(reason.all)
   process.exit(reason.exitCode)
 })
+
+if (name === '@escapace/web-fonts-metrics') {
+  await chmod(path.join(outdir, 'web-fonts-json.mjs'), '0755')
+}

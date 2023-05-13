@@ -1,8 +1,7 @@
 import browserslist from 'browserslist'
 import { findUp } from 'find-up'
-import { readFile } from 'fs/promises'
 import { browserslistToTargets } from 'lightningcss'
-import { includes, isString, map, mapKeys, toLower } from 'lodash-es'
+import { includes, isString, map } from 'lodash-es'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import {
@@ -10,7 +9,7 @@ import {
   DEFAULT_OUTPUT_DIR,
   DEFAULT_PUBLIC_PATH
 } from '../constants'
-import { FontMetrics, Options, State } from '../types'
+import { Options, State } from '../types'
 import { configuration } from './configuration'
 import { Console } from './console'
 
@@ -107,17 +106,6 @@ export const createState = async (options: Options): Promise<State> => {
     'src/utilities/font-strip.py'
   )
 
-  const metrics = new Map(
-    Object.entries(
-      mapKeys(
-        JSON.parse(
-          await readFile(path.join(absWorkingDir, 'src/metrics.json'), 'utf8')
-        ) as Record<string, FontMetrics>,
-        (_, key) => toLower(key)
-      )
-    )
-  )
-
   const { locales, configFile } = await configuration(cwd, console)
 
   console.spinner.text = `read ${configFile}`
@@ -139,7 +127,6 @@ export const createState = async (options: Options): Promise<State> => {
     outputDir,
     publicPath,
     scriptFontStrip,
-    sourceWebFontLoader,
-    metrics
+    sourceWebFontLoader
   }
 }

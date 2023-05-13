@@ -4,3 +4,4 @@ ls:
     .d.ts: kebab-case
     .spec.ts: kebab-case
     .json: kebab-case
+    .py: kebab-case

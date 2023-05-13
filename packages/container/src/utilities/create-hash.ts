@@ -1,21 +1,11 @@
-import { createHash as _createHash } from 'crypto'
+import fnv1a from '@sindresorhus/fnv1a'
 import Hashids from 'hashids'
-import { filter, join } from 'lodash-es'
+import stringify from 'safe-stable-stringify'
 import { HASHS_LENGHT, HASH_ALPHABET } from '../constants'
 
-export const createHash = (...value: [...Array<string | number | undefined>]) =>
-  new Hashids('', HASHS_LENGHT, HASH_ALPHABET)
-    .encodeHex(
-      _createHash('sha1')
-        .update(
-          Buffer.from(
-            join(
-              filter(value, (v) => v !== undefined),
-              '#'
-            ),
-            'utf8'
-          ).toString('hex')
-        )
-        .digest('hex')
-    )
-    .slice(0, 7)
+export const createHash = (
+  value: string | number | boolean | object | unknown[] | null
+) =>
+  new Hashids('', HASHS_LENGHT, HASH_ALPHABET).encodeHex(
+    fnv1a(stringify(value), { size: 32 })
+  )

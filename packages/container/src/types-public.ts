@@ -1,8 +1,37 @@
 import type { Properties } from 'csstype'
-import { every, isNumber, map, sortBy, uniq } from 'lodash-es'
+import { difference, every, isNumber, map, sortBy, uniq } from 'lodash-es'
 import { z } from 'zod'
 import { createSlug } from './utilities/create-slug'
 import { parseUnicodeRange } from './utilities/parse-unicode-range'
+
+export const SchemaFallbackFont = z.object({
+  id: z.string().nonempty(),
+  names: z.array(z.string().nonempty()).nonempty(),
+  weight: z
+    .literal(100)
+    .or(z.literal(200))
+    .or(z.literal(300))
+    .or(z.literal(400))
+    .or(z.literal(500))
+    .or(z.literal(600))
+    .or(z.literal(700))
+    .or(z.literal(800))
+    .or(z.literal(900)),
+  italic: z.boolean(),
+  // familyName: z.string().nonempty(),
+  // postscriptName: z.string().nonempty(),
+  // fullName: z.string().nonempty(),
+  // subfamilyName: z.string().nonempty(),
+  capHeight: z.number(),
+  ascent: z.number(),
+  descent: z.number(),
+  lineGap: z.number(),
+  unitsPerEm: z.number(),
+  xHeight: z.number(),
+  xWidthAvg: z.number()
+})
+
+const SchemaFallbackFontKeys = SchemaFallbackFont.keyof().options
 
 export interface LightningCSSTargets {
   android?: number
@@ -126,15 +155,16 @@ const SchemaFont: z.ZodType<TypeInferFont, z.ZodTypeDef, TypeFont> =
 export const SchemaClass = z
   .object({
     fontFamily: z
-      .array(SchemaFont.or(z.string().nonempty()))
-      // .nonempty()
+      .array(SchemaFont.or(SchemaFallbackFont))
       .transform((values, ctx) => {
         const fallbacks = values.filter(
-          (value): value is string => typeof value === 'string'
+          (value): value is TypeFallbackFont =>
+            difference(SchemaFallbackFontKeys, Object.keys(value)).length === 0
         )
 
         const fonts = values.filter(
-          (value): value is TypeInferFont => typeof value !== 'string'
+          (value): value is TypeInferFont =>
+            difference(SchemaFallbackFontKeys, Object.keys(value)).length !== 0
         )
 
         const slugs = uniq(map(fonts, (value) => createSlug(value)))
@@ -212,3 +242,5 @@ export type TypeClass = z.input<typeof SchemaClass> &
 export type TypeInferLocales = z.infer<typeof SchemaLocales>
 export type TypeInferClass = z.infer<typeof SchemaClass> &
   Omit<StyleRule, 'fontFamily'>
+
+export type TypeFallbackFont = z.infer<typeof SchemaFallbackFont>

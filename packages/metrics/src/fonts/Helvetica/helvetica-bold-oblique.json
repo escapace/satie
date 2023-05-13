@@ -1,0 +1,17 @@
+{
+  "names": ["Helvetica-BoldOblique", "Helvetica Bold Oblique"],
+  "weight": 700,
+  "italic": true,
+  "familyName": "Helvetica",
+  "postscriptName": "Helvetica-BoldOblique",
+  "fullName": "Helvetica Bold Oblique",
+  "subfamilyName": "Bold Oblique",
+  "capHeight": 1474,
+  "ascent": 1577,
+  "descent": -471,
+  "lineGap": 0,
+  "unitsPerEm": 2048,
+  "xHeight": 1105,
+  "xWidthAvg": 977,
+  "issues": []
+}

@@ -21,7 +21,7 @@ await mkdir(outdir, { recursive: true })
 
 await build({
   bundle: true,
-  entryPoints: ['src/index.ts'],
+  entryPoints: ['src/cli.ts'],
   external: [
     ...Object.keys(packageJSON.dependencies ?? {}),
     ...Object.keys(packageJSON.peerDependencies ?? {})

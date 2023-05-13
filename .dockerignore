@@ -1,0 +1,10 @@
+**
+!/packages/container/lib/**
+!/packages/container/package.json
+!/packages/container/scripts/docker-entrypoint.sh
+!/packages/container/scripts/docker-entrypoint.sh
+!/packages/container/src/utilities/font-loader.ts
+!/packages/container/src/utilities/font-strip.py
+!/packages/web-fonts/lib/**
+!/packages/web-fonts/package.json
+!requirements.txt

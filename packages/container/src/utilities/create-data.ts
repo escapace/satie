@@ -50,23 +50,6 @@ const accumulate = (
     ...value.resourceHint
   ])
 
-  // const overlap = intersection(
-  //   keys(accumulator.fontFace),
-  //   keys(value.fontFace)
-  // ).filter((key) => accumulator.fontFace[key] !== value.fontFace[key])
-  //
-  // if (overlap.length !== 0) {
-  //   throw new Error(
-  //     `Conflicting font family values for\n ${JSON.stringify(
-  //       overlap.map((key) => [accumulator.fontFace[key], value.fontFace[key]]),
-  //       null,
-  //       2
-  //     )}.`
-  //   )
-  // }
-
-  // TODO: figure out if there are conflicts
-
   const fontFace: FontFace[] = uniqWith(
     [...accumulator.fontFace, ...value.fontFace],
     (a, b) => isEqual(a, b)

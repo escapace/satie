@@ -53,7 +53,7 @@ jobs:
       - name: install dependencies
         run: |
           pip3 install --upgrade pip
-          pip3 install -r packages/container/requirements.txt
+          pip3 install -r requirements.txt
           pnpm install
       - name: build
         run: pnpm run build
@@ -66,17 +66,18 @@ jobs:
       - name: archive context
         if: inputs.artifact-name != ''
         run: >-
-          tar -C packages/container --exclude=node_modules
+          tar -C . --exclude=node_modules
           -czvf context.tar.gz
           ./.dockerignore
           ./Dockerfile
-          ./lib
-          ./package.json
+          ./packages/container/lib
+          ./packages/container/package.json
+          ./packages/container/scripts/docker-entrypoint.sh
+          ./packages/container/src/utilities/font-loader.ts
+          ./packages/container/src/utilities/font-strip.py
+          ./packages/web-fonts/lib
+          ./packages/web-fonts/package.json
           ./requirements.txt
-          ./scripts/docker-entrypoint.sh
-          ./src/utilities/font-loader.ts
-          ./src/utilities/font-strip.py
-          ./src/metrics.json
       - name: upload context.tar
         if: inputs.artifact-name != ''
         uses: actions/upload-artifact@v3

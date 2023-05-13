@@ -10,5 +10,5 @@ export const createSlug = (value: TypeFont | TypeInferFont): string => {
 
   const v = values(pick(value, ...SLUG_PARTS)).flatMap((value) => value)
 
-  return createHash(...v)
+  return createHash(v)
 }

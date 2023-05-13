@@ -137,7 +137,6 @@ export interface State {
   sourceWebFontLoader: string
   console: Console
   declaration: boolean
-  metrics: Map<string, FontMetrics>
 }
 
 export interface Data {

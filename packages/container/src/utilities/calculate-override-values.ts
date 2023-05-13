@@ -5,15 +5,15 @@ import { FontMetrics } from '../types'
 export const round = (value: number) => parseFloat(value.toFixed(4))
 const toPercentString = (value: number) => `${round(value * 100)}%`
 
-interface OverrideValuesParams {
-  metrics: FontStackMetrics
-  fallbackMetrics: FontStackMetrics
-}
-
 type FontStackMetrics = Pick<
   FontMetrics,
   'ascent' | 'descent' | 'lineGap' | 'unitsPerEm' | 'xWidthAvg'
 >
+
+interface OverrideValuesParams {
+  metrics: FontStackMetrics
+  fallbackMetrics: FontStackMetrics
+}
 
 export const calculateOverrideValues = ({
   metrics,

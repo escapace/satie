@@ -1,4 +1,18 @@
-import { TypeFont, TypeLocales } from '../../src/types'
+import { TypeFont, TypeLocales, TypeFallbackFont } from '../../src/types'
+
+export const arialRegular: TypeFallbackFont = {
+  id: 'arial-regular',
+  names: ['Arial Regular', 'ArialMT', 'Arial'],
+  weight: 400,
+  italic: false,
+  capHeight: 1467,
+  ascent: 1854,
+  descent: -434,
+  lineGap: 67,
+  unitsPerEm: 2048,
+  xHeight: 1062,
+  xWidthAvg: 904
+}
 
 const EN_UNICODE_RANGE =
   'U+20-7E,U+A0-BF,U+2BB,U+2BC,U+2C6,U+2DA,U+2DC,U+303,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD'
@@ -69,40 +83,33 @@ const RU_NOTO_SANS_BOLD_ITALIC: TypeFont = {
   testString: '‎Русскийязык'
 }
 
-const EN_FALLBACK = ['segoe ui', 'helvetica neue', 'helvetica', 'Cantarell', 'Ubuntu', 'roboto', 'arial']
-const RU_FALLBACK = EN_FALLBACK
-
 const locales: TypeLocales = {
   en: {
     'sans-serif': {
-      fontFamily: [EN_NOTO_SANS, ...EN_FALLBACK]
+      fontFamily: [EN_NOTO_SANS, arialRegular]
     },
     'sans-serif-italic': {
-      fontFamily: [EN_NOTO_SANS_ITALIC, ...EN_FALLBACK]
+      fontFamily: [EN_NOTO_SANS_ITALIC]
     },
     'sans-serif-bold': {
-      fontFamily: [EN_NOTO_SANS_BOLD, ...EN_FALLBACK]
+      fontFamily: [EN_NOTO_SANS_BOLD]
     },
     'sans-serif-bold-italic': {
-      fontFamily: [EN_NOTO_SANS_BOLD_ITALIC, ...EN_FALLBACK]
+      fontFamily: [EN_NOTO_SANS_BOLD_ITALIC]
     }
   },
   ru: {
     'sans-serif': {
-      fontFamily: [RU_NOTO_SANS, EN_NOTO_SANS, ...RU_FALLBACK]
+      fontFamily: [RU_NOTO_SANS, EN_NOTO_SANS, arialRegular]
     },
     'sans-serif-italic': {
-      fontFamily: [RU_NOTO_SANS_ITALIC, EN_NOTO_SANS_ITALIC, ...RU_FALLBACK]
+      fontFamily: [RU_NOTO_SANS_ITALIC, EN_NOTO_SANS_ITALIC]
     },
     'sans-serif-bold': {
-      fontFamily: [RU_NOTO_SANS_BOLD, EN_NOTO_SANS_BOLD, ...RU_FALLBACK]
+      fontFamily: [RU_NOTO_SANS_BOLD, EN_NOTO_SANS_BOLD]
     },
     'sans-serif-bold-italic': {
-      fontFamily: [
-        RU_NOTO_SANS_BOLD_ITALIC,
-        EN_NOTO_SANS_BOLD_ITALIC,
-        ...RU_FALLBACK
-      ]
+      fontFamily: [RU_NOTO_SANS_BOLD_ITALIC, EN_NOTO_SANS_BOLD_ITALIC]
     }
   }
 }

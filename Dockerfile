@@ -16,13 +16,13 @@ ENV UID=1000
 ENV GID=1000
 ENV UMASK=0022
 
-COPY lib/esm /web-fonts/lib/esm
-COPY src/utilities/font-loader.ts /web-fonts/src/utilities
-COPY src/utilities/font-strip.py /web-fonts/src/utilities
-COPY src/metrics.json /web-fonts/src
+COPY packages/container/lib/esm /web-fonts/lib/esm
+COPY packages/container/src/utilities/font-loader.ts /web-fonts/src/utilities
+COPY packages/container/src/utilities/font-strip.py /web-fonts/src/utilities
 
-COPY package.json /web-fonts
-COPY scripts/docker-entrypoint.sh /usr/local/bin/
+COPY packages/container/package.json /web-fonts
+COPY packages/container/scripts/docker-entrypoint.sh /usr/local/bin/
+COPY packages/web-fonts /web-fonts/node_modules/@escapace/web-fonts
 
 WORKDIR /web-fonts
 
