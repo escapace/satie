@@ -1,175 +1,178 @@
-import { AtRule } from 'csstype'
 import {
-  LightningCSSTargets,
-  TypeFont,
-  TypeInferFont,
-  TypeInferLocales
-} from './types-public'
-import { Console } from './utilities/console'
+  CSSProperties,
+  Fallback as IFallback,
+  InferFont,
+  ResourceHint
+} from './state/user-schema'
 
-export * from './types-public'
-
-export const enum TypeFontIssue {
-  Error,
-  Warning
+export interface FontFallback {
+  font: IFallback
+  fontFaces: Map<string, FontFace>
 }
 
-export interface FontIssue {
-  type: TypeFontIssue
-  description: string
+export interface FontFaceAdjustments {
+  ascentOverride?: number
+  descentOverride?: number
+  lineGapOverride?: number
+  sizeAdjust?: number
 }
 
-export type FontFace = Omit<AtRule.FontFace, 'src' | 'fontFamily'> &
-  Required<Pick<AtRule.FontFace, 'src' | 'fontFamily'>>
-
-export interface FontMetrics {
-  familyName: string
-  fullName: string
-  postscriptName: string
-  subfamilyName: string
-
-  /** The height of the ascenders above baseline */
-  ascent: number
-  /** The descent of the descenders below baseline */
-  descent: number
-  /** The amount of space included between lines */
-  lineGap: number
-  /** The size of the font’s internal coordinate grid */
-  unitsPerEm: number
-  /** The height of capital letters above the baseline */
-  capHeight: number
-  /** The height of the main body of lower case letters above baseline */
-  xHeight: number
-  /** The average width of lowercase characters (currently derived from latin character frequencies in English language) */
-  xWidthAvg: number
-  issues?: FontIssue[]
+export interface FontFace
+  extends FontFaceAdjustments,
+    Omit<
+      Required<FontProperties>,
+      'fontFamily' | 'fontWeight' | 'fontStretch'
+    > {
+  fontFamily: string
+  fontWeight: number | [number, number]
+  fontStretch: number | [number, number]
+  src: string
+  unicodeRange?: InferFont['unicodeRange']
+  fontDisplay?: InferFont['display']
 }
 
-export interface DataFont {
-  family: string
+export interface LightningCSSTargets {
+  android?: number
+  chrome?: number
+  edge?: number
+  firefox?: number
+  ie?: number
+  ios_saf?: number
+  opera?: number
+  safari?: number
+  samsung?: number
+}
+
+export const enum TypeFontState {
+  Initial,
+  Written,
+  Hints,
+  Metrics
+}
+
+export interface FontStateInitial {
+  type: TypeFontState.Initial
   slug: string
-  prefer: string[]
-  stretch?: number | number[] | undefined
-  style?: number | number[] | 'normal' | 'italic' | 'oblique' | undefined
-  tech?: Array<'variations'>
-  testString?: string | undefined
-  weight?: number | number[] | undefined
+  font: InferFont
+  fontFaces: Map<string, FontFace>
 }
 
-export interface DataLocale {
-  fontFace: string | undefined
-  style: string | undefined
-  noScriptStyle: string | undefined
-  resourceHint: ResourceHint[] | undefined
-  fonts: DataFont[]
-  order: string[]
+export interface FontStateWritten extends Omit<FontStateInitial, 'type'> {
+  type: TypeFontState.Written
+  files: string[]
 }
 
-export interface DataLocales {
-  [x: string]: DataLocale
+export interface FontStateHints extends Omit<FontStateWritten, 'type'> {
+  type: TypeFontState.Hints
+  resourceHints: ResourceHint[]
 }
+
+export type FontState = FontStateInitial | FontStateWritten | FontStateHints
 
 export interface Options {
-  cli?: boolean
   cwd?: string
+  cli?: boolean
   jsonFile?: string
-  loaderFile?: string
   outputDir?: string
   publicPath?: string
-  declaration?: boolean
 }
 
-export interface Size {
-  brotli: number
-  gzip: number
+export interface AtRule {
+  type: '@supports' | '@media'
+  value: string
 }
 
-export interface SizeFont extends Size {
-  file: string
+export interface FontProperties {
+  fontFamily:
+    | {
+        fallbacks: string[]
+        fonts: string[]
+      }
+    | undefined
+  fontWeight?: number | undefined
+  fontStretch?: number | undefined
+  fontStyle?: number | 'normal' | 'italic' | 'oblique' | undefined
 }
 
-export type RecordSizeFont = Record<string, SizeFont[]>
-
-export interface SizePart extends Size {
-  key: 'fontFace' | 'noScriptStyle' | 'resourceHint' | 'style' | 'script'
+export interface Style {
+  id: string
+  fontProperties?: string
+  atRules: AtRule[]
+  properties: CSSProperties<{}>
+  locale: string
+  fontPropertiesKeys: Array<keyof Required<FontProperties>>
+  classname: string
+  graph?: Map<string, string[]>
+  style?: string
+  noScriptStyle?: string
 }
 
-export interface SizeLocale {
-  totalFonts: Size
-  total: Size
-  fonts: SizeFont[]
-  totalParts: Size
-  parts: SizePart[]
+export interface Configuration {
+  fonts: Map<string, FontState>
+  fallbackFonts: Map<string, FontFallback>
+  fontProperties: Map<string, Required<FontProperties>>
+  styles: Style[]
+  locales: Record<string, Style[]>
 }
-
-export type RecordSizeLocale = Record<string, SizeLocale>
-
-// export interface Targets {
-//   android?: number
-//   chrome?: number
-//   edge?: number
-//   firefox?: number
-//   ie?: number
-//   ios_saf?: number
-//   opera?: number
-//   safari?: number
-//   samsung?: number
-// }
 
 export interface State {
-  absWorkingDir: string
-  cacheFonts: Map<
-    string,
-    [TypeInferFont, TypeInferFontExtended, () => Promise<SizeFont[]>]
-  >
-  cwd: string
   browsers: string[]
+  configuration: Configuration
+  configurationDirectory: string
+  configurationFile: string
+  jsonFile: string
+  processDirectory: string
+  outputDir: string
+  publicPath: string
+  runtimeDirectory: string
+  runtimeFontLoaderPath: string
+  runtimeFontStripPath: string
   targets: {
     lightningCSS: LightningCSSTargets
     esbuild?: string[]
   }
-  jsonFile: string
-  outputDir: string
-  locales: TypeInferLocales
-  loaderFile: string | undefined
-  publicPath: string
-  scriptFontStrip: string
-  sourceWebFontLoader: string
-  console: Console
-  declaration: boolean
 }
 
-export interface Data {
-  fontFace: string | undefined
-  fonts: DataFont[]
-  fontsIndex: Array<[string, DataFont]>
-  localeIndex: Array<[string, string[]]>
-  locales: DataLocales
-  noScriptStyle: string | undefined
-  style: string | undefined
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type TupleUnion<U extends string, R extends any[] = []> = {
+  [S in U]: Exclude<U, S> extends never
+    ? [...R, S]
+    : TupleUnion<Exclude<U, S>, [...R, S]>
+}[U]
 
-export interface ResourceHint {
-  as: 'font'
-  crossorigin: 'anonymous'
-  href: string
-  rel: 'prefetch' | 'preload'
-  type: string
-}
+// export interface Data {
+//   fontFace: string | undefined
+//   fonts: DataFont[]
+//   fontsIndex: Array<[string, DataFont]>
+//   localeIndex: Array<[string, string[]]>
+//   locales: DataLocales
+//   noScriptStyle: string | undefined
+//   style: string | undefined
+// }
 
-export interface TypeInferFontExtended
-  extends Omit<TypeInferFont, 'resourceHint'> {
-  metrics: FontMetrics
-  slug: string
-  resourceHint: ResourceHint[]
-}
-
-export type SlugParts =
-  | 'family'
-  | 'stretch'
-  | 'style'
-  | 'tech'
-  | 'unicodeRange'
-  | 'weight'
-
-export type SlugNonParts = Exclude<keyof (TypeFont | TypeInferFont), SlugParts>
+// export type FontFace = Omit<AtRule.FontFace, 'src' | 'fontFamily'> &
+//   Required<Pick<AtRule.FontFace, 'src' | 'fontFamily'>>
+//
+// export interface DataFont {
+//   family: string
+//   slug: string
+//   prefer: string[]
+//   stretch?: number | number[] | undefined
+//   style?: number | number[] | 'normal' | 'italic' | 'oblique' | undefined
+//   tech?: Array<'variations'>
+//   testString?: string | undefined
+//   weight?: number | number[] | undefined
+// }
+//
+// export interface DataLocale {
+//   fontFace: string | undefined
+//   style: string | undefined
+//   noScriptStyle: string | undefined
+//   resourceHint: ResourceHint[] | undefined
+//   fonts: DataFont[]
+//   order: string[]
+// }
+//
+// export interface DataLocales {
+//   [x: string]: DataLocale
+// }

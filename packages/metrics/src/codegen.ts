@@ -1,4 +1,4 @@
-import { SchemaFallbackFont } from '@escapace/web-fonts-container'
+import { schemaFallback } from '@escapace/web-fonts-container'
 import { walk } from '@nodelib/fs.walk'
 import { readFile } from 'fs/promises'
 import { camelCase, map, pick, sortBy } from 'lodash-es'
@@ -18,9 +18,9 @@ const entries = sortBy(
   (entry) => entry.name
 )
 
-const schemKeys = SchemaFallbackFont.keyof().options
+const schemKeys = schemaFallback.keyof().options
 
-type Font = z.infer<typeof SchemaFallbackFont>
+type Font = z.infer<typeof schemaFallback>
 
 const fonts: Record<string, Font> = Object.fromEntries(
   await Promise.all(
@@ -29,7 +29,7 @@ const fonts: Record<string, Font> = Object.fromEntries(
       const key = camelCase(id)
 
       const value = pick(
-        SchemaFallbackFont.parse({
+        schemaFallback.parse({
           id,
           ...JSON.parse(await readFile(entry.path, 'utf8'))
         }),

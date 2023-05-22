@@ -1,10 +1,42 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Font as FontKitFont } from 'fontkit'
 import { omit } from 'lodash-es'
-import { FontIssue, FontMetrics, TypeFontIssue } from '../types'
+
+export const enum TypeFontIssue {
+  Error,
+  Warning
+}
+
+export interface FontIssue {
+  type: TypeFontIssue
+  description: string
+}
+
+export interface FontMetrics {
+  familyName: string
+  fullName: string
+  postscriptName: string
+  subfamilyName: string
+
+  /** The height of the ascenders above baseline */
+  ascent: number
+  /** The descent of the descenders below baseline */
+  descent: number
+  /** The amount of space included between lines */
+  lineGap: number
+  /** The size of the font’s internal coordinate grid */
+  unitsPerEm: number
+  /** The height of capital letters above the baseline */
+  capHeight: number
+  /** The height of the main body of lower case letters above baseline */
+  xHeight: number
+  /** The average width of lowercase characters (currently derived from latin character frequencies in English language) */
+  xWidthAvg: number
+  issues?: FontIssue[]
+}
 
 // Ref: https://en.wikipedia.org/wiki/Letter_frequency#Relative_frequencies_of_letters_in_other_languages
-const weightings = {
+const WEIGHTINGS = {
   a: 0.0668,
   b: 0.0122,
   c: 0.0228,
@@ -33,14 +65,14 @@ const weightings = {
   z: 0.0006,
   ' ': 0.1818
 }
-const sampleString = Object.keys(weightings).join('')
+const sampleString = Object.keys(WEIGHTINGS).join('')
 
 const weightingForCharacter = (character: string) => {
-  if (!Object.keys(weightings).includes(character)) {
+  if (!Object.keys(WEIGHTINGS).includes(character)) {
     throw new Error(`No weighting specified for character: “${character}”`)
   }
 
-  return weightings[character as keyof typeof weightings]
+  return WEIGHTINGS[character as keyof typeof WEIGHTINGS]
 }
 
 interface FontIssueWithTest extends FontIssue {
@@ -96,7 +128,7 @@ const issueReducer = (metrics: FontMetrics): FontIssue[] => {
     .map((value) => omit(value, ['test']))
 }
 
-export const metricsFromFont = (font: FontKitFont): FontMetrics => {
+export const fontMetrics = (font: FontKitFont): FontMetrics => {
   const issues: FontIssue[] = []
 
   const {
@@ -136,7 +168,7 @@ export const metricsFromFont = (font: FontKitFont): FontMetrics => {
 
   const glyphs = font.glyphsForString(sampleString)
 
-  // alternatively https://github.com/vercel/next.js/blob/canary/packages/font/src/local/get-fallback-metrics-from-font-file.ts
+  // TODO: alternatively https://github.com/vercel/next.js/blob/canary/packages/font/src/local/get-fallback-metrics-from-font-file.ts
   const weightedWidth = glyphs.reduce((sum, glyph, index) => {
     const character = sampleString.charAt(index)
 

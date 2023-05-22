@@ -1,6 +1,7 @@
 import { transform } from 'lightningcss'
 import { forEach } from 'lodash-es'
-import { StyleRule, LightningCSSTargets } from '../types'
+import { StyleRule } from '../state/user-schema'
+import { LightningCSSTargets } from '../types'
 
 function dashify(str: string) {
   return str
@@ -11,21 +12,21 @@ function dashify(str: string) {
 
 const DOUBLE_SPACE = '  '
 
-function iterate(v: StyleRule, indent = '', prefix = '') {
+export function iterateProperties(v: StyleRule<{}>, indent = '', prefix = '') {
   const rules: string[] = []
 
   forEach(v, (value, key) => {
     if (Array.isArray(value)) {
-      rules.push(...value.map((v) => iterate({ [key]: v }, indent)))
+      rules.push(...value.map((v) => iterateProperties({ [key]: v }, indent)))
     } else if (typeof value === 'object') {
       const isEmpty = Object.keys(value).length === 0
 
       if (!isEmpty) {
         if (key === '@supports' || key === '@media') {
-          rules.push(iterate(value, indent + DOUBLE_SPACE, `${key} `))
+          rules.push(iterateProperties(value, indent + DOUBLE_SPACE, `${key} `))
         } else {
           rules.push(
-            `${indent}${prefix}${key} {\n${iterate(
+            `${indent}${prefix}${key} {\n${iterateProperties(
               value,
               indent + DOUBLE_SPACE,
               prefix
@@ -45,11 +46,11 @@ function iterate(v: StyleRule, indent = '', prefix = '') {
 
 export const style = (
   selector: string,
-  rule: StyleRule,
+  rule: StyleRule<{}>,
   targets?: LightningCSSTargets
 ) => {
   const css = `${selector} {
-${iterate(rule, '  ')}
+${iterateProperties(rule, '  ')}
 }`
 
   const { code } = transform({

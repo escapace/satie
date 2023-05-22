@@ -6,7 +6,7 @@ import { webFonts } from './web-fonts'
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 describe('src/web-fonts.spec.ts', function () {
-  this.timeout(30000)
+  this.timeout(60000)
 
   it('happy-path', async () => {
     assert.isFunction(webFonts)

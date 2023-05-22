@@ -1,4 +1,4 @@
-import { TypeFontIssue, metricsFromFont } from '@escapace/web-fonts-container'
+import { TypeFontIssue, fontMetrics } from '@escapace/web-fonts-container'
 import arg from 'arg'
 import chalk from 'chalk'
 import { Font, openSync } from 'fontkit'
@@ -79,7 +79,7 @@ const openFont = (): Font => {
       return (font.getVariation as Function)(args['--name'])
     } else {
       const font = openSync(filepath, args['--name'])
-      noop(metricsFromFont(font))
+      noop(fontMetrics(font))
 
       return font
     }
@@ -91,7 +91,7 @@ const openFont = (): Font => {
 
 const font = openFont()
 
-const content = metricsFromFont(font)
+const content = fontMetrics(font)
 
 const issues = content.issues ?? []
 

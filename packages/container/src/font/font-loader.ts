@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import FontFaceObserver from 'fontfaceobserver'
-import type { DataFont as Font } from '../types'
+import type { WebFont as Font } from '../state/user-schema'
 
 interface WebFont extends Font {
   state?: Promise<boolean>
 }
 
-declare const __DATA_LOCALE_INDEX__: Array<readonly [string, string[]]>
-declare const __DATA_FONTS__: Array<readonly [string, WebFont]>
+declare const __DATA_LOCALES__: Array<readonly [string, string[]]>
+declare const __DATA_FONTS__: WebFont[]
 
 type Callback = (webFonts: Font[]) => unknown
 
@@ -21,8 +21,10 @@ declare global {
   }
 }
 
-const LOCALE_INDEX = new Map(__DATA_LOCALE_INDEX__)
-const FONTS = new Map(__DATA_FONTS__)
+const LOCALE_INDEX = new Map(__DATA_LOCALES__)
+const FONTS = new Map(
+  __DATA_FONTS__.map((value) => [value.slug, value] as const)
+)
 const SUBSCRIBERS: Callback[] = []
 
 const getDataFontsLoaded = () =>
@@ -47,7 +49,7 @@ const updateDataFontsLoaded = (value: string) => {
 const createPromise = async (slug: string): Promise<boolean> => {
   const font = FONTS.get(slug)
 
-  if (font === undefined) {
+  if (font === undefined || font.fontFace === undefined) {
     return false
   }
 
@@ -67,35 +69,42 @@ const createPromise = async (slug: string): Promise<boolean> => {
       return false
     } else {
       try {
-        const weight =
-          font.weight === undefined
-            ? undefined
-            : (Array.isArray(font.weight)
-                ? font.weight[0]
-                : font.weight
-              ).toString()
+        await Promise.any(
+          font.fontFace!.map(async (fontFace) => {
+            const weight =
+              fontFace.fontWeight === undefined
+                ? undefined
+                : (Array.isArray(fontFace.fontWeight)
+                    ? fontFace.fontWeight[0]
+                    : fontFace.fontWeight
+                  ).toString()
 
-        const stretch =
-          font.stretch === undefined
-            ? undefined
-            : `${Array.isArray(font.stretch) ? font.stretch[0] : font.stretch}%`
+            const stretch =
+              fontFace.fontStretch === undefined
+                ? undefined
+                : `${
+                    Array.isArray(fontFace.fontStretch)
+                      ? fontFace.fontStretch[0]
+                      : fontFace.fontStretch
+                  }%`
 
-        const style =
-          font.style === undefined
-            ? undefined
-            : typeof font.style === 'string'
-            ? font.style
-            : `oblique ${
-                Array.isArray(font.style) ? font.style[0] : font.style
-              }deg`
+            const style =
+              fontFace.fontStyle === undefined
+                ? undefined
+                : typeof fontFace.fontStyle === 'string'
+                ? fontFace.fontStyle
+                : `oblique ${fontFace.fontStyle}deg`
 
-        await new FontFaceObserver(font.family, {
-          weight,
-          stretch,
-          style
-        }).load(
-          typeof font.testString === 'string' ? font.testString : null,
-          10000
+            await new FontFaceObserver(fontFace.fontFamily, {
+              weight,
+              stretch,
+              style
+            }).load(
+              typeof font.testString === 'string' ? font.testString : null,
+              // TODO: custom timeout
+              10000
+            )
+          })
         )
 
         updateDataFontsLoaded(slug)
@@ -145,19 +154,10 @@ export const webFontLoaderSubscribe = (cb: Callback) => {
   }
 }
 
-// const uniqBy = <T>(arr: T[], prop: keyof T): T[] => {
-//   const fn = (item: T) => item[prop]
-//
-//   return arr.filter(
-//     (value, index, array) =>
-//       index === array.findIndex((y) => fn(value) === fn(y))
-//   )
-// }
-
 const next = async (slug: string): Promise<boolean> => {
   const font = FONTS.get(slug)!
 
-  for (const preference of font.prefer) {
+  for (const preference of font.prefer ?? []) {
     const success = await next(preference)
 
     if (success) {

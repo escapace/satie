@@ -26,8 +26,6 @@ Options:
   --output-dir    font output directory path (default: ${DEFAULT_OUTPUT_DIR})
   --json-file     json file output path (default: ${DEFAULT_JSON_FILE})
   --public-path   font public prefix on the web server (default: ${DEFAULT_PUBLIC_PATH})
-  --loader-file   output path for a font loader script
-  --declaration   output d.ts file for the font loader script
   -h, --help      display help
 
 Examples:
@@ -51,9 +49,7 @@ Examples:
 const options = (): Options => {
   try {
     const args = arg({
-      '--declaration': Boolean,
       '--json-file': String,
-      '--loader-file': String,
       '--output-dir': String,
       '--public-path': String,
       '--help': Boolean,
@@ -65,11 +61,9 @@ const options = (): Options => {
     }
 
     return {
-      declaration: args['--declaration'] === true,
       jsonFile: args['--json-file'],
       outputDir: args['--output-dir'],
-      publicPath: args['--public-path'],
-      loaderFile: args['--loader-file']
+      publicPath: args['--public-path']
     }
   } catch (e) {
     return help(1, isError(e) ? e.message : undefined)
