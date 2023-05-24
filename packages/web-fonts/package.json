@@ -38,7 +38,7 @@
   "private": false,
   "scripts": {
     "build": "node ../../scripts/build.mjs && cp src/types.d.ts lib/types",
-    "copy-types": "cp ../container/lib/types/state/user-schema.d.ts src/types.d.ts",
+    "copy-types": "cp ../container/lib/types/state/user-schema.d.ts src/types.d.ts && prettier --write src/types.d.ts",
     "lint": "eslint 'src/**/*.{js,mjs,cjs,ts,mts,cts}'",
     "release": "node ../../scripts/release.mjs",
     "typecheck": "tsc --noEmit"
