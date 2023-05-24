@@ -8,7 +8,6 @@ import {
   first,
   isEmpty,
   isEqual,
-  isNumber,
   last,
   map,
   mapValues,
@@ -16,6 +15,7 @@ import {
   pick,
   pickBy,
   reduce,
+  sortBy,
   uniq,
   uniqBy
 } from 'lodash-es'
@@ -61,25 +61,23 @@ const fontFaceToString = (value: FontFace): string =>
     '@font-face {',
     `font-family: ${quoteFontFamily(value.fontFamily)};`,
     `src: ${value.src};`,
-    isNumber(value.fontWeight)
-      ? value.fontWeight === 400
-        ? undefined
-        : `font-weight: ${value.fontWeight};`
-      : Array.isArray(value.fontWeight)
-      ? `font-weight: ${value.fontWeight[0]} ${value.fontWeight[1]};`
-      : undefined,
-    value.fontStyle === 'normal'
-      ? undefined
-      : isNumber(value.fontStyle)
-      ? `font-style: oblique ${value.fontStyle}deg;`
-      : `font-style: ${value.fontStyle};`,
-    isNumber(value.fontStretch)
-      ? value.fontStretch === 100
-        ? undefined
-        : `font-stretch: ${value.fontStretch}%;`
-      : Array.isArray(value.fontStretch)
-      ? `font-stretch: ${value.fontStretch[0]}% ${value.fontStretch[1]}%;`
-      : undefined,
+    // isNumber(value.fontWeight)
+    //   ? value.fontWeight === 400
+    //     ? undefined
+    //     : `font-weight: ${value.fontWeight};`
+    //   : Array.isArray(value.fontWeight)
+    //   ? `font-weight: ${value.fontWeight[0]} ${value.fontWeight[1]};`
+    //   : undefined,
+    // value.fontStyle === 'normal'
+    //   ? undefined
+    //   : `font-style: ${value.fontStyle};`,
+    // isNumber(value.fontStretch)
+    //   ? value.fontStretch === 100
+    //     ? undefined
+    //     : `font-stretch: ${value.fontStretch}%;`
+    //   : Array.isArray(value.fontStretch)
+    //   ? `font-stretch: ${value.fontStretch[0]}% ${value.fontStretch[1]}%;`
+    //   : undefined,
     value.unicodeRange === undefined
       ? undefined
       : `unicode-range: ${value.unicodeRange};`,
@@ -101,13 +99,13 @@ const fontFaceToString = (value: FontFace): string =>
     '}'
   ]).join('\n')
 
-const reduceFontFaceWeightStretch = (
-  value: Array<number | [number, number]>
-): number | [number, number] => {
-  const array = uniq(value.flatMap((value) => value)).sort((a, b) => a - b)
-
-  return array.length === 1 ? array[0] : [array[0], array[1]]
-}
+// const reduceFontFaceWeightStretch = (
+//   value: Array<number | [number, number]>
+// ): number | [number, number] => {
+//   const array = uniq(value.flatMap((value) => value)).sort((a, b) => a - b)
+//
+//   return array.length === 1 ? array[0] : [array[0], array[1]]
+// }
 
 const compareFontDisplay = (value: InferFont['display']) => {
   const priority: TupleUnion<Exclude<InferFont['display'], undefined>> = [
@@ -128,25 +126,35 @@ const compactFontFaces = (
   return Object.entries(
     mapValues(fontFaces, (current, id): FontFace => {
       const relevant = filter(omit(fontFaces, [id]), (candidate): boolean => {
-        const keys: Array<keyof FontFace> = [
+        const relevantKeys: Array<keyof FontFace> = [
           'fontDisplay',
-          'fontWeight',
-          'fontStretch'
+          'fontStretch',
+          'fontWeight'
         ]
 
-        return isEqual(omit(current, keys), omit(candidate, keys))
+        return isEqual(
+          omit(current, relevantKeys),
+          omit(candidate, relevantKeys)
+        )
       })
 
       const fontFace: FontFace = {
         ...current,
-        fontWeight: reduceFontFaceWeightStretch([
-          current.fontWeight,
-          ...relevant.map((value) => value.fontWeight)
-        ]),
-        fontStretch: reduceFontFaceWeightStretch([
-          current.fontStretch,
-          ...relevant.map((value) => value.fontStretch)
-        ]),
+        fontStyle: 'normal',
+        fontWeight: 400,
+        fontStretch: 100,
+        // fontWeight: isFallback
+        //   ? 400
+        //   : reduceFontFaceWeightStretch([
+        //       current.fontWeight,
+        //       ...relevant.map((value) => value.fontWeight)
+        //     ]),
+        // fontStretch: isFallback
+        //   ? 100
+        //   : reduceFontFaceWeightStretch([
+        //       current.fontStretch,
+        //       ...relevant.map((value) => value.fontStretch)
+        //     ]),
         unicodeRange: isFallback ? undefined : current.unicodeRange,
         fontDisplay: isFallback
           ? undefined
@@ -165,11 +173,33 @@ const compactFontFaces = (
 
 const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
   const style = minifyCss(
-    uniq(compact(styles.map((value) => value.style))).join('\n'),
+    [
+      ...uniq(
+        compact(
+          sortBy(styles, (value) => value.atRules.length).map(
+            (value) => value.styleFallback
+          )
+        )
+      ),
+      ...uniq(
+        compact(
+          sortBy(styles, (value) => value.atRules.length).map(
+            (value) => value.style
+          )
+        )
+      )
+    ].join('\n'),
     state.targets.lightningCSS
   )
+
   const noScriptStyle = minifyCss(
-    uniq(compact(styles.map((value) => value.noScriptStyle))).join('\n'),
+    uniq(
+      compact(
+        sortBy(styles, (value) => value.atRules.length).map(
+          (value) => value.noScriptStyle
+        )
+      )
+    ).join('\n'),
     state.targets.lightningCSS
   )
 
@@ -197,13 +227,10 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
     })
   )
 
-  // TODO: ensure no overlap over the two
   const fonts = uniqBy(
     compact(lookup.flatMap((value) => value.fonts)),
     (value) => value.slug
   )
-
-  // console.log(fonts.map(value => value.fontFaces))
 
   const fallbackFonts = uniqBy(
     compact(lookup.flatMap((value) => value.fallbackFonts)),
@@ -219,6 +246,12 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
       ),
       (value) => createHash(pickBy(value, (value) => value !== undefined))
     )
+      .sort((a, b) =>
+        a.fontFamily.localeCompare(b.fontFamily, 'en-us', {
+          usage: 'sort',
+          sensitivity: 'variant'
+        })
+      )
       .map((value) => fontFaceToString(value))
       .join('\n\n'),
     state.targets.lightningCSS
@@ -370,48 +403,64 @@ export const webFonts = async (options: Options = {}) => {
       (slug) => state.configuration.fallbackFonts.get(slug)!
     )
 
-    const primaryFont = first(fonts)!
+    const primaryFont = first(fonts)
     const secondaryFonts = fonts.slice(1)
-    const primaryFontMetrics = fontMetrics(
-      await fontOpen(primaryFont, fontProperties)
-    )
+    const primaryFontMetrics =
+      (primaryFont === undefined
+        ? undefined
+        : fontMetrics(
+            (await fontOpen(primaryFont, fontProperties, state)).font
+          )) ?? fallbackFonts[0].font
 
-    primaryFont.fontFaces.set(
+    primaryFont?.fontFaces.set(
       style.id,
-      fontFace({
-        type: 'font',
-        font: primaryFont,
-        fontProperties,
-        publicPath: state.publicPath
-      })
+      await fontFace(
+        {
+          type: 'font',
+          font: primaryFont,
+          fontProperties,
+          publicPath: state.publicPath
+        },
+        state
+      )
     )
 
     for (const secondaryFont of secondaryFonts) {
       secondaryFont.fontFaces.set(
         style.id,
-        fontFace({
-          type: 'font',
-          font: secondaryFont,
-          fontProperties,
-          publicPath: state.publicPath,
-          adjustments: fontAdjust(
-            primaryFontMetrics,
-            fontMetrics(await fontOpen(secondaryFont, fontProperties))
-          )
-        })
+        await fontFace(
+          {
+            type: 'font',
+            font: secondaryFont,
+            fontProperties,
+            publicPath: state.publicPath,
+            adjustments: fontAdjust(
+              primaryFontMetrics,
+              fontMetrics(
+                (
+                  await fontOpen(secondaryFont, fontProperties, state)
+                ).font
+              )
+            )
+          },
+          state
+        )
       )
     }
 
     for (const fallbackFont of fallbackFonts) {
       fallbackFont.fontFaces.set(
         style.id,
-        fontFace({
-          type: 'fallback',
-          font: fallbackFont,
-          fontProperties,
-          publicPath: state.publicPath,
-          adjustments: fontAdjust(primaryFontMetrics, fallbackFont.font)
-        })
+        await fontFace(
+          {
+            type: 'fallback',
+            font: fallbackFont,
+            fontProperties,
+            publicPath: state.publicPath,
+            adjustments: fontAdjust(primaryFontMetrics, fallbackFont.font)
+          },
+          state
+        )
       )
     }
   }
@@ -488,18 +537,36 @@ export const webFonts = async (options: Options = {}) => {
       ? fontProperties?.fontStyle
       : undefined
 
+    const fontVariationSettings = style.fontPropertiesKeys.includes(
+      'fontVariationSettings'
+    )
+      ? fontProperties?.fontVariationSettings === undefined
+        ? undefined
+        : fontProperties?.fontVariationSettings === 'normal'
+        ? undefined
+        : sortBy(
+            uniqBy(
+              Object.entries(fontProperties.fontVariationSettings),
+              ([key]) => key
+            ),
+            ([key]) => key
+          )
+            .map(([key, value]) => `"${key}" ${value}`)
+            .join(', ')
+      : undefined
+
     const noScriptStyleProperties = pickBy(
       {
-        fontFamily: style.fontPropertiesKeys.includes('fontFamily')
-          ? combinedFontFamilies.length === 0
+        fontFamily:
+          combinedFontFamilies.length === 0
             ? undefined
             : combinedFontFamilies
                 .map((value) => quoteFontFamily(value))
-                .join(', ')
-          : undefined,
+                .join(', '),
         fontWeight,
         fontStretch,
         fontStyle,
+        fontVariationSettings,
         ...style.properties
       },
       (value) => value !== undefined
@@ -517,23 +584,28 @@ export const webFonts = async (options: Options = {}) => {
           ...atRulesClose
         ]).join('\n')
 
+    const isRoot = atRulesOpen.length === 0
+
     const fallbackStyleProperties = pickBy(
       {
-        fontFamily: style.fontPropertiesKeys.includes('fontFamily')
-          ? fallbackFontFamilies.length === 0
+        // TODO: only include if parent style value differs
+        fontFamily:
+          fallbackFontFamilies.length === 0
             ? undefined
             : fallbackFontFamilies
                 .map((value) => quoteFontFamily(value))
-                .join(', ')
-          : undefined,
+                .join(', '),
         fontWeight,
         fontStretch,
         fontStyle,
+        fontSynthesis: isRoot ? 'none' : undefined,
+        fontVariationSettings,
         ...style.properties
       },
       (value) => value !== undefined
     )
 
+    // TODO: better minification
     const fallbackStyle: string | undefined = isEmpty(fallbackStyleProperties)
       ? undefined
       : compact([
@@ -551,7 +623,6 @@ export const webFonts = async (options: Options = {}) => {
     )
 
     const primaryStyles = compact([
-      fallbackStyle,
       ...fontFamilyCombinations.map((fonts): string | undefined => {
         const selector = `html${map(
           fonts,
@@ -565,13 +636,12 @@ export const webFonts = async (options: Options = {}) => {
 
         const properties = pickBy(
           {
-            fontFamily: style.fontPropertiesKeys.includes('fontFamily')
-              ? combinedFontFamilies.length === 0
+            fontFamily:
+              combinedFontFamilies.length === 0
                 ? undefined
                 : combinedFontFamilies
                     .map((value) => quoteFontFamily(value))
                     .join(', ')
-              : undefined
           },
           (value) => value !== undefined
         )
@@ -588,6 +658,7 @@ export const webFonts = async (options: Options = {}) => {
       })
     ])
 
+    style.styleFallback = fallbackStyle
     style.style =
       primaryStyles.length === 0 ? undefined : primaryStyles.join('\n')
     style.noScriptStyle = noScriptStyle

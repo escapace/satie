@@ -4,8 +4,10 @@ import {
   FontFaceAdjustments,
   FontFallback,
   FontProperties,
-  FontState
+  FontState,
+  State
 } from '../types'
+import { fontOpen } from './font-open'
 
 const fontSrc = ({ slug, font }: FontState, publicPath: string): string =>
   font.format
@@ -42,18 +44,38 @@ interface FontFaceOptionsFont {
   adjustments?: FontFaceAdjustments
 }
 
-export const fontFace = (
-  options: FontFaceOptionsFont | FontFaceOptionsFallback
-): FontFace => {
+export const fontFace = async (
+  options: FontFaceOptionsFont | FontFaceOptionsFallback,
+  state: State
+): Promise<FontFace> => {
   if (options.type === 'font') {
     const { font } = options.font
     const { fontWeight, fontStretch, fontStyle } = options.fontProperties
 
+    const isVariable = font.tech?.includes('variations') === true
+
+    const variationAxes = isVariable
+      ? (await fontOpen(options.font, options.fontProperties, state))
+          .variationAxes
+      : undefined
+
     return {
       src: fontSrc(options.font, options.publicPath),
       fontFamily: font.name ?? options.font.slug,
-      fontWeight,
-      fontStretch,
+      fontWeight:
+        variationAxes?.wght === undefined
+          ? fontWeight
+          : [
+              Math.max(variationAxes.wght.min, 1),
+              Math.min(variationAxes.wght.max, 1000)
+            ],
+      fontStretch:
+        variationAxes?.wdth === undefined
+          ? fontStretch
+          : [
+              Math.max(variationAxes.wdth.min, 50),
+              Math.min(variationAxes.wdth.max, 200)
+            ],
       fontStyle,
       unicodeRange: font.unicodeRange,
       fontDisplay: font.display,

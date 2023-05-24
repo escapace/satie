@@ -1,7 +1,11 @@
 import { transform } from 'lightningcss'
 import { LightningCSSTargets } from '../types'
 
-export const minifyCss = (value: string, targets: LightningCSSTargets) => {
+export const minifyCss = (
+  value: string,
+  targets: LightningCSSTargets,
+  pass = 0
+): string => {
   const { code } = transform({
     targets,
     filename: 'style.css',
@@ -9,7 +13,9 @@ export const minifyCss = (value: string, targets: LightningCSSTargets) => {
     minify: true
   })
 
-  return code.toString('utf8')
+  return pass === 0
+    ? minifyCss(code.toString('utf8'), targets, 1)
+    : code.toString('utf8')
 }
 
 // import CleanCSS from 'clean-css'

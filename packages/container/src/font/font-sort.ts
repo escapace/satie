@@ -13,9 +13,9 @@ const hasFontOverlap = (fonts: InferFont[], cwd: string) =>
   uniqBy(fonts, (value) => fontSlug(value, cwd)).length !== fonts.length
 
 export const fontSort = (initial: InferFont[], cwd: string): FontsSorted => {
-  if (initial.length === 0) {
-    throw new Error('At least one font is necessary.')
-  }
+  // if (initial.length === 0) {
+  //   throw new Error('At least one font is necessary.')
+  // }
 
   if (hasFontOverlap(initial, cwd)) {
     throw new Error('One of the classes has font overlaps.')

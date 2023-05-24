@@ -2,6 +2,7 @@ import {
   CSSProperties,
   Fallback as IFallback,
   InferFont,
+  InferFontProperties,
   ResourceHint
 } from './state/user-schema'
 
@@ -17,12 +18,8 @@ export interface FontFaceAdjustments {
   sizeAdjust?: number
 }
 
-export interface FontFace
-  extends FontFaceAdjustments,
-    Omit<
-      Required<FontProperties>,
-      'fontFamily' | 'fontWeight' | 'fontStretch'
-    > {
+export interface FontFace extends FontFaceAdjustments {
+  fontStyle: 'normal' | 'italic'
   fontFamily: string
   fontWeight: number | [number, number]
   fontStretch: number | [number, number]
@@ -82,16 +79,26 @@ export interface AtRule {
   value: string
 }
 
-export interface FontProperties {
+// export interface FontProperties {
+//   fontFamily:
+//     | {
+//         fallbacks: string[]
+//         fonts: string[]
+//       }
+//     | undefined
+//   fontWeight?: number | undefined
+//   fontStretch?: number | undefined
+//   fontStyle?: 'normal' | 'italic'
+// }
+
+export interface FontProperties
+  extends Omit<InferFontProperties, 'fontFamily'> {
   fontFamily:
     | {
         fallbacks: string[]
         fonts: string[]
       }
     | undefined
-  fontWeight?: number | undefined
-  fontStretch?: number | undefined
-  fontStyle?: number | 'normal' | 'italic' | 'oblique' | undefined
 }
 
 export interface Style {
@@ -105,6 +112,7 @@ export interface Style {
   graph?: Map<string, string[]>
   style?: string
   noScriptStyle?: string
+  styleFallback?: string
 }
 
 export interface Configuration {
@@ -139,40 +147,3 @@ export type TupleUnion<U extends string, R extends any[] = []> = {
     ? [...R, S]
     : TupleUnion<Exclude<U, S>, [...R, S]>
 }[U]
-
-// export interface Data {
-//   fontFace: string | undefined
-//   fonts: DataFont[]
-//   fontsIndex: Array<[string, DataFont]>
-//   localeIndex: Array<[string, string[]]>
-//   locales: DataLocales
-//   noScriptStyle: string | undefined
-//   style: string | undefined
-// }
-
-// export type FontFace = Omit<AtRule.FontFace, 'src' | 'fontFamily'> &
-//   Required<Pick<AtRule.FontFace, 'src' | 'fontFamily'>>
-//
-// export interface DataFont {
-//   family: string
-//   slug: string
-//   prefer: string[]
-//   stretch?: number | number[] | undefined
-//   style?: number | number[] | 'normal' | 'italic' | 'oblique' | undefined
-//   tech?: Array<'variations'>
-//   testString?: string | undefined
-//   weight?: number | number[] | undefined
-// }
-//
-// export interface DataLocale {
-//   fontFace: string | undefined
-//   style: string | undefined
-//   noScriptStyle: string | undefined
-//   resourceHint: ResourceHint[] | undefined
-//   fonts: DataFont[]
-//   order: string[]
-// }
-//
-// export interface DataLocales {
-//   [x: string]: DataLocale
-// }

@@ -160,7 +160,6 @@ export const flattenConfiguration = (
       return value.id
     })
 
-    // TODO: allow for fallback fonts only
     const sorted = fontSort(fontFamily.fonts, cwd)
 
     const _fonts = sorted.fonts.map((state): string => {
@@ -215,7 +214,8 @@ export const flattenConfiguration = (
       fontFamily: p.fontFamily,
       fontWeight: p.fontWeight ?? 400,
       fontStyle: p.fontStyle ?? 'normal',
-      fontStretch: p.fontStretch ?? 100
+      fontStretch: p.fontStretch ?? 100,
+      fontVariationSettings: p.fontVariationSettings ?? 'normal'
     }
 
     const id = createHash(_fontProperties)
@@ -256,8 +256,6 @@ export const flattenConfiguration = (
   const slugsAndNames = Array.from(fonts.values()).map(
     (value): [string, string] => [value.slug, value.font.name ?? value.slug]
   )
-
-  //TODO: conflict with fallback values
 
   if (
     uniq(flatMap(slugsAndNames, (value) => value[0])).length !==

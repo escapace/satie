@@ -33,19 +33,20 @@ export const fontWrite = async (slug: string, state: State): Promise<void> => {
         'pyftsubset',
         compact([
           source,
+          format === 'woff' ? '--with-zopfli' : undefined,
+          `--output-file=${outputFile}`,
           font.unicodeRange !== undefined
             ? `--unicodes=${font.unicodeRange}`
             : undefined,
+          '--harfbuzz-repacker',
+          `--flavor=${format}`,
           // TODO: make layout features configurable
           `--layout-features='*'`,
-          `--obfuscate-names`,
           `--name-IDs=''`,
-          `--recalc-average-width`,
-          `--recalc-bounds`,
-          '--harfbuzz-repacker',
-          `--output-file=${outputFile}`,
-          `--flavor=${format}`,
-          format === 'woff' ? '--with-zopfli' : undefined
+          `--no-recalc-average-width`,
+          `--no-recalc-bounds`,
+          `--no-recalc-max-context`,
+          `--obfuscate-names`
         ])
       )
 

@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { FontFaceAdjustments } from '../types'
 import type { FontMetrics } from './font-metrics'
+import { BigNumber } from 'bignumber.js'
 
-const round = (value: number) => parseFloat(value.toFixed(4))
-// const toPercentString = (value: number) => `${round(value * 100)}%`
+export const round = (value: number, precision = 4) =>
+  Number.isFinite(precision)
+    ? parseFloat(new BigNumber(value).toPrecision(precision))
+    : value
 
 export type RequiredFontMetrics = Required<
   Pick<

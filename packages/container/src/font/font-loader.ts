@@ -27,6 +27,25 @@ const FONTS = new Map(
 )
 const SUBSCRIBERS: Callback[] = []
 
+const fontStretchMapping = new Map([
+  [50, 'ultra-condensed'],
+  [62.5, 'extra-condensed'],
+  [75, 'condensed'],
+  [87.5, 'semi-condensed'],
+  [100, 'normal'],
+  [112.5, 'semi-expanded'],
+  [125, 'expanded'],
+  [150, 'extra-expande'],
+  [200, 'ultra-expanded']
+])
+
+const fontStretchMappingKeys = Array.from(fontStretchMapping.keys())
+
+const closest = (array: number[], value: number): number =>
+  array.reduce(function (prev, curr) {
+    return Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
+  })
+
 const getDataFontsLoaded = () =>
   (document.documentElement.getAttribute('data-fonts-loaded')?.split(' ') ?? [])
     .filter((value) => FONTS.has(value))
@@ -82,18 +101,25 @@ const createPromise = async (slug: string): Promise<boolean> => {
             const stretch =
               fontFace.fontStretch === undefined
                 ? undefined
-                : `${
-                    Array.isArray(fontFace.fontStretch)
-                      ? fontFace.fontStretch[0]
-                      : fontFace.fontStretch
-                  }%`
+                : fontStretchMapping.get(
+                    closest(
+                      fontStretchMappingKeys,
+                      Array.isArray(fontFace.fontStretch)
+                        ? (fontFace.fontStretch[0] + fontFace.fontStretch[1]) /
+                            2
+                        : fontFace.fontStretch
+                    )
+                  )
 
             const style =
-              fontFace.fontStyle === undefined
-                ? undefined
-                : typeof fontFace.fontStyle === 'string'
-                ? fontFace.fontStyle
-                : `oblique ${fontFace.fontStyle}deg`
+              fontFace.fontStyle === undefined ? undefined : fontFace.fontStyle
+
+            console.log({
+              fontFamily: fontFace.fontFamily,
+              weight,
+              stretch,
+              style
+            })
 
             await new FontFaceObserver(fontFace.fontFamily, {
               weight,

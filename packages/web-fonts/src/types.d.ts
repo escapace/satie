@@ -159,10 +159,13 @@ export declare const schemaFontPlaceholder: z.ZodObject<
     unicodeRange?: string | undefined
   }
 >
+export declare const schemaFontVariationSettings: z.ZodUnion<
+  [z.ZodLiteral<'normal'>, z.ZodRecord<z.ZodString, z.ZodNumber>]
+>
 export declare const schemaFontWeight: z.ZodDefault<z.ZodNumber>
 export declare const schemaFontStretch: z.ZodDefault<z.ZodNumber>
 export declare const schemaFontStyle: z.ZodDefault<
-  z.ZodUnion<[z.ZodEnum<['normal', 'italic', 'oblique']>, z.ZodNumber]>
+  z.ZodEnum<['normal', 'italic']>
 >
 export declare const schemaFontProperties: z.ZodObject<
   {
@@ -283,9 +286,10 @@ export declare const schemaFontProperties: z.ZodObject<
     >
     fontWeight: z.ZodOptional<z.ZodDefault<z.ZodNumber>>
     fontStretch: z.ZodOptional<z.ZodDefault<z.ZodNumber>>
-    fontStyle: z.ZodOptional<
-      z.ZodDefault<
-        z.ZodUnion<[z.ZodEnum<['normal', 'italic', 'oblique']>, z.ZodNumber]>
+    fontStyle: z.ZodOptional<z.ZodDefault<z.ZodEnum<['normal', 'italic']>>>
+    fontVariationSettings: z.ZodOptional<
+      z.ZodUnion<
+        [z.ZodLiteral<'normal'>, z.ZodRecord<z.ZodString, z.ZodNumber>]
       >
     >
   },
@@ -300,7 +304,8 @@ export declare const schemaFontProperties: z.ZodObject<
       | undefined
     fontWeight?: number | undefined
     fontStretch?: number | undefined
-    fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+    fontStyle?: 'italic' | 'normal' | undefined
+    fontVariationSettings?: 'normal' | Record<string, number> | undefined
   },
   {
     fontFamily?:
@@ -323,7 +328,8 @@ export declare const schemaFontProperties: z.ZodObject<
       | undefined
     fontWeight?: number | undefined
     fontStretch?: number | undefined
-    fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+    fontStyle?: 'italic' | 'normal' | undefined
+    fontVariationSettings?: 'normal' | Record<string, number> | undefined
   }
 >
 export type InputFontProperties = z.input<typeof schemaFontProperties>
@@ -365,7 +371,8 @@ export declare const schemaLocale: z.ZodObject<
         | undefined
       fontWeight?: number | undefined
       fontStretch?: number | undefined
-      fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+      fontStyle?: 'italic' | 'normal' | undefined
+      fontVariationSettings?: 'normal' | Record<string, number> | undefined
     }>,
     z.ZodTypeDef,
     StyleRule<{
@@ -389,7 +396,8 @@ export declare const schemaLocale: z.ZodObject<
         | undefined
       fontWeight?: number | undefined
       fontStretch?: number | undefined
-      fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+      fontStyle?: 'italic' | 'normal' | undefined
+      fontVariationSettings?: 'normal' | Record<string, number> | undefined
     }>
   >,
   {},
@@ -411,7 +419,8 @@ export declare const schemaLocales: z.ZodObject<
           | undefined
         fontWeight?: number | undefined
         fontStretch?: number | undefined
-        fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+        fontStyle?: 'italic' | 'normal' | undefined
+        fontVariationSettings?: 'normal' | Record<string, number> | undefined
       }>,
       z.ZodTypeDef,
       StyleRule<{
@@ -435,7 +444,8 @@ export declare const schemaLocales: z.ZodObject<
           | undefined
         fontWeight?: number | undefined
         fontStretch?: number | undefined
-        fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+        fontStyle?: 'italic' | 'normal' | undefined
+        fontVariationSettings?: 'normal' | Record<string, number> | undefined
       }>
     >,
     {},
@@ -456,7 +466,8 @@ export declare const schemaLocales: z.ZodObject<
             | undefined
           fontWeight?: number | undefined
           fontStretch?: number | undefined
-          fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+          fontStyle?: 'italic' | 'normal' | undefined
+          fontVariationSettings?: 'normal' | Record<string, number> | undefined
         }>,
         z.ZodTypeDef,
         StyleRule<{
@@ -480,7 +491,8 @@ export declare const schemaLocales: z.ZodObject<
             | undefined
           fontWeight?: number | undefined
           fontStretch?: number | undefined
-          fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+          fontStyle?: 'italic' | 'normal' | undefined
+          fontVariationSettings?: 'normal' | Record<string, number> | undefined
         }>
       >,
       {},
@@ -503,7 +515,8 @@ export declare const schemaLocales: z.ZodObject<
             | undefined
           fontWeight?: number | undefined
           fontStretch?: number | undefined
-          fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+          fontStyle?: 'italic' | 'normal' | undefined
+          fontVariationSettings?: 'normal' | Record<string, number> | undefined
         }>,
         z.ZodTypeDef,
         StyleRule<{
@@ -527,7 +540,8 @@ export declare const schemaLocales: z.ZodObject<
             | undefined
           fontWeight?: number | undefined
           fontStretch?: number | undefined
-          fontStyle?: number | 'italic' | 'normal' | 'oblique' | undefined
+          fontStyle?: 'italic' | 'normal' | undefined
+          fontVariationSettings?: 'normal' | Record<string, number> | undefined
         }>
       >,
       {},
@@ -550,7 +564,7 @@ export interface WebFont {
   fontFace?: Array<{
     fontFamily: string
     fontStretch?: number | [number, number]
-    fontStyle?: number | 'italic' | 'oblique'
+    fontStyle?: 'italic'
     fontWeight?: number | [number, number]
   }>
   resourceHint?: ResourceHint[]

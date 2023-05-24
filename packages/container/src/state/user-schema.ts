@@ -65,29 +65,7 @@ export const schemaFontPlaceholder = z.object({
 
       return /^[a-z-]+$/i.test(value)
     }),
-  // family: z.string(),
   source: z.string(),
-  // style: z.optional(
-  //   z
-  //     .enum(['normal', 'italic', 'oblique'])
-  //     .or(z.number().min(-90).max(90))
-  //     // TODO: validate angle range
-  //     .or(z.array(z.number().min(-90).max(90)).length(2))
-  // ),
-  // weight: z.optional(
-  //   z
-  //     // TODO: validate weight range
-  //     .array(z.number().int().min(1).max(1000))
-  //     .length(2)
-  //     .or(z.number().int().min(1).max(1000))
-  // ),
-  // stretch: z.optional(
-  //   z
-  //     // TODO: validate stretch range
-  //     .array(z.number().min(50).max(200))
-  //     .length(2)
-  //     .or(z.number().min(50).max(200))
-  // ),
   display: z.optional(
     z
       .literal('auto')
@@ -145,12 +123,12 @@ const schemaFontFamily = z.array(schemaFont.or(schemaFallback)).transform(
   }
 )
 
+export const schemaFontVariationSettings = z
+  .literal('normal')
+  .or(z.record(z.number().int()))
 export const schemaFontWeight = z.number().min(1).max(1000).default(400)
 export const schemaFontStretch = z.number().min(50).max(200).default(100)
-export const schemaFontStyle = z
-  .enum(['normal', 'italic', 'oblique'])
-  .or(z.number().min(-90).max(90))
-  .default('normal')
+export const schemaFontStyle = z.enum(['normal', 'italic']).default('normal')
 
 // 'fontOpticalSizing'
 // 'fontVariationSetting'
@@ -158,7 +136,8 @@ export const schemaFontProperties = z.object({
   fontFamily: schemaFontFamily.optional(),
   fontWeight: schemaFontWeight.optional(),
   fontStretch: schemaFontStretch.optional(),
-  fontStyle: schemaFontStyle.optional()
+  fontStyle: schemaFontStyle.optional(),
+  fontVariationSettings: schemaFontVariationSettings.optional()
 })
 
 export type InputFontProperties = z.input<typeof schemaFontProperties>
@@ -244,7 +223,7 @@ export interface WebFont {
   fontFace?: Array<{
     fontFamily: string
     fontStretch?: number | [number, number]
-    fontStyle?: number | 'italic' | 'oblique'
+    fontStyle?: 'italic'
     fontWeight?: number | [number, number]
   }>
   resourceHint?: ResourceHint[]
