@@ -42,7 +42,7 @@
   "private": true,
   "repository": "https://github.com/escapace/web-fonts.git",
   "scripts": {
-    "build": "pnpm run -r --filter './packages/*' build",
+    "build": "pnpm run --sequential -r --filter './packages/*' build",
     "lint": "ls-lint && pnpm run -r --filter './packages/*' lint",
     "prepare": "is-ci || husky install",
     "release": "pnpm run -r --filter './packages/*' release",
