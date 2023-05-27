@@ -46,6 +46,8 @@ export const fontOpen = async (
 
   const font = await fontKitOpen(source)
 
+  // TODO: implement https://drafts.csswg.org/css-fonts/#font-style-matching
+  // for better warnings
   if (isVariableFont) {
     // @ts-expect-error bad types
     const variationAxes = schemaFontKitVariationAxes.parse(font.variationAxes)

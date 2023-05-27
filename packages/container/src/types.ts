@@ -2,8 +2,7 @@ import {
   CSSProperties,
   Fallback as IFallback,
   InferFont,
-  InferFontProperties,
-  ResourceHint
+  InferFontProperties
 } from './state/user-schema'
 
 export interface FontFallback {
@@ -42,9 +41,7 @@ export interface LightningCSSTargets {
 
 export const enum TypeFontState {
   Initial,
-  Written,
-  Hints,
-  Metrics
+  Written
 }
 
 export interface FontStateInitial {
@@ -59,12 +56,7 @@ export interface FontStateWritten extends Omit<FontStateInitial, 'type'> {
   files: string[]
 }
 
-export interface FontStateHints extends Omit<FontStateWritten, 'type'> {
-  type: TypeFontState.Hints
-  resourceHints: ResourceHint[]
-}
-
-export type FontState = FontStateInitial | FontStateWritten | FontStateHints
+export type FontState = FontStateInitial | FontStateWritten
 
 export interface Options {
   cwd?: string
@@ -103,16 +95,19 @@ export interface FontProperties
 
 export interface Style {
   id: string
+  parent?: string
   fontProperties?: string
   atRules: AtRule[]
   properties: CSSProperties<{}>
   locale: string
-  fontPropertiesKeys: Array<keyof Required<FontProperties>>
+  // fontPropertiesKeys: Array<keyof Required<FontProperties>>
   classname: string
   graph?: Map<string, string[]>
   style?: string
   noScriptStyle?: string
-  styleFallback?: string
+  fallbackStyle?: string
+  noScriptStyleProperties?: CSSProperties<{}>
+  fallbackStyleProperties?: CSSProperties<{}>
 }
 
 export interface Configuration {
