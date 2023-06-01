@@ -26,6 +26,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ inputs.ref }}
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.10'
+          cache: 'pip'
       - name: setup node
         uses: actions/setup-node@v3
         with:
@@ -55,7 +60,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store
       - name: install dependencies
-        run: pnpm install
+        run: |
+          pip3 install --upgrade pip
+          pip3 install -r requirements.txt
+          pnpm install
       - name: build
         run: pnpm run build
       - name: typecheck

@@ -73,6 +73,20 @@ jobs:
           done < <(find "./lib" -type f -name '*.tgz' -not -name 'context.tgz' -print0 2>/dev/null)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: publish to npmjs
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
+            @escapace:registry=https://registry.npmjs.org
+            provenance=true
+            always-auth=true
+          EOF
+
+          while read -d '' -r file; do
+            npm publish --provenance --access public "${file}"
+          done < <(find "./lib" -type f -name '*.tgz' -not -name 'context.tgz' -print0 2>/dev/null)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: checkout
         uses: actions/checkout@v3
         with:
