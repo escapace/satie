@@ -102,6 +102,7 @@ jobs:
     uses: ./.github/workflows/workflow-call-build-container.yaml
     with:
       context: 'lib/escapace-web-fonts-container-${{ needs.context.outputs.version }}.tgz'
+      dockerfile: 'package/Dockerfile'
       args: >-
         --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}
         --build-arg NODE_VERSION=${{ needs.context.outputs.node-version }}

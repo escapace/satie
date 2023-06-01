@@ -5,6 +5,10 @@ on:
         required: true
         type: string
         description: 'Path to context archive.'
+      dockerfile:
+        default: 'Dockerfile'
+        type: string
+        description: 'Path to dockerfile.'
       args:
         required: false
         type: string
@@ -77,7 +81,7 @@ jobs:
           docker buildx build
           --cache-from type=local,src=$HOME/.buildx
           --cache-to   type=local,dest=$HOME/.buildx,mode=max
-          --file Dockerfile
+          --file "${{ inputs.dockerfile }}"
           --platform linux/amd64,linux/arm64
           ${{ steps.filter.outputs.value }}
-          --push - < ${{ inputs.context }}
+          --push - < "${{ inputs.context }}"
