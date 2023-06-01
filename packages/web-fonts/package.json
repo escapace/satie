@@ -36,6 +36,7 @@
   "license": "MPL-2.0",
   "module": "lib/esm/index.mjs",
   "private": false,
+  "repository": "https://github.com/escapace/web-fonts.git",
   "scripts": {
     "build": "node ../../scripts/build.mjs && cp src/types.d.ts lib/types",
     "copy-types": "cp ../container/lib/types/state/user-schema.d.ts src/types.d.ts && prettier --write src/types.d.ts",
