@@ -68,11 +68,10 @@ COPY --chown=root:root package/scripts/docker-entrypoint.sh /usr/local/bin/docke
 COPY --chown=node:node package /opt/app
 
 RUN cd /opt/app \
+  && npm install --omit=dev \
   && pip3 install --no-cache --upgrade pip setuptools \
   && pip3 install -r /opt/app/requirements.txt \
   && rm -f /opt/app/requirements.txt /opt/app/Dockerfile
-
-  # && npm install --omit=dev \
 
 WORKDIR /wd
 ENTRYPOINT ["/usr/local/bin/gosu", "node:node", "node", "--enable-source-maps", "--no-warnings", "--experimental-vm-modules", "/opt/app/lib/esm/cli.mjs"]
