@@ -10,12 +10,13 @@ on:
       pnpm-version:
         required: true
         type: string
-      artifact-name:
+      version:
         required: false
         type: string
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   main:
@@ -25,15 +26,19 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ inputs.ref }}
-      - name: setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10.10'
-          cache: 'pip'
       - name: setup node
         uses: actions/setup-node@v3
         with:
           node-version: ${{ inputs.node-version }}
+      - name: write .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
+            @escapace:registry=https://npm.pkg.github.com
+            always-auth=true
+          EOF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
@@ -41,8 +46,7 @@ jobs:
           run_install: false
       - name: get pnpm store directory
         id: pnpm-store-path
-        run: |
-          echo "value=$(pnpm store path)" >> $GITHUB_OUTPUT
+        run: echo "value=$(pnpm store path)" >> $GITHUB_OUTPUT
       - name: pnpm cache
         uses: actions/cache@v3
         with:
@@ -51,36 +55,26 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store
       - name: install dependencies
-        run: |
-          pip3 install --upgrade pip
-          pip3 install -r requirements.txt
-          pnpm install
+        run: pnpm install
       - name: build
         run: pnpm run build
       - name: typecheck
         run: pnpm run typecheck
-      - name: lint
-        run: pnpm run lint
       - name: test
         run: pnpm run test
-      - name: archive context
-        if: inputs.artifact-name != ''
-        run: >-
-          tar -C . --exclude=node_modules
-          -czvf context.tar.gz
-          ./.dockerignore
-          ./Dockerfile
-          ./packages/container/lib
-          ./packages/container/package.json
-          ./packages/container/scripts/docker-entrypoint.sh
-          ./packages/container/src/font/font-loader.ts
-          ./packages/container/src/font/font-strip.py
-          ./packages/web-fonts/lib
-          ./packages/web-fonts/package.json
-          ./requirements.txt
-      - name: upload context.tar
-        if: inputs.artifact-name != ''
+      - name: code coverage
+        uses: codecov/codecov-action@v3.1.4
+      - name: pnpm pack
+        if: inputs.version != ''
+        run: |
+          pnpm --filter './packages/web-fonts' --filter './packages/container' exec bash -c "jq -r '.version=\"${{ inputs.version }}\"' package.json > package-updated.json"
+          pnpm --filter './packages/web-fonts' --filter './packages/container' exec mv package-updated.json package.json
+          pnpm --filter './packages/web-fonts' exec pnpm pack --pack-destination ../../lib
+          cp packages/container/lib/context.tgz lib/
+      - name: upload
+        if: inputs.version != ''
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.artifact-name }}
-          path: context.tar.gz
+          retention-days: 3
+          name: package
+          path: 'lib/*.tgz'

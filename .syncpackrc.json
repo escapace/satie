@@ -1,4 +1,14 @@
 {
+  "dependencyTypes": [
+    "dev",
+    "overrides",
+    "peer",
+    "pnpmOverrides",
+    "prod",
+    "resolutions",
+    "workspace",
+    "engines"
+  ],
   "customTypes": {
     "engines": {
       "path": "engines",
@@ -22,7 +32,7 @@
       "dependencies": ["**"],
       "dependencyTypes": ["prod"],
       "packages": ["**"],
-      "range": ""
+      "range": "^"
     }
   ],
   "source": ["package.json", "packages/*/package.json"]

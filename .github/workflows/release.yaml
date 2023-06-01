@@ -4,46 +4,90 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - trunk
-    paths-ignore:
-      - README.md
-      - LICENSE
+
+env:
+  # 7 GiB by default on GitHub, setting to 6 GiB
+  # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+  NODE_OPTIONS: --max-old-space-size=6144
 
 jobs:
   context:
     uses: ./.github/workflows/workflow-call-context.yaml
-  test-build:
-    needs:
-      - context
-    uses: ./.github/workflows/workflow-call-test-build.yaml
-    with:
-      ref: ${{ needs.context.outputs.ref }}
-      node-version: ${{ needs.context.outputs.node-version }}
-      pnpm-version: ${{ needs.context.outputs.pnpm-version }}
-      artifact-name: ${{ needs.context.outputs.version }}
-  build-container:
-    needs:
-      - context
-      - test-build
+  ci:
     if: needs.context.outputs.environment == 'production'
-    uses: ./.github/workflows/workflow-call-build-container.yaml
-    concurrency: ${{ github.ref }}
-    with:
-      artifact-name: ${{ needs.context.outputs.version }}
-      file: Dockerfile
-      args: >-
-        --build-arg PNPM_VERSION=${{ needs.context.outputs.pnpm-version }}
-        --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}
-  github-release:
+    uses: ./.github/workflows/workflow-call-ci.yaml
     needs:
       - context
-      - build-container
-    if: needs.build-container.result == 'success'
-    uses: ./.github/workflows/workflow-call-github-release.yaml
     with:
-      version: ${{ needs.context.outputs.version }}
-      environment: ${{ needs.context.outputs.environment }}
+      ref: ${{ needs.context.outputs.ref }}
       node-version: ${{ needs.context.outputs.node-version }}
       pnpm-version: ${{ needs.context.outputs.pnpm-version }}
-      ref: ${{ needs.context.outputs.ref }}
+      version: ${{ needs.context.outputs.version }}
+  build-container-node:
+    if: needs.context.outputs.environment == 'production'
+    needs:
+      - context
+      - ci
+    uses: ./.github/workflows/workflow-call-build-container.yaml
+    with:
+      context: lib/context.tgz
+      args: >-
+        --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}
+        --build-arg NODE_VERSION=${{ needs.context.outputs.node-version }}
+        --build-arg PNPM_VERSION=${{ needs.context.outputs.pnpm-version }}
+  release:
+    if: needs.context.outputs.environment == 'production'
+    runs-on: ubuntu-latest
+    needs:
+      - context
+      - ci
+    permissions:
+      id-token: write
+      packages: write
+      contents: write
+    steps:
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ needs.context.outputs.node-version }}
+      - name: download package
+        uses: actions/download-artifact@v3
+        with:
+          name: package
+          path: lib
+      - name: install latest npm
+        run: |
+          npm install -g npm
+          npm --version
+      - name: publish to github packages
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+            @escapace:registry=https://npm.pkg.github.com
+            provenance=true
+            always-auth=true
+          EOF
+
+          while read -d '' -r file; do
+            npm publish --provenance --access public "${file}"
+          done < <(find "./lib" -type f -name '*.tgz' -not -name 'context.tgz' -print0 2>/dev/null)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.ref.outputs.value }}
+      - name: github release
+        run: |
+          echo "${{ needs.context.outputs.changelog }}" > changelog.md
+
+          if [[ "${{ needs.context.outputs.prerelease }}" == "true" ]]; then
+            gh release create v${{ needs.context.outputs.version }} \
+              --prerelease \
+              --notes-file changelog.md
+          else
+            gh release create v${{ needs.context.outputs.version }} \
+              --notes-file changelog.md
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

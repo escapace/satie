@@ -8,7 +8,7 @@ updates:
       time: '07:00'
       timezone: GMT
   - package-ecosystem: pip
-    directory: '/'
+    directory: '/packages/container'
     schedule:
       interval: weekly
       day: saturday
