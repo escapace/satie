@@ -67,11 +67,11 @@ COPY --chown=root:root package/scripts/docker-entrypoint.sh /usr/local/bin/docke
 COPY --chown=node:node package /opt/app
 
 RUN cd /opt/app \
-  && dnf install --assumeyes gcc gcc-c++ freetype-devel glib2-devel cairo-devel \
+  && dnf install --assumeyes gcc gcc-c++ freetype-devel glib2-devel cairo-devel python3-devel \
   && pip3 install --no-cache --upgrade pip setuptools \
   && pip3 install -r /opt/app/requirements.txt \
   && rm -f /opt/app/requirements.txt /opt/app/Dockerfile \
-  && dnf --assumeyes remove gcc gcc-c++ freetype-devel glib2-devel cairo-devel \
+  && dnf --assumeyes remove gcc gcc-c++ freetype-devel glib2-devel cairo-devel  python3-devel \
   && dnf --assumeyes clean all \
   && npm install --omit=dev
 
