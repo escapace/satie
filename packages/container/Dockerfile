@@ -17,7 +17,7 @@ RUN set -eux; \
   esac; \
   dnf clean all; \
   dnf update -y; \
-  dnf install -y --allowerasing ca-certificates curl gnupg dirmngr xz libatomic python3 python3-pip; \
+  dnf install -y --allowerasing ca-certificates curl gnupg dirmngr xz libatomic python3 python3-pip gcc; \
   curl -fsSL --compressed -o /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$ARCH"; \
   curl -fsSL --compressed -o /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$ARCH.asc"; \
   gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
@@ -53,7 +53,6 @@ RUN set -eux; \
   ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
   gpgconf --kill all; \
   rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
-  dnf --assumeyes clean all; \
   groupadd --gid=$GID node; \
   useradd --shell=/bin/sh --uid=$UID -g node node; \
   mkdir -p /opt/app; \
@@ -71,7 +70,9 @@ RUN cd /opt/app \
   && npm install --omit=dev \
   && pip3 install --no-cache --upgrade pip setuptools \
   && pip3 install -r /opt/app/requirements.txt \
-  && rm -f /opt/app/requirements.txt /opt/app/Dockerfile
+  && rm -f /opt/app/requirements.txt /opt/app/Dockerfile \
+  && dnf --assumeyes remove gcc \
+  && dnf --assumeyes clean all
 
 WORKDIR /wd
 ENTRYPOINT ["/usr/local/bin/gosu", "node:node", "node", "--enable-source-maps", "--no-warnings", "--experimental-vm-modules", "/opt/app/lib/esm/cli.mjs"]
