@@ -83,7 +83,7 @@
   "private": true,
   "repository": "https://github.com/escapace/web-fonts.git",
   "scripts": {
-    "build": "node ../../scripts/build.mjs && pnpm deploy --filter '@escapace/web-fonts-container' --prod --ignore-scripts lib/context && tar -czf lib/context.tgz -C lib/context .",
+    "build": "node ../../scripts/build.mjs",
     "lint": "eslint 'src/**/*.ts?(x)'",
     "test": "node ../../scripts/test.mjs && c8 mocha --no-warnings --experimental-vm-modules --enable-source-maps 'lib/tests/**/*.spec.js'",
     "typecheck": "tsc --noEmit -p tsconfig.json"

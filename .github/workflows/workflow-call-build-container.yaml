@@ -75,7 +75,6 @@ jobs:
       - name: build and push
         run: >-
           docker buildx build
-          --attest type=provenance,mode=max
           --cache-from type=local,src=$HOME/.buildx
           --cache-to   type=local,dest=$HOME/.buildx,mode=max
           --file Dockerfile

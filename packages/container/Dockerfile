@@ -3,8 +3,8 @@ ARG UID=1000
 ARG GID=1000
 ARG GOSU_VERSION=1.14
 ARG NODE_VERSION=18.4.0
-ARG PNPM_VERSION=8.6.0
 ENV PYTHONUNBUFFERED=1
+ENV NODE_ENV=production
 
 # https://github.com/nodejs/docker-node/blob/main/18/alpine3.16/Dockerfile
 RUN set -eux; \
@@ -59,17 +59,20 @@ RUN set -eux; \
   mkdir -p /opt/app; \
   chmod 770 /opt/app; \
   chown $UID:$GID /opt/app; \
-  npm install -g pnpm@$PNPM_VERSION; \
+  npm install -g npm; \
   gosu --version; \
   node --version; \
-  pnpm --version
+  npm --version
 
-COPY --chown=root:root scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-COPY --chown=node:node . /opt/app
+COPY --chown=root:root package/scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY --chown=node:node package /opt/app
 
-RUN pip3 install --no-cache --upgrade pip setuptools \
+RUN cd /opt/app \
+  && pip3 install --no-cache --upgrade pip setuptools \
   && pip3 install -r /opt/app/requirements.txt \
   && rm -f /opt/app/requirements.txt /opt/app/Dockerfile
+
+  # && npm install --omit=dev \
 
 WORKDIR /wd
 ENTRYPOINT ["/usr/local/bin/gosu", "node:node", "node", "--enable-source-maps", "--no-warnings", "--experimental-vm-modules", "/opt/app/lib/esm/cli.mjs"]

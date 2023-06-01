@@ -62,7 +62,7 @@ jobs:
       - name: install dependencies
         run: |
           pip3 install --upgrade pip
-          pip3 install -r requirements.txt
+          pip3 install -r packages/container/requirements.txt
           pnpm install
       - name: build
         run: pnpm run build
@@ -77,8 +77,7 @@ jobs:
         run: |
           pnpm --filter './packages/web-fonts' --filter './packages/container' exec bash -c "jq -r '.version=\"${{ inputs.version }}\"' package.json > package-updated.json"
           pnpm --filter './packages/web-fonts' --filter './packages/container' exec mv package-updated.json package.json
-          pnpm --filter './packages/web-fonts' exec pnpm pack --pack-destination ../../lib
-          cp packages/container/lib/context.tgz lib/
+          pnpm --filter './packages/web-fonts' --filter './packages/container' exec pnpm pack --pack-destination ../../lib
       - name: upload
         if: inputs.version != ''
         uses: actions/upload-artifact@v3
