@@ -17,7 +17,7 @@ RUN set -eux; \
   esac; \
   dnf clean all; \
   dnf update -y; \
-  dnf install -y --allowerasing ca-certificates curl gnupg dirmngr xz libatomic python3 python3-pip gcc; \
+  dnf install -y --allowerasing ca-certificates curl gnupg dirmngr xz libatomic python3 python3-pip; \
   curl -fsSL --compressed -o /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$ARCH"; \
   curl -fsSL --compressed -o /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$ARCH.asc"; \
   gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
@@ -67,12 +67,13 @@ COPY --chown=root:root package/scripts/docker-entrypoint.sh /usr/local/bin/docke
 COPY --chown=node:node package /opt/app
 
 RUN cd /opt/app \
-  && npm install --omit=dev \
+  && dnf install --assumeyes gcc gcc-c++ freetype-devel glib2-devel cairo-devel \
   && pip3 install --no-cache --upgrade pip setuptools \
   && pip3 install -r /opt/app/requirements.txt \
   && rm -f /opt/app/requirements.txt /opt/app/Dockerfile \
-  && dnf --assumeyes remove gcc \
-  && dnf --assumeyes clean all
+  && dnf --assumeyes remove gcc gcc-c++ freetype-devel glib2-devel cairo-devel \
+  && dnf --assumeyes clean all \
+  && npm install --omit=dev
 
 WORKDIR /wd
 ENTRYPOINT ["/usr/local/bin/gosu", "node:node", "node", "--enable-source-maps", "--no-warnings", "--experimental-vm-modules", "/opt/app/lib/esm/cli.mjs"]
