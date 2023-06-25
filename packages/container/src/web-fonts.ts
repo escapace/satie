@@ -184,12 +184,12 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
       ...uniq(compact(styles.map((value) => value.fallbackStyle))),
       ...uniq(compact(styles.map((value) => value.style)))
     ].join('\n'),
-    state.targets.lightningCSS
+    state.targets.lightningcss
   )
 
   const noScriptStyle = minifyCss(
     uniq(compact(styles.map((value) => value.noScriptStyle))).join('\n'),
-    state.targets.lightningCSS
+    state.targets.lightningcss
   )
 
   const lookup = compact(
@@ -243,7 +243,7 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
       )
       .map((value) => fontFaceToString(value))
       .join('\n\n'),
-    state.targets.lightningCSS
+    state.targets.lightningcss
   )
 
   const order = last(

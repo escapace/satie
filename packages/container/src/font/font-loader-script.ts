@@ -16,7 +16,7 @@ export const fontLoaderScript = async (
   buildToString(
     await build({
       entryPoints: [state.runtimeFontLoaderPath],
-      absWorkingDir: state.runtimeFontLoaderPath,
+      absWorkingDir: state.runtimeDirectory,
       bundle: true,
       minify: true,
       target: state.targets.esbuild,

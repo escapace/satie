@@ -4,6 +4,7 @@ import {
   InferFont,
   InferFontProperties
 } from './state/user-schema'
+import { Targets } from 'lightningcss'
 
 export interface FontFallback {
   font: IFallback
@@ -27,17 +28,17 @@ export interface FontFace extends FontFaceAdjustments {
   fontDisplay?: InferFont['display']
 }
 
-export interface LightningCSSTargets {
-  android?: number
-  chrome?: number
-  edge?: number
-  firefox?: number
-  ie?: number
-  ios_saf?: number
-  opera?: number
-  safari?: number
-  samsung?: number
-}
+// export interface LightningCSSTargets {
+//   android?: number
+//   chrome?: number
+//   edge?: number
+//   firefox?: number
+//   ie?: number
+//   ios_saf?: number
+//   opera?: number
+//   safari?: number
+//   samsung?: number
+// }
 
 export const enum TypeFontState {
   Initial,
@@ -119,7 +120,6 @@ export interface Configuration {
 }
 
 export interface State {
-  browsers: string[]
   configuration: Configuration
   configurationDirectory: string
   configurationFile: string
@@ -131,8 +131,9 @@ export interface State {
   runtimeFontLoaderPath: string
   runtimeFontStripPath: string
   targets: {
-    lightningCSS: LightningCSSTargets
-    esbuild?: string[]
+    browserslist: string[]
+    lightningcss: Targets
+    esbuild: string[]
   }
 }
 

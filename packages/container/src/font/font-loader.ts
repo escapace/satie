@@ -114,13 +114,6 @@ const createPromise = async (slug: string): Promise<boolean> => {
             const style =
               fontFace.fontStyle === undefined ? undefined : fontFace.fontStyle
 
-            console.log({
-              fontFamily: fontFace.fontFamily,
-              weight,
-              stretch,
-              style
-            })
-
             await new FontFaceObserver(fontFace.fontFamily, {
               weight,
               stretch,

@@ -1,5 +1,4 @@
-import { transform } from 'lightningcss'
-import { LightningCSSTargets } from '../types'
+import { Targets, transform } from 'lightningcss'
 
 // export const minifyCss = (value: string, targets: LightningCSSTargets) => {
 //   const { code } = transform({
@@ -30,7 +29,7 @@ import { LightningCSSTargets } from '../types'
 // }
 
 import CleanCSS from 'clean-css'
-export const minifyCss = (value: string, targets: LightningCSSTargets) => {
+export const minifyCss = (value: string, targets: Targets) => {
   const { code } = transform({
     targets,
     filename: 'style.css',

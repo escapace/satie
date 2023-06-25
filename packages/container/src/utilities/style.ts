@@ -1,7 +1,6 @@
-import { transform } from 'lightningcss'
+import { Targets, transform } from 'lightningcss'
 import { forEach } from 'lodash-es'
 import { StyleRule } from '../state/user-schema'
-import { LightningCSSTargets } from '../types'
 
 function dashify(str: string) {
   return str
@@ -47,7 +46,7 @@ export function iterateProperties(v: StyleRule<{}>, indent = '', prefix = '') {
 export const style = (
   selector: string,
   rule: StyleRule<{}>,
-  targets?: LightningCSSTargets
+  targets?: Targets
 ) => {
   const css = `${selector} {
 ${iterateProperties(rule, '  ')}
