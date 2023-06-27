@@ -10,10 +10,10 @@ const buildToString = (value: { outputFiles: OutputFile[] }): string =>
 
 export const fontLoaderScript = async (
   state: State,
-  locales: Array<readonly [string, string[]]>,
+  locales: Array<readonly [string, string[] | string]>,
   fonts: WebFont[]
-): Promise<string> =>
-  buildToString(
+): Promise<string> => {
+  return buildToString(
     await build({
       entryPoints: [state.runtimeFontLoaderPath],
       absWorkingDir: state.runtimeDirectory,
@@ -29,3 +29,4 @@ export const fontLoaderScript = async (
       }
     })
   )
+}

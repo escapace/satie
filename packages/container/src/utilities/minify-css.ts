@@ -1,6 +1,6 @@
 import { Targets, transform } from 'lightningcss'
 
-// export const minifyCss = (value: string, targets: LightningCSSTargets) => {
+// export const minifyCss = (value: string, targets: Targets) => {
 //   const { code } = transform({
 //     targets,
 //     filename: 'style.css',

@@ -10,8 +10,8 @@ export type InputRule = z.input<typeof schemaRule>
 export type InferRule = z.infer<typeof schemaRule>
 export type InputLocale = Record<string, InputRule>
 export type InferLocale = Record<string, InferRule>
-export type InputLocales = Record<string, InputLocale>
-export type InferLocales = Record<string, InferLocale>
+export type InputLocales = Record<string, InputLocale | string>
+export type InferLocales = Record<string, InferLocale | string>
 export type Fallback = z.infer<typeof schemaFallback>
 export declare const schemaFallback: z.ZodObject<
   {
@@ -406,146 +406,206 @@ export declare const schemaLocale: z.ZodObject<
 export declare const schemaLocales: z.ZodObject<
   {},
   'strip',
-  z.ZodObject<
-    {},
-    'strip',
-    z.ZodType<
-      StyleRule<{
-        fontFamily?:
-          | {
-              fallbacks: Fallback[]
-              fonts: InferFont[]
-            }
-          | undefined
-        fontWeight?: number | undefined
-        fontStretch?: number | undefined
-        fontStyle?: 'italic' | 'normal' | undefined
-        fontVariationSettings?: 'normal' | Record<string, number> | undefined
-      }>,
-      z.ZodTypeDef,
-      StyleRule<{
-        fontFamily?:
-          | (
-              | InputFont
+  z.ZodUnion<
+    [
+      z.ZodString,
+      z.ZodObject<
+        {},
+        'strip',
+        z.ZodType<
+          StyleRule<{
+            fontFamily?:
               | {
-                  id: string
-                  names: [string, ...string[]]
-                  weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-                  italic: boolean
-                  capHeight: number
-                  ascent: number
-                  descent: number
-                  lineGap: number
-                  unitsPerEm: number
-                  xHeight: number
-                  xWidthAvg: number
+                  fallbacks: Fallback[]
+                  fonts: InferFont[]
                 }
-            )[]
-          | undefined
-        fontWeight?: number | undefined
-        fontStretch?: number | undefined
-        fontStyle?: 'italic' | 'normal' | undefined
-        fontVariationSettings?: 'normal' | Record<string, number> | undefined
-      }>
-    >,
-    {},
-    {}
+              | undefined
+            fontWeight?: number | undefined
+            fontStretch?: number | undefined
+            fontStyle?: 'italic' | 'normal' | undefined
+            fontVariationSettings?:
+              | 'normal'
+              | Record<string, number>
+              | undefined
+          }>,
+          z.ZodTypeDef,
+          StyleRule<{
+            fontFamily?:
+              | (
+                  | InputFont
+                  | {
+                      id: string
+                      names: [string, ...string[]]
+                      weight:
+                        | 100
+                        | 200
+                        | 300
+                        | 400
+                        | 500
+                        | 600
+                        | 700
+                        | 800
+                        | 900
+                      italic: boolean
+                      capHeight: number
+                      ascent: number
+                      descent: number
+                      lineGap: number
+                      unitsPerEm: number
+                      xHeight: number
+                      xWidthAvg: number
+                    }
+                )[]
+              | undefined
+            fontWeight?: number | undefined
+            fontStretch?: number | undefined
+            fontStyle?: 'italic' | 'normal' | undefined
+            fontVariationSettings?:
+              | 'normal'
+              | Record<string, number>
+              | undefined
+          }>
+        >,
+        {},
+        {}
+      >
+    ]
   >,
   z.objectOutputType<
     {},
-    z.ZodObject<
-      {},
-      'strip',
-      z.ZodType<
-        StyleRule<{
-          fontFamily?:
-            | {
-                fallbacks: Fallback[]
-                fonts: InferFont[]
-              }
-            | undefined
-          fontWeight?: number | undefined
-          fontStretch?: number | undefined
-          fontStyle?: 'italic' | 'normal' | undefined
-          fontVariationSettings?: 'normal' | Record<string, number> | undefined
-        }>,
-        z.ZodTypeDef,
-        StyleRule<{
-          fontFamily?:
-            | (
-                | InputFont
+    z.ZodUnion<
+      [
+        z.ZodString,
+        z.ZodObject<
+          {},
+          'strip',
+          z.ZodType<
+            StyleRule<{
+              fontFamily?:
                 | {
-                    id: string
-                    names: [string, ...string[]]
-                    weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-                    italic: boolean
-                    capHeight: number
-                    ascent: number
-                    descent: number
-                    lineGap: number
-                    unitsPerEm: number
-                    xHeight: number
-                    xWidthAvg: number
+                    fallbacks: Fallback[]
+                    fonts: InferFont[]
                   }
-              )[]
-            | undefined
-          fontWeight?: number | undefined
-          fontStretch?: number | undefined
-          fontStyle?: 'italic' | 'normal' | undefined
-          fontVariationSettings?: 'normal' | Record<string, number> | undefined
-        }>
-      >,
-      {},
-      {}
+                | undefined
+              fontWeight?: number | undefined
+              fontStretch?: number | undefined
+              fontStyle?: 'italic' | 'normal' | undefined
+              fontVariationSettings?:
+                | 'normal'
+                | Record<string, number>
+                | undefined
+            }>,
+            z.ZodTypeDef,
+            StyleRule<{
+              fontFamily?:
+                | (
+                    | InputFont
+                    | {
+                        id: string
+                        names: [string, ...string[]]
+                        weight:
+                          | 100
+                          | 200
+                          | 300
+                          | 400
+                          | 500
+                          | 600
+                          | 700
+                          | 800
+                          | 900
+                        italic: boolean
+                        capHeight: number
+                        ascent: number
+                        descent: number
+                        lineGap: number
+                        unitsPerEm: number
+                        xHeight: number
+                        xWidthAvg: number
+                      }
+                  )[]
+                | undefined
+              fontWeight?: number | undefined
+              fontStretch?: number | undefined
+              fontStyle?: 'italic' | 'normal' | undefined
+              fontVariationSettings?:
+                | 'normal'
+                | Record<string, number>
+                | undefined
+            }>
+          >,
+          {},
+          {}
+        >
+      ]
     >,
     'strip'
   >,
   z.objectInputType<
     {},
-    z.ZodObject<
-      {},
-      'strip',
-      z.ZodType<
-        StyleRule<{
-          fontFamily?:
-            | {
-                fallbacks: Fallback[]
-                fonts: InferFont[]
-              }
-            | undefined
-          fontWeight?: number | undefined
-          fontStretch?: number | undefined
-          fontStyle?: 'italic' | 'normal' | undefined
-          fontVariationSettings?: 'normal' | Record<string, number> | undefined
-        }>,
-        z.ZodTypeDef,
-        StyleRule<{
-          fontFamily?:
-            | (
-                | InputFont
+    z.ZodUnion<
+      [
+        z.ZodString,
+        z.ZodObject<
+          {},
+          'strip',
+          z.ZodType<
+            StyleRule<{
+              fontFamily?:
                 | {
-                    id: string
-                    names: [string, ...string[]]
-                    weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-                    italic: boolean
-                    capHeight: number
-                    ascent: number
-                    descent: number
-                    lineGap: number
-                    unitsPerEm: number
-                    xHeight: number
-                    xWidthAvg: number
+                    fallbacks: Fallback[]
+                    fonts: InferFont[]
                   }
-              )[]
-            | undefined
-          fontWeight?: number | undefined
-          fontStretch?: number | undefined
-          fontStyle?: 'italic' | 'normal' | undefined
-          fontVariationSettings?: 'normal' | Record<string, number> | undefined
-        }>
-      >,
-      {},
-      {}
+                | undefined
+              fontWeight?: number | undefined
+              fontStretch?: number | undefined
+              fontStyle?: 'italic' | 'normal' | undefined
+              fontVariationSettings?:
+                | 'normal'
+                | Record<string, number>
+                | undefined
+            }>,
+            z.ZodTypeDef,
+            StyleRule<{
+              fontFamily?:
+                | (
+                    | InputFont
+                    | {
+                        id: string
+                        names: [string, ...string[]]
+                        weight:
+                          | 100
+                          | 200
+                          | 300
+                          | 400
+                          | 500
+                          | 600
+                          | 700
+                          | 800
+                          | 900
+                        italic: boolean
+                        capHeight: number
+                        ascent: number
+                        descent: number
+                        lineGap: number
+                        unitsPerEm: number
+                        xHeight: number
+                        xWidthAvg: number
+                      }
+                  )[]
+                | undefined
+              fontWeight?: number | undefined
+              fontStretch?: number | undefined
+              fontStyle?: 'italic' | 'normal' | undefined
+              fontVariationSettings?:
+                | 'normal'
+                | Record<string, number>
+                | undefined
+            }>
+          >,
+          {},
+          {}
+        >
+      ]
     >,
     'strip'
   >
@@ -578,6 +638,9 @@ export interface WebFontLocale {
   style: string
 }
 export interface WebFontsJson {
+  alias: {
+    [x: string]: string
+  }
   locale: {
     [x: string]: WebFontLocale
   }

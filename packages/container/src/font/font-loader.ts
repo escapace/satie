@@ -8,7 +8,7 @@ interface WebFont extends Font {
   state?: Promise<boolean>
 }
 
-declare const __DATA_LOCALES__: Array<readonly [string, string[]]>
+declare const __DATA_LOCALES__: Array<readonly [string, string[] | string]>
 declare const __DATA_FONTS__: WebFont[]
 
 type Callback = (webFonts: Font[]) => unknown
@@ -192,7 +192,10 @@ export const webFontLoader = async (locale: string): Promise<Font[]> => {
     throw new Error('Font Loader: No locale')
   }
 
-  const slugs = LOCALE_INDEX.get(locale)!
+  const value = LOCALE_INDEX.get(locale)!
+
+  const slugs =
+    typeof value === 'string' ? (LOCALE_INDEX.get(value)! as string[]) : value
 
   await Promise.all(slugs.map(async (slug) => await next(slug)))
 

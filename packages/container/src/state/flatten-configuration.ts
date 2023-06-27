@@ -4,7 +4,9 @@ import {
   defaults,
   flatMap,
   groupBy,
+  has,
   isEmpty,
+  map,
   omit,
   pick,
   pickBy,
@@ -228,6 +230,10 @@ export const flattenConfiguration = (
   }
 
   const styles: Style[] = flatMap(locales, (value, locale) => {
+    if (typeof value === 'string') {
+      return []
+    }
+
     return flatMap(value, (styleRule, classname) => {
       return flattenStyleRule(styleRule).map((value) => {
         const reducedFontProperties = reduceFontProperties(value.fontProperties)
@@ -270,11 +276,52 @@ export const flattenConfiguration = (
     throw new Error('Conflicting font names.')
   }
 
+  const allLocales = groupBy(styles, (value) => value.locale)
+
+  const [localeFromAlias, localeToAlias] = map(locales, (value, key) => {
+    if (typeof value === 'string') {
+      if (!has(allLocales, value)) {
+        return undefined
+      }
+
+      if (value === key) {
+        return undefined
+      }
+
+      return [key, value] as const
+    }
+
+    return undefined
+  })
+    .filter((value): value is [string, string] => value !== undefined)
+    .reduce(
+      (acc, value) => {
+        acc.forEach((map, index) => {
+          const [k, v] = index === 0 ? value : [...value].reverse()
+
+          const array = map.has(k)
+            ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              map.get(k)!
+            : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              (map.set(k, []), map.get(k)!)
+
+          if (!array.includes(v)) {
+            array.push(v)
+          }
+        })
+
+        return acc
+      },
+      [new Map<string, string[]>(), new Map<string, string[]>()]
+    )
+
   return {
     fonts,
     fallbackFonts: fallbacks,
     styles: sortedStyles,
     fontProperties,
-    locales: groupBy(styles, (value) => value.locale)
+    locales: allLocales,
+    localeFromAlias,
+    localeToAlias
   }
 }

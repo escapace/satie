@@ -117,6 +117,8 @@ export interface Configuration {
   fontProperties: Map<string, Required<FontProperties>>
   styles: Style[]
   locales: Record<string, Style[]>
+  localeFromAlias: Map<string, string[]>
+  localeToAlias: Map<string, string[]>
 }
 
 export interface State {

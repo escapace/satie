@@ -22,8 +22,8 @@ export type InferRule = z.infer<typeof schemaRule>
 export type InputLocale = Record<string, InputRule>
 export type InferLocale = Record<string, InferRule>
 
-export type InputLocales = Record<string, InputLocale>
-export type InferLocales = Record<string, InferLocale>
+export type InputLocales = Record<string, InputLocale | string>
+export type InferLocales = Record<string, InferLocale | string>
 
 export type Fallback = z.infer<typeof schemaFallback>
 
@@ -206,7 +206,7 @@ const schemaRule: z.ZodType<
 })
 
 export const schemaLocale = z.object({}).catchall(schemaRule)
-export const schemaLocales = z.object({}).catchall(schemaLocale)
+export const schemaLocales = z.object({}).catchall(z.string().or(schemaLocale))
 
 export interface ResourceHint {
   as: 'font'
@@ -239,6 +239,9 @@ export interface WebFontLocale {
 }
 
 export interface WebFontsJson {
+  alias: {
+    [x: string]: string
+  }
   locale: {
     [x: string]: WebFontLocale
   }

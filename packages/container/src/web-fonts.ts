@@ -5,6 +5,7 @@ import {
   compact,
   find,
   first,
+  forEach,
   includes,
   isEmpty,
   isEqual,
@@ -56,6 +57,12 @@ import { fontFaceToString } from './utilities/font-face-to-string'
 import { minifyCss } from './utilities/minify-css'
 import { iterateProperties } from './utilities/style'
 import { toposort } from './utilities/toposort'
+
+const toLang = (locale: string, state: State): string =>
+  uniq([locale, ...(state.configuration.localeToAlias.get(locale) ?? [])])
+    .sort((a, b) => a.localeCompare(b))
+    .map((value) => `"${value}"`)
+    .join(', ')
 
 const stylePropertiesToString = (
   style: Style,
@@ -318,16 +325,32 @@ const toWebFontsJson = async (state: State): Promise<WebFontsJson> => {
     toWebFontLocale(style, state)
   )
 
+  const aliasPartial = map(locale, (_, locale) =>
+    (state.configuration.localeToAlias.get(locale) ?? []).map(
+      (alias) => [alias, locale] as const
+    )
+  ).flat()
+
+  const locales = [
+    ...map(
+      locale,
+      (value, locale) =>
+        [locale, value.font.map((value) => value.slug)] as const
+    ),
+    ...aliasPartial
+  ]
+
+  const alias = [...aliasPartial]
+
+  forEach(locale, (_, locale) => alias.push([locale, locale]))
+
   return {
     ...combined,
+    alias: Object.fromEntries(alias),
     locale,
     script: await fontLoaderScript(
       state,
-      map(
-        locale,
-        (value, locale) =>
-          [locale, value.font.map((value) => value.slug)] as const
-      ),
+      locales,
       // resourceHint is not useful for the font loader
       combined.font.map((value) => omit(value, ['resourceHint']))
     )
@@ -517,7 +540,7 @@ export const webFonts = async (options: Options = {}) => {
         const selector = `html${map(
           fonts,
           ({ slug }) => `[data-fonts-loaded~='${slug}']`
-        ).join('')}:lang(${style.locale}) .${style.classname}`
+        ).join('')}:lang(${toLang(style.locale, state)}) .${style.classname}`
 
         return stylePropertiesToString(
           style,
@@ -537,13 +560,13 @@ export const webFonts = async (options: Options = {}) => {
 
     style.fallbackStyle = stylePropertiesToString(
       style,
-      `html:lang(${style.locale}) .${style.classname}`,
+      `html:lang(${toLang(style.locale, state)}) .${style.classname}`,
       fallbackStyleProperties
     )
 
     style.noScriptStyle = stylePropertiesToString(
       style,
-      `html:lang(${style.locale}) .${style.classname}`,
+      `html:lang(${toLang(style.locale, state)}) .${style.classname}`,
       noScriptStyleProperties
     )
 
