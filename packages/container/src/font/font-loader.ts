@@ -2,22 +2,22 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import FontFaceObserver from 'fontfaceobserver'
-import type { WebFont as Font } from '../state/user-schema'
+import type { WebFont, WebFontState } from '../state/user-schema'
 
-interface WebFont extends Font {
-  state?: Promise<boolean>
+interface Font extends Omit<WebFont, 'state'> {
+  state?: Promise<WebFontState>
 }
 
 declare const __DATA_LOCALES__: Array<readonly [string, string[] | string]>
-declare const __DATA_FONTS__: WebFont[]
+declare const __DATA_FONTS__: Font[]
 
-type Callback = (webFonts: Font[]) => unknown
+type Callback = (webFonts: WebFont[]) => unknown
 
 declare global {
   interface Window {
     FontFaceObserver: typeof FontFaceObserver
-    webFontLoader: (locale: string) => Promise<Font[]>
-    webFontLoaderSubscribe: (cb: Callback) => void
+    webFontLoader: (locale: string) => Promise<WebFont[]>
+    webFontLoaderSubscribe: (cb: Callback) => () => void
   }
 }
 
@@ -25,7 +25,7 @@ const LOCALE_INDEX = new Map(__DATA_LOCALES__)
 const FONTS = new Map(
   __DATA_FONTS__.map((value) => [value.slug, value] as const)
 )
-const SUBSCRIBERS: Callback[] = []
+const SUBSCRIBERS: Set<Callback> = new Set()
 
 const fontStretchMapping = new Map([
   [50, 'ultra-condensed'],
@@ -65,27 +65,27 @@ const updateDataFontsLoaded = (value: string) => {
   }
 }
 
-const createPromise = async (slug: string): Promise<boolean> => {
+const createPromise = async (slug: string): Promise<WebFontState> => {
   const font = FONTS.get(slug)
 
   if (font === undefined || font.fontFace === undefined) {
-    return false
+    return 'font-unknown'
   }
 
   if (font.state !== undefined) {
     return await font.state
   }
 
-  font.state = (async () => {
+  font.state = (async (): Promise<WebFontState> => {
     if (getDataFontsLoaded().includes(slug)) {
       updateDataFontsLoaded(slug)
 
-      return true
+      return 'font-already-loaded'
     } else if (
       font.tech?.includes('variations') === true &&
       !CSS.supports('(font-variation-settings: normal)')
     ) {
-      return false
+      return 'font-not-supported'
     } else {
       try {
         await Promise.any(
@@ -127,9 +127,9 @@ const createPromise = async (slug: string): Promise<boolean> => {
         )
 
         updateDataFontsLoaded(slug)
-        return true
+        return 'font-loaded'
       } catch {
-        return false
+        return 'error'
       }
     }
   })()
@@ -138,21 +138,34 @@ const createPromise = async (slug: string): Promise<boolean> => {
   return await font.state!
 }
 
-const iterateFonts = async (): Promise<WebFont[]> =>
+const iterateFonts = async (): Promise<Font[]> =>
   (
     await Promise.all(
       Array.from(FONTS.values()).map(async (font) => {
-        if (font.state !== undefined && (await font.state)) {
-          return font
+        if (font.state !== undefined) {
+          const state = await font.state
+
+          return state === 'font-loaded' || state === 'font-already-loaded'
+            ? font
+            : undefined
         }
 
         return undefined
       })
     )
-  ).filter((value): value is WebFont => value !== undefined)
+  ).filter((value): value is Font => value !== undefined)
+
+const normalize = async (fonts: Font[]): Promise<WebFont[]> =>
+  await Promise.all(
+    fonts.map(async (value): Promise<WebFont> => {
+      const state = await value.state
+
+      return { ...value, state }
+    })
+  )
 
 const updateSubscribers = async () => {
-  const fonts = await iterateFonts()
+  const fonts = await normalize(await iterateFonts())
 
   if (fonts.length > 0) {
     SUBSCRIBERS.forEach((cb) => cb(fonts))
@@ -161,33 +174,37 @@ const updateSubscribers = async () => {
   return fonts
 }
 
-export const webFontLoaderSubscribe = (cb: Callback) => {
-  if (!SUBSCRIBERS.includes(cb)) {
-    SUBSCRIBERS.push(cb)
+export const webFontLoaderSubscribe = (cb: Callback): (() => void) => {
+  if (!SUBSCRIBERS.has(cb)) {
+    SUBSCRIBERS.add(cb)
 
-    void iterateFonts().then((fonts) => {
+    void iterateFonts().then(async (fonts) => {
       if (fonts.length !== 0) {
-        cb(fonts)
+        cb(await normalize(fonts))
       }
     })
   }
+
+  return () => {
+    SUBSCRIBERS.delete(cb)
+  }
 }
 
-const next = async (slug: string): Promise<boolean> => {
+const next = async (slug: string): Promise<WebFontState> => {
   const font = FONTS.get(slug)!
 
   for (const preference of font.prefer ?? []) {
-    const success = await next(preference)
+    const state = await next(preference)
 
-    if (success) {
-      return success
+    if (state === 'font-loaded' || state === 'font-already-loaded') {
+      return state
     }
   }
 
   return await createPromise(slug)
 }
 
-export const webFontLoader = async (locale: string): Promise<Font[]> => {
+export const webFontLoader = async (locale: string): Promise<WebFont[]> => {
   if (locale === undefined || !LOCALE_INDEX.has(locale)) {
     throw new Error('Font Loader: No locale')
   }

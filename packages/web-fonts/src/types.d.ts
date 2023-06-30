@@ -617,6 +617,12 @@ export interface ResourceHint {
   rel: 'prefetch' | 'preload'
   type: string
 }
+export type WebFontState =
+  | 'font-loaded'
+  | 'font-already-loaded'
+  | 'font-unknown'
+  | 'font-not-supported'
+  | 'error'
 export interface WebFont {
   slug: string
   prefer?: string[]
@@ -629,6 +635,7 @@ export interface WebFont {
   }>
   resourceHint?: ResourceHint[]
   testString?: string
+  state?: WebFontState
 }
 export interface WebFontLocale {
   fontFace: string

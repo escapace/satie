@@ -9,9 +9,12 @@ export type {
   WebFontLocale,
   WebFontsJson
 } from './types'
+
 import type { WebFont } from './types'
 
-export type WebFontLoaderSubscribe = (cb: (webFonts: WebFont[]) => void) => void
+export type WebFontLoaderSubscribe = (
+  cb: (webFonts: WebFont[]) => void
+) => () => void
 
 export type WebFontLoader = (locale: string) => Promise<WebFont[]>
 
