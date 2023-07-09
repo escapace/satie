@@ -179,8 +179,9 @@ const selectorFallbackFontFamilies = (style: Style, state: State): string[] => {
   const fontProperties = selectorFontProperties(style, state)
 
   return compact(
-    fontProperties?.fontFamily?.fallbacks.map((slug) =>
-      state.configuration.fallbackFonts.get(slug)?.fontFaces.get(style.id)
+    fontProperties?.fontFamily?.fallbacks.map(
+      (slug) =>
+        state.configuration.fallbackFonts.get(slug)?.fontFaces.get(style.id)
     )
   ).map((value) => value.fontFamily)
 }
@@ -263,7 +264,7 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
     ).map((value) => Array.from(value))
   )
 
-  const webFont = fonts.map((font): WebFont => {
+  const outputFont = fonts.map((font): WebFont => {
     const fontFaces = uniqBy(
       compact(styles.map(({ id }) => font.fontFaces.get(id))).map((value) =>
         pick(value, ['fontWeight', 'fontStyle', 'fontStretch', 'fontFamily'])
@@ -309,7 +310,7 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
   })
 
   const output: WebFontLocale = {
-    font: webFont,
+    font: outputFont,
     fontFace,
     noScriptStyle,
     style,
@@ -357,7 +358,7 @@ const toWebFontsJson = async (state: State): Promise<WebFontsJson> => {
   }
 }
 
-export const webFonts = async (options: Options = {}) => {
+export const webFont = async (options: Options = {}) => {
   const state = await createState(options)
 
   for (const slug of state.configuration.fonts.keys()) {
@@ -423,9 +424,7 @@ export const webFonts = async (options: Options = {}) => {
             adjustments: fontAdjust(
               primaryFontMetrics,
               fontMetrics(
-                (
-                  await fontOpen(secondaryFont, fontProperties, state)
-                ).font
+                (await fontOpen(secondaryFont, fontProperties, state)).font
               )
             )
           },

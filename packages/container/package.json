@@ -1,14 +1,14 @@
 {
-  "name": "@escapace/web-fonts-container",
+  "name": "@escapace/web-font-container",
   "description": "",
   "version": "0.0.0",
   "author": "escapace <opensource@escapace.com>",
   "bin": {
-    "web-fonts": "./lib/esm/cli.mjs"
+    "web-font": "./lib/esm/cli.mjs"
   },
-  "bugs": "https://github.com/escapace/web-fonts/issues",
+  "bugs": "https://github.com/escapace/web-font/issues",
   "dependencies": {
-    "@escapace/web-fonts": "workspace:*",
+    "@escapace/web-font": "workspace:*",
     "@sindresorhus/fnv1a": "^3.0.0",
     "@types/clean-css": "^4.2.6",
     "@yeuxjs/browserslist-to-targets": "^5.9.2",
@@ -79,10 +79,10 @@
     "src/font/font-loader.ts",
     "src/font/font-strip.py"
   ],
-  "homepage": "https://github.com/escapace/web-fonts",
+  "homepage": "https://github.com/escapace/web-font",
   "license": "MPL-2.0",
   "private": true,
-  "repository": "https://github.com/escapace/web-fonts.git",
+  "repository": "https://github.com/escapace/web-font.git",
   "scripts": {
     "build": "node ../../scripts/build.mjs",
     "lint": "eslint 'src/**/*.ts?(x)'",

@@ -16,10 +16,10 @@ await mkdir(outdir, { recursive: true })
 await build({
   bundle: true,
   entryPoints:
-    name === '@escapace/web-fonts'
+    name === '@escapace/web-font'
       ? ['src/index.ts']
-      : name === '@escapace/web-fonts-metrics'
-      ? ['src/web-fonts-json.ts']
+      : name === '@escapace/web-font-metrics'
+      ? ['src/web-font-json.ts']
       : ['src/index.ts', 'src/cli.ts'],
   treeShaking: true,
   splitting: true,
@@ -53,6 +53,6 @@ await execa(
   process.exit(reason.exitCode)
 })
 
-if (name === '@escapace/web-fonts-metrics') {
-  await chmod(path.join(outdir, 'web-fonts-json.mjs'), '0755')
+if (name === '@escapace/web-font-metrics') {
+  await chmod(path.join(outdir, 'web-font-json.mjs'), '0755')
 }

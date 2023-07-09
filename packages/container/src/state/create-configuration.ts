@@ -40,9 +40,9 @@ export const createConfiguration = async (processDirectory: string) => {
       'web-fonts.config.ts',
       'web-fonts.config.mjs',
       'web-fonts.config.js',
-      'web-fonts.config.ts',
-      'web-fonts.config.mjs',
-      'web-fonts.config.js'
+      'web-font.config.ts',
+      'web-font.config.mjs',
+      'web-font.config.js'
     ],
     {
       // absolute: true,
@@ -66,11 +66,11 @@ export const createConfiguration = async (processDirectory: string) => {
 
   const alias = pickBy(
     {
-      '@escapace/web-fonts':
-        (await resolve('@escapace/web-fonts')) ??
-        (await resolve('@escapace/web-fonts', path.dirname(configFile))) ??
+      '@escapace/web-font':
+        (await resolve('@escapace/web-font')) ??
+        (await resolve('@escapace/web-font', path.dirname(configFile))) ??
         (await resolve(
-          '@escapace/web-fonts',
+          '@escapace/web-font',
           path.dirname(fileURLToPath(import.meta.url))
         ))
     },
@@ -86,7 +86,7 @@ export const createConfiguration = async (processDirectory: string) => {
     bundle: true,
     minify: false,
     alias,
-    // external: ['@escapace/web-fonts'],
+    // external: ['@escapace/web-font'],
     loader: {
       '.js': 'js',
       '.mjs': 'js',

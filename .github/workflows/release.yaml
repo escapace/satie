@@ -58,7 +58,7 @@ jobs:
 
           while read -d '' -r file; do
             npm publish --provenance --access public "${file}"
-          done < <(find "./lib" -type f -name '*.tgz' -not -name 'escapace-web-fonts-container-*' -print0 2>/dev/null)
+          done < <(find "./lib" -type f -name '*.tgz' -not -name 'escapace-web-font-container-*' -print0 2>/dev/null)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: publish to npmjs
@@ -72,7 +72,7 @@ jobs:
 
           while read -d '' -r file; do
             npm publish --provenance --access public "${file}"
-          done < <(find "./lib" -type f -name '*.tgz' -not -name 'escapace-web-fonts-container-*' -print0 2>/dev/null)
+          done < <(find "./lib" -type f -name '*.tgz' -not -name 'escapace-web-font-container-*' -print0 2>/dev/null)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: checkout
@@ -101,7 +101,7 @@ jobs:
       - ci
     uses: ./.github/workflows/workflow-call-build-container.yaml
     with:
-      context: 'lib/escapace-web-fonts-container-${{ needs.context.outputs.version }}.tgz'
+      context: 'lib/escapace-web-font-container-${{ needs.context.outputs.version }}.tgz'
       dockerfile: 'package/Dockerfile'
       args: >-
         --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}

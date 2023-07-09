@@ -18,7 +18,11 @@
   "versionGroups": [
     {
       "packages": ["**"],
-      "dependencies": ["@escapace/web-fonts", "@escapace/web-fonts-container"],
+      "dependencies": [
+        "@escapace/web-font",
+        "@escapace/web-font-container",
+        "@escapace/web-font-metric"
+      ],
       "isIgnored": true
     }
   ],

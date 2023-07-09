@@ -1,9 +1,9 @@
 {
-  "name": "@escapace/web-fonts",
+  "name": "@escapace/web-font",
   "description": "",
   "version": "1.0.0",
   "author": "escapace <opensource@escapace.com>",
-  "bugs": "https://github.com/escapace/web-fonts/issues",
+  "bugs": "https://github.com/escapace/web-font/issues",
   "dependencies": {
     "csstype": "^3.1.2",
     "zod": "^3.21.4"
@@ -31,12 +31,12 @@
     "lib/esm",
     "lib/types"
   ],
-  "homepage": "https://github.com/escapace/web-fonts",
+  "homepage": "https://github.com/escapace/web-font",
   "keywords": [],
   "license": "MPL-2.0",
   "module": "lib/esm/index.mjs",
   "private": false,
-  "repository": "https://github.com/escapace/web-fonts.git",
+  "repository": "https://github.com/escapace/web-font.git",
   "scripts": {
     "build": "node ../../scripts/build.mjs && cp src/types.d.ts lib/types",
     "copy-types": "cp ../container/lib/types/state/user-schema.d.ts src/types.d.ts && prettier --write src/types.d.ts",

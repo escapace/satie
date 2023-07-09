@@ -1,4 +1,4 @@
-import { TypeFontIssue, fontMetrics } from '@escapace/web-fonts-container'
+import { TypeFontIssue, fontMetrics } from '@escapace/web-font-container'
 import arg from 'arg'
 import chalk from 'chalk'
 import { Font, openSync } from 'fontkit'

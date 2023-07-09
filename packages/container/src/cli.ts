@@ -8,19 +8,19 @@ import {
   DEFAULT_OUTPUT_DIR,
   DEFAULT_PUBLIC_PATH
 } from './constants'
-import { webFonts } from './web-fonts'
+import { webFont } from './web-font'
 import { Options } from './types'
 
 const help = (code: 0 | 1 = 0, message?: string): never => {
-  console.log(`Usage: web-fonts [options]
+  console.log(`Usage: web-font [options]
 
   Writes locale-optmizied fonts, and a json file with a font-loader script,
   per-locale styles and resource hints.
 
-  Requires a ${chalk.yellow('web-fonts.config.(ts|mjs|js)')} configuration file
+  Requires a ${chalk.yellow('web-font.config.(ts|mjs|js)')} configuration file
   in the current working directory.
 
-  See ${chalk.blue('https://bit.ly/escapace-web-fonts')} for the documentation.
+  See ${chalk.blue('https://bit.ly/escapace-web-font')} for the documentation.
 
 Options:
   --output-dir    font output directory path (default: ${DEFAULT_OUTPUT_DIR})
@@ -30,12 +30,12 @@ Options:
 
 Examples:
   ${chalk.gray('# run in a container')}
-  docker run --rm -it -v "$(pwd)":/wd escapace/web-fonts
+  docker run --rm -it -v "$(pwd)":/wd escapace/web-font
   ${chalk.gray('# set uid, gid and umask')}
   docker run --rm -it -e UID=$\{UID} -e GID=$\{GID} -e UMASK=0027 -v "$(pwd)":/wd \\
-    escapace/web-fonts
+    escapace/web-font
   ${chalk.gray('# write loader file and typescript declaration')}
-  docker run --rm -it -v "$(pwd)":/wd escapace/web-fonts \\
+  docker run --rm -it -v "$(pwd)":/wd escapace/web-font \\
     --declaration --loader-file src/web-font-loader.js
   `)
 
@@ -70,7 +70,7 @@ const options = (): Options => {
   }
 }
 
-void webFonts({
+void webFont({
   cli: true,
   ...options()
 })

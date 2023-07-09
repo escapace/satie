@@ -3,7 +3,7 @@
   "description": "",
   "version": "0.0.0",
   "author": "escapace <opensource@escapace.com>",
-  "bugs": "https://github.com/escapace/web-fonts/issues",
+  "bugs": "https://github.com/escapace/web-font/issues",
   "devDependencies": {
     "@commitlint/cli": "17.6.6",
     "@commitlint/config-conventional": "17.6.6",
@@ -35,10 +35,10 @@
     "node": ">=18.16.0",
     "pnpm": ">=8.6.0"
   },
-  "homepage": "https://github.com/escapace/web-fonts",
+  "homepage": "https://github.com/escapace/web-font",
   "license": "MPL-2.0",
   "private": true,
-  "repository": "https://github.com/escapace/web-fonts.git",
+  "repository": "https://github.com/escapace/web-font.git",
   "scripts": {
     "build": "pnpm run --sequential -r --filter './packages/*' build",
     "lint": "ls-lint && pnpm run -r --filter './packages/*' lint",

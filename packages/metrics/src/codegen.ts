@@ -1,4 +1,4 @@
-import { schemaFallback } from '@escapace/web-fonts-container'
+import { schemaFallback } from '@escapace/web-font-container'
 import { walk } from '@nodelib/fs.walk'
 import { readFile } from 'fs/promises'
 import { camelCase, map, pick, sortBy } from 'lodash-es'
@@ -41,7 +41,7 @@ const fonts: Record<string, Font> = Object.fromEntries(
   )
 )
 
-const code = format(
+const code = await format(
   [
     `import { FallbackFont } from './index'`,
     ...map(
