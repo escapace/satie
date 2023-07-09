@@ -22,7 +22,6 @@ export const resolve = async (
   basedir?: string
 ): Promise<string | undefined> => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const value = await resolvePath(id, {
       extensions: ['.mjs', '.cjs', '.js', '.json'],
       conditions: ['node', 'import', 'require'],
@@ -37,7 +36,14 @@ export const resolve = async (
 
 export const createConfiguration = async (processDirectory: string) => {
   const candidates = await findUpMultiple(
-    ['web-fonts.config.ts', 'web-fonts.config.mjs', 'web-fonts.config.js'],
+    [
+      'web-fonts.config.ts',
+      'web-fonts.config.mjs',
+      'web-fonts.config.js',
+      'web-fonts.config.ts',
+      'web-fonts.config.mjs',
+      'web-fonts.config.js'
+    ],
     {
       // absolute: true,
       cwd: processDirectory
