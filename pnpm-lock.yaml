@@ -86,7 +86,7 @@ importers:
   packages/container:
     dependencies:
       '@escapace/web-fonts':
-        specifier: ^1.0.0
+        specifier: workspace:*
         version: link:../web-fonts
       '@sindresorhus/fnv1a':
         specifier: ^3.0.0
@@ -249,7 +249,7 @@ importers:
   packages/metrics:
     dependencies:
       '@escapace/web-fonts-container':
-        specifier: ^0.0.0
+        specifier: workspace:*
         version: link:../container
       '@nodelib/fs.walk':
         specifier: ^1.2.8

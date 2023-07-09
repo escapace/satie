@@ -15,6 +15,13 @@
       "strategy": "versionsByName"
     }
   },
+  "versionGroups": [
+    {
+      "packages": ["**"],
+      "dependencies": ["@escapace/web-fonts", "@escapace/web-fonts-container"],
+      "isIgnored": true
+    }
+  ],
   "semverGroups": [
     {
       "dependencies": ["**"],
