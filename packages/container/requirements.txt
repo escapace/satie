@@ -1,6 +1,6 @@
 zopfli==0.2.2
 unicodedata2==15.0.0
 Brotli==1.0.9
-fonttools==4.40.0
+fonttools==4.42.0
 lxml==4.9.3
 uharfbuzz==0.37.0
