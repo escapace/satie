@@ -52,7 +52,7 @@
     "c8": "8.0.1",
     "chai": "4.3.8",
     "eslint": "8.49.0",
-    "eslint-config-escapace": "3.18.0",
+    "eslint-config-escapace": "3.18.1",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-editorconfig": "4.0.3",
     "eslint-plugin-no-null": "1.0.2",
