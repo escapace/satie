@@ -75,7 +75,7 @@ const openFont = (): Font => {
 
       const font = openSync(filepath)
       // @ts-expect-error typings
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/ban-types
       return (font.getVariation as Function)(args['--name'])
     } else {
       const font = openSync(filepath, args['--name'])
@@ -149,14 +149,13 @@ if (
 
 const weight = args['--weight'] ?? weights[0]
 const italic =
-  args['--italic'] === undefined
-    ? content.postscriptName.toLowerCase().toLowerCase().includes('italic') ||
-      content.subfamilyName.toLowerCase().toLowerCase().includes('italic') ||
-      content.fullName.toLowerCase().toLowerCase().includes('italic') ||
-      content.postscriptName.toLowerCase().toLowerCase().includes('oblique') ||
-      content.subfamilyName.toLowerCase().toLowerCase().includes('oblique') ||
-      content.fullName.toLowerCase().toLowerCase().includes('oblique')
-    : args['--italic']
+  args['--italic'] ??
+  (content.postscriptName.toLowerCase().toLowerCase().includes('italic') ||
+    content.subfamilyName.toLowerCase().toLowerCase().includes('italic') ||
+    content.fullName.toLowerCase().toLowerCase().includes('italic') ||
+    content.postscriptName.toLowerCase().toLowerCase().includes('oblique') ||
+    content.subfamilyName.toLowerCase().toLowerCase().includes('oblique') ||
+    content.fullName.toLowerCase().toLowerCase().includes('oblique'))
 
 const newFilename = `${kebabCase(
   `${content.familyName}-${content.subfamilyName}`

@@ -3,5 +3,8 @@
     "warnOnUnsupportedTypeScriptVersion": false,
     "project": "./tsconfig.json"
   },
-  "extends": ["escapace"]
+  "extends": ["escapace"],
+  "rules": {
+    "@typescript-eslint/ban-types": 0
+  }
 }

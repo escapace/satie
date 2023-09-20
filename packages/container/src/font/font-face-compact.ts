@@ -12,7 +12,7 @@ const fontDisplayCompact = (value: InferFont['display']) => {
     'optional'
   ]
 
-  return priority.indexOf(value === undefined ? 'auto' : value)
+  return priority.indexOf(value ?? 'auto')
 }
 
 // const reduceFontFaceWeightStretch = (

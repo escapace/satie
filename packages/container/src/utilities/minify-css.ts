@@ -69,5 +69,5 @@ export const minifyCss = (value: string, targets: Targets) => {
     minify: true
   })
 
-  return code.toString('utf8')
+  return code.toString()
 }

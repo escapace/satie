@@ -68,7 +68,7 @@ const updateDataFontsLoaded = (value: string) => {
 const createPromise = async (slug: string): Promise<WebFontState> => {
   const font = FONTS.get(slug)
 
-  if (font === undefined || font.fontFace === undefined) {
+  if (font?.fontFace === undefined) {
     return 'font-unknown'
   }
 
@@ -111,8 +111,7 @@ const createPromise = async (slug: string): Promise<WebFontState> => {
                     )
                   )
 
-            const style =
-              fontFace.fontStyle === undefined ? undefined : fontFace.fontStyle
+            const style = fontFace.fontStyle ?? undefined
 
             await new FontFaceObserver(fontFace.fontFamily, {
               weight,

@@ -56,11 +56,8 @@ ${iterateProperties(rule, '  ')}
     targets,
     filename: 'style.css',
     code: Buffer.from(css),
-    minify: false,
-    drafts: {
-      nesting: true
-    }
+    minify: false
   })
 
-  return code.toString('utf8')
+  return code.toString()
 }
