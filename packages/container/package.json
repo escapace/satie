@@ -1,14 +1,14 @@
 {
-  "name": "@escapace/web-font-container",
+  "name": "@escapace/satie-container",
   "description": "",
   "version": "0.0.0",
   "author": "escapace <opensource@escapace.com>",
   "bin": {
-    "web-font": "./lib/esm/cli.mjs"
+    "satie": "./lib/esm/cli.mjs"
   },
-  "bugs": "https://github.com/escapace/web-font/issues",
+  "bugs": "https://github.com/escapace/satie/issues",
   "dependencies": {
-    "@escapace/web-font": "workspace:*",
+    "@escapace/satie": "workspace:*",
     "@sindresorhus/fnv1a": "^3.0.0",
     "@types/clean-css": "^4.2.7",
     "@yeuxjs/browserslist-to-targets": "^5.10.1",
@@ -79,10 +79,10 @@
     "src/font/font-loader.ts",
     "src/font/font-strip.py"
   ],
-  "homepage": "https://github.com/escapace/web-font",
+  "homepage": "https://github.com/escapace/satie",
   "license": "MPL-2.0",
   "private": true,
-  "repository": "https://github.com/escapace/web-font.git",
+  "repository": "https://github.com/escapace/satie.git",
   "scripts": {
     "build": "node ../../scripts/build.mjs",
     "lint": "eslint 'src/**/*.ts?(x)'",

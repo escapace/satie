@@ -1,4 +1,4 @@
-import { schemaFallback } from '@escapace/web-font-container'
+import { schemaFallback } from '@escapace/satie-container'
 import { walk } from '@nodelib/fs.walk'
 import { readFile } from 'fs/promises'
 import { camelCase, map, pick, sortBy } from 'lodash-es'

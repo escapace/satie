@@ -1,17 +1,17 @@
 import { assert } from 'chai'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { webFont } from './web-font'
+import { satie } from './satie'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
-describe('src/web-font.spec.ts', function () {
+describe('src/satie.spec.ts', function () {
   this.timeout(60000)
 
   it('happy-path', async () => {
-    assert.isFunction(webFont)
+    assert.isFunction(satie)
 
-    const result = await webFont({
+    const result = await satie({
       cwd: path.resolve(dirname, '../../test/happy-path')
     })
 

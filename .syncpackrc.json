@@ -19,9 +19,9 @@
     {
       "packages": ["**"],
       "dependencies": [
-        "@escapace/web-font",
-        "@escapace/web-font-container",
-        "@escapace/web-font-metric"
+        "@escapace/satie",
+        "@escapace/satie-container",
+        "@escapace/satie-metric"
       ],
       "isIgnored": true
     }

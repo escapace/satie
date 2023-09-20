@@ -1,9 +1,9 @@
 {
-  "name": "@escapace/web-font",
+  "name": "@escapace/satie",
   "description": "",
   "version": "1.0.0",
   "author": "escapace <opensource@escapace.com>",
-  "bugs": "https://github.com/escapace/web-font/issues",
+  "bugs": "https://github.com/escapace/satie/issues",
   "dependencies": {
     "csstype": "^3.1.2",
     "zod": "^3.22.2"
@@ -31,12 +31,12 @@
     "lib/esm",
     "lib/types"
   ],
-  "homepage": "https://github.com/escapace/web-font",
+  "homepage": "https://github.com/escapace/satie",
   "keywords": [],
   "license": "MPL-2.0",
   "module": "lib/esm/index.mjs",
   "private": false,
-  "repository": "https://github.com/escapace/web-font.git",
+  "repository": "https://github.com/escapace/satie.git",
   "scripts": {
     "build": "node ../../scripts/build.mjs && cp src/types.d.ts lib/types",
     "copy-types": "cp ../container/lib/types/state/user-schema.d.ts src/types.d.ts && prettier --write src/types.d.ts",

@@ -75,9 +75,9 @@ jobs:
       - name: pnpm pack
         if: inputs.version != ''
         run: |
-          pnpm --filter './packages/web-font' --filter './packages/container' exec bash -c "jq -r '.version=\"${{ inputs.version }}\"' package.json > package-updated.json"
-          pnpm --filter './packages/web-font' --filter './packages/container' exec mv package-updated.json package.json
-          pnpm --filter './packages/web-font' --filter './packages/container' exec pnpm pack --pack-destination ../../lib
+          pnpm --filter './packages/satie' --filter './packages/container' exec bash -c "jq -r '.version=\"${{ inputs.version }}\"' package.json > package-updated.json"
+          pnpm --filter './packages/satie' --filter './packages/container' exec mv package-updated.json package.json
+          pnpm --filter './packages/satie' --filter './packages/container' exec pnpm pack --pack-destination ../../lib
       - name: upload
         if: inputs.version != ''
         uses: actions/upload-artifact@v3

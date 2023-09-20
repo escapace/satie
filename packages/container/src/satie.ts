@@ -358,7 +358,7 @@ const toWebFontsJson = async (state: State): Promise<WebFontsJson> => {
   }
 }
 
-export const webFont = async (options: Options = {}) => {
+export const satie = async (options: Options = {}) => {
   const state = await createState(options)
 
   for (const slug of state.configuration.fonts.keys()) {

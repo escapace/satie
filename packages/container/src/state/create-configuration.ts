@@ -36,14 +36,7 @@ export const resolve = async (
 
 export const createConfiguration = async (processDirectory: string) => {
   const candidates = await findUpMultiple(
-    [
-      'web-fonts.config.ts',
-      'web-fonts.config.mjs',
-      'web-fonts.config.js',
-      'web-font.config.ts',
-      'web-font.config.mjs',
-      'web-font.config.js'
-    ],
+    ['satie.config.ts', 'satie.config.mjs', 'satie.config.js'],
     {
       // absolute: true,
       cwd: processDirectory
@@ -66,11 +59,11 @@ export const createConfiguration = async (processDirectory: string) => {
 
   const alias = pickBy(
     {
-      '@escapace/web-font':
-        (await resolve('@escapace/web-font')) ??
-        (await resolve('@escapace/web-font', path.dirname(configFile))) ??
+      '@escapace/satie':
+        (await resolve('@escapace/satie')) ??
+        (await resolve('@escapace/satie', path.dirname(configFile))) ??
         (await resolve(
-          '@escapace/web-font',
+          '@escapace/satie',
           path.dirname(fileURLToPath(import.meta.url))
         ))
     },
@@ -86,7 +79,7 @@ export const createConfiguration = async (processDirectory: string) => {
     bundle: true,
     minify: false,
     alias,
-    // external: ['@escapace/web-font'],
+    // external: ['@escapace/satie'],
     loader: {
       '.js': 'js',
       '.mjs': 'js',
