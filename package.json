@@ -2,7 +2,10 @@
   "name": "monorepo",
   "description": "",
   "version": "0.0.0",
-  "author": "escapace <opensource@escapace.com>",
+  "author": {
+    "name": "escapace",
+    "email": "opensource@escapace.com"
+  },
   "bugs": "https://github.com/escapace/satie/issues",
   "devDependencies": {
     "@commitlint/cli": "17.7.1",
@@ -33,12 +36,12 @@
   },
   "engines": {
     "node": ">=18.18.0",
-    "pnpm": ">=8.6.12"
+    "pnpm": ">=8.7.6"
   },
   "homepage": "https://github.com/escapace/satie",
   "license": "MPL-2.0",
   "private": true,
-  "repository": "https://github.com/escapace/satie.git",
+  "repository": "escapace/satie.git",
   "scripts": {
     "build": "pnpm run --sequential -r --filter './packages/*' build",
     "lint": "ls-lint && pnpm run -r --filter './packages/*' lint",
