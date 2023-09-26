@@ -41,7 +41,7 @@
   "homepage": "https://github.com/escapace/satie",
   "license": "MPL-2.0",
   "private": true,
-  "repository": "escapace/satie.git",
+  "repository": "escapace/satie",
   "scripts": {
     "build": "pnpm run --sequential -r --filter './packages/*' build",
     "lint": "ls-lint && pnpm run -r --filter './packages/*' lint",

@@ -82,7 +82,7 @@
   "homepage": "https://github.com/escapace/satie",
   "license": "MPL-2.0",
   "private": true,
-  "repository": "https://github.com/escapace/satie.git",
+  "repository": "escapace/satie",
   "scripts": {
     "build": "node ../../scripts/build.mjs",
     "lint": "eslint 'src/**/*.ts?(x)'",
