@@ -7,14 +7,6 @@ updates:
       day: saturday
       time: '07:00'
       timezone: GMT
-  - package-ecosystem: pip
-    directory: '/packages/container'
-    schedule:
-      interval: weekly
-      day: saturday
-      time: '07:00'
-      timezone: GMT
-    open-pull-requests-limit: 10
-    commit-message:
-      prefix: fix
-      include: scope
+    labels:
+      - 'dependencies'
+      - 'github-actions'
