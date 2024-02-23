@@ -38,7 +38,7 @@ jobs:
       - name: available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: cache buildx
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.buildx
           key: ${{ runner.os }}-buildx-${{ hashFiles(inputs.context) }}
