@@ -43,9 +43,9 @@ export const fontWrite = async (slug: string, state: State): Promise<void> => {
           // TODO: make layout features configurable
           `--layout-features='*'`,
           `--name-IDs=''`,
-          `--no-recalc-average-width`,
-          `--no-recalc-bounds`,
-          `--no-recalc-max-context`,
+          `--recalc-average-width`,
+          `--recalc-bounds`,
+          `--recalc-max-context`,
           `--obfuscate-names`
         ])
       )
