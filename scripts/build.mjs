@@ -18,8 +18,6 @@ await build({
   entryPoints:
     name === '@escapace/satie'
       ? ['src/index.ts']
-      : name === '@escapace/satie-metrics'
-      ? ['src/satie-json.ts']
       : ['src/index.ts', 'src/cli.ts'],
   treeShaking: true,
   splitting: true,
@@ -52,7 +50,3 @@ await execa(
   console.error(reason.all)
   process.exit(reason.exitCode)
 })
-
-if (name === '@escapace/satie-metrics') {
-  await chmod(path.join(outdir, 'satie-json.mjs'), '0755')
-}

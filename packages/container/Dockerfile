@@ -1,8 +1,8 @@
-FROM quay.io/centos/centos:stream9
+FROM quay.io/centos/centos:stream9 as BASE
 ARG UID=1000
 ARG GID=1000
-ARG GOSU_VERSION=1.14
-ARG NODE_VERSION=18.4.0
+ARG GOSU_VERSION=1.17
+ARG NODE_VERSION=20.12.0
 ENV PYTHONUNBUFFERED=1
 ENV NODE_ENV=production
 
@@ -41,6 +41,7 @@ RUN set -eux; \
     890C08DB8579162FEE0DF9DB8BEAB4DFCF555EF4 \
     C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
     108F52B48DB57BB0CC439B2997B01419BD92F80A \
+    A363A499291CBBC940DD62E41F10027AF002F8B0 \
   ; do \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
@@ -63,18 +64,38 @@ RUN set -eux; \
   node --version; \
   npm --version
 
-COPY --chown=root:root package/scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN set -eux \
+  && dnf install -y --nodocs dnf-plugins-core \
+  && dnf config-manager -y --add-repo https://releases.escapace.com/stable/linux/centos/escapace.repo \
+  && dnf upgrade -y --nodocs \
+  && dnf install --nodocs --assumeyes gcc gcc-c++ freetype-devel glib2-devel cairo-devel python3-devel
+
+FROM base AS app
+
+ARG PNPM_VERSION=8.15.5
+RUN npm install -g pnpm@${PNPM_VERSION}
+
+COPY --chown=node:node package/packages/container/requirements.txt /opt/app/packages/container/requirements.txt
+
+RUN pip3 install --no-cache --upgrade pip setuptools \
+  && pip3 install -r /opt/app/packages/container/requirements.txt
+
+RUN dnf --assumeyes remove gcc gcc-c++ freetype-devel glib2-devel cairo-devel python3-devel \
+  && dnf --assumeyes autoremove \
+  && dnf --assumeyes clean all \
+  && rm -f /etc/yum.repos.d/escapace.repo \
+  && rm -rf /var/cache/yum/ /var/cache/dnf/ /tmp/*
+
 COPY --chown=node:node package /opt/app
 
-RUN cd /opt/app \
-  && dnf install --assumeyes gcc gcc-c++ freetype-devel glib2-devel cairo-devel python3-devel \
-  && pip3 install --no-cache --upgrade pip setuptools \
-  && pip3 install -r /opt/app/requirements.txt \
-  && rm -f /opt/app/requirements.txt /opt/app/Dockerfile \
-  && dnf --assumeyes remove gcc gcc-c++ freetype-devel glib2-devel cairo-devel  python3-devel \
-  && dnf --assumeyes clean all \
-  && npm install --omit=dev
+WORKDIR /opt/app
 
+RUN --mount=type=cache,id=pnpm,target=/home/node/.local/share/pnpm pnpm install --prod --frozen-lockfile
+RUN rm -f /opt/app/packages/container/requirements.txt \
+  /opt/app/Dockerfile \
+  /opt/app/pnpm-lock.yaml
+
+# TODO: use uid:gid
 WORKDIR /wd
-ENTRYPOINT ["/usr/local/bin/gosu", "node:node", "node", "--enable-source-maps", "--no-warnings", "--experimental-vm-modules", "/opt/app/lib/esm/cli.mjs"]
+ENTRYPOINT ["/usr/local/bin/gosu", "node:node", "node", "--enable-source-maps", "--no-warnings", "--experimental-vm-modules", "/opt/app/packages/container/lib/esm/cli.mjs"]
 CMD []

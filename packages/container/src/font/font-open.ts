@@ -1,5 +1,5 @@
 import { Font as FontKitFont, open as fontKitOpen } from 'fontkit'
-import { compact, find, mapValues, uniq } from 'lodash-es'
+import { compact, find, isEmpty, mapValues, uniq } from 'lodash-es'
 import path from 'path'
 import { z } from 'zod'
 import { FontProperties, FontState, State } from '../types'
@@ -44,7 +44,7 @@ export const fontOpen = async (
     fontState.font.source
   )
 
-  const font = await fontKitOpen(source)
+  const font = (await fontKitOpen(source)) as FontKitFont
 
   // TODO: implement https://drafts.csswg.org/css-fonts/#font-style-matching
   // for better warnings
@@ -93,9 +93,10 @@ export const fontOpen = async (
       })
     }
 
-    // @ts-expect-error bad types
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const variableFont = font.getVariation(variation) as FontKitFont
+    // TODO: https://github.com/foliojs/fontkit/issues/330
+    const variableFont = isEmpty(variation)
+      ? font
+      : font.getVariation(variation)
 
     return { font: variableFont, variationAxes, variation }
   }

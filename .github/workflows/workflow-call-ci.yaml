@@ -13,6 +13,8 @@ on:
       version:
         required: false
         type: string
+    secrets:
+      CODECOV_TOKEN:
 
 permissions:
   contents: read
@@ -35,15 +37,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
-      - name: write .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
-            @escapace:registry=https://npm.pkg.github.com
-            always-auth=true
-          EOF
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: write .npmrc
+      #   run: |
+      #     cat << EOF > "$HOME/.npmrc"
+      #       //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
+      #       @escapace:registry=https://npm.pkg.github.com
+      #       always-auth=true
+      #     EOF
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: install pnpm
         uses: pnpm/action-setup@v3.0.0
         with:
@@ -72,12 +74,11 @@ jobs:
         run: pnpm run test
       - name: code coverage
         uses: codecov/codecov-action@v4.1.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
       - name: pnpm pack
         if: inputs.version != ''
-        run: |
-          pnpm --filter './packages/satie' --filter './packages/container' exec bash -c "jq -r '.version=\"${{ inputs.version }}\"' package.json > package-updated.json"
-          pnpm --filter './packages/satie' --filter './packages/container' exec mv package-updated.json package.json
-          pnpm --filter './packages/satie' --filter './packages/container' exec pnpm pack --pack-destination ../../lib
+        run: pnpm run pack --version ${{ inputs.version }}
       - name: upload
         if: inputs.version != ''
         uses: actions/upload-artifact@v4

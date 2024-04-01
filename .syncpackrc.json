@@ -18,11 +18,7 @@
   "versionGroups": [
     {
       "packages": ["**"],
-      "dependencies": [
-        "@escapace/satie",
-        "@escapace/satie-container",
-        "@escapace/satie-metric"
-      ],
+      "dependencies": ["@escapace/satie", "@escapace/satie-*"],
       "isIgnored": true
     }
   ],

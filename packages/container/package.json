@@ -33,7 +33,6 @@
     "safe-stable-stringify": "^2.4.3",
     "strip-ansi": "^7.1.0",
     "url-join": "^5.0.0",
-    "wrap-ansi": "^9.0.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -44,11 +43,10 @@
     "@types/fs-extra": "11.0.4",
     "@types/lodash-es": "4.17.12",
     "@types/mocha": "10.0.6",
-    "@types/node": "20.11.30",
+    "@types/node": "20.12.2",
     "@types/url-join": "4.0.3",
-    "@types/wrap-ansi": "8.1.0",
-    "@typescript-eslint/eslint-plugin": "7.3.1",
-    "@typescript-eslint/parser": "7.3.1",
+    "@typescript-eslint/eslint-plugin": "7.4.0",
+    "@typescript-eslint/parser": "7.4.0",
     "c8": "9.1.0",
     "chai": "5.1.0",
     "eslint": "8.57.0",
@@ -57,7 +55,7 @@
     "eslint-plugin-editorconfig": "4.0.3",
     "eslint-plugin-no-null": "1.0.2",
     "lint-staged": "15.2.2",
-    "mocha": "10.3.0",
+    "mocha": "10.4.0",
     "prettier": "3.2.5",
     "prettier-config-escapace": "1.0.6",
     "tsx": "4.7.1",
@@ -75,7 +73,6 @@
     "lib/esm",
     "lib/types",
     "requirements.txt",
-    "scripts/docker-entrypoint.sh",
     "src/font/font-loader.ts",
     "src/font/font-strip.py"
   ],
@@ -85,6 +82,7 @@
   "repository": "escapace/satie",
   "scripts": {
     "build": "node ../../scripts/build.mjs",
+    "build:container": "pnpm -w run pack && cat ../../lib/satie-1.4.0.tgz | docker build -f package/packages/container/Dockerfile -",
     "lint": "eslint 'src/**/*.ts?(x)'",
     "test": "node ../../scripts/test.mjs && c8 mocha --no-warnings --experimental-vm-modules --enable-source-maps 'lib/tests/**/*.spec.js'",
     "typecheck": "tsc --noEmit -p tsconfig.json"

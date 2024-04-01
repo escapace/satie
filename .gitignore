@@ -1,3 +1,5 @@
+requirements-dev.lock
+requirements.lock
 .netlify
 lib
 .python-version

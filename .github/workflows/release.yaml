@@ -51,7 +51,7 @@ jobs:
         run: |
           cat << EOF > "$HOME/.npmrc"
             //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-            @escapace:registry=https://npm.pkg.github.com
+            @escapace:registry=https://npm.pkg.github.com/
             provenance=true
             always-auth=true
           EOF
@@ -65,7 +65,7 @@ jobs:
         run: |
           cat << EOF > "$HOME/.npmrc"
             //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
-            @escapace:registry=https://registry.npmjs.org
+            @escapace:registry=https://registry.npmjs.org/
             provenance=true
             always-auth=true
           EOF
@@ -101,8 +101,9 @@ jobs:
       - ci
     uses: ./.github/workflows/workflow-call-build-container.yaml
     with:
-      context: 'lib/escapace-satie-container-${{ needs.context.outputs.version }}.tgz'
-      dockerfile: 'package/Dockerfile'
+      context: 'lib/satie-${{ needs.context.outputs.version }}.tgz'
+      dockerfile: 'package/packages/container/Dockerfile'
       args: >-
         --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}
         --build-arg NODE_VERSION=${{ needs.context.outputs.node-version }}
+        --build-arg PNPM_VERSION=${{ needs.context.outputs.pnpm-version }}

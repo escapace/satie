@@ -1,7 +1,7 @@
 {
   "name": "@escapace/satie",
   "description": "",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "author": "escapace <opensource@escapace.com>",
   "bugs": "https://github.com/escapace/satie/issues",
   "dependencies": {
@@ -9,8 +9,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "7.3.1",
-    "@typescript-eslint/parser": "7.3.1",
+    "@typescript-eslint/eslint-plugin": "7.4.0",
+    "@typescript-eslint/parser": "7.4.0",
     "eslint": "8.57.0",
     "eslint-config-escapace": "3.19.0",
     "eslint-config-prettier": "9.1.0",

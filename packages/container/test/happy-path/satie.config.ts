@@ -1,4 +1,8 @@
-import { InputFont as Font, InputLocales, Fallback } from '../../src/state/user-schema'
+import {
+  InputFont as Font,
+  InputLocales,
+  Fallback
+} from '../../src/state/user-schema'
 
 export const arialRegular: Fallback = {
   id: 'arial-regular',
@@ -14,7 +18,7 @@ export const arialRegular: Fallback = {
   xWidthAvg: 904
 }
 
-export const arialBold: Fallback= {
+export const arialBold: Fallback = {
   id: 'arial-bold',
   names: ['Arial-BoldMT', 'Arial Bold'],
   weight: 700,
@@ -39,7 +43,7 @@ const robotoFlex: Font = {
   name: 'roboto-flex',
   source: './fixtures/roboto-flex.ttf',
   tech: ['variations'],
-  unicodeRange: EN_UNICODE_RANGE,
+  unicodeRange: EN_UNICODE_RANGE
 }
 
 const EN_NOTO_SANS: Font = {
@@ -77,7 +81,7 @@ const RU_NOTO_SANS: Font = {
   resourceHint: 'preload',
   source: './fixtures/NotoSans-Italic.ttf',
   unicodeRange: RU_UNICODE_RANGE,
-  testString: '‎Русскийязык',
+  testString: '‎Русскийязык'
 }
 
 const RU_NOTO_SANS_ITALIC: Font = {
@@ -101,6 +105,7 @@ const RU_NOTO_SANS_BOLD_ITALIC: Font = {
   testString: '‎Русскийязык'
 }
 
+// TODO: multiple languages
 const locales: InputLocales = {
   en: {
     'sans-serif': {
@@ -143,7 +148,11 @@ const locales: InputLocales = {
       fontWeight: 700
     },
     'sans-serif-bold-italic': {
-      fontFamily: [RU_NOTO_SANS_BOLD_ITALIC, EN_NOTO_SANS_BOLD_ITALIC, arialBold],
+      fontFamily: [
+        RU_NOTO_SANS_BOLD_ITALIC,
+        EN_NOTO_SANS_BOLD_ITALIC,
+        arialBold
+      ],
       fontStyle: 'italic',
       fontWeight: 700
     }

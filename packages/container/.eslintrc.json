@@ -1,4 +1,5 @@
 {
+  "root": true,
   "parserOptions": {
     "warnOnUnsupportedTypeScriptVersion": false,
     "project": "./tsconfig.json"
