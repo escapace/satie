@@ -44,7 +44,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: package
-          path: lib
       - name: install latest npm
         run: |
           npm install -g npm
@@ -103,7 +102,7 @@ jobs:
       - ci
     uses: ./.github/workflows/workflow-call-build-container.yaml
     with:
-      context: 'satie-${{ needs.context.outputs.version }}.tgz'
+      context: 'lib/satie-${{ needs.context.outputs.version }}.tgz'
       dockerfile: 'package/packages/container/Dockerfile'
       args: >-
         --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}
