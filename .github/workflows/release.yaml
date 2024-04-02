@@ -103,7 +103,7 @@ jobs:
       - ci
     uses: ./.github/workflows/workflow-call-build-container.yaml
     with:
-      context: 'lib/satie-${{ needs.context.outputs.version }}.tgz'
+      context: 'satie-${{ needs.context.outputs.version }}.tgz'
       dockerfile: 'package/packages/container/Dockerfile'
       args: >-
         --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}
