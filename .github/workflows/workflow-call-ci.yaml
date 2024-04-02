@@ -85,4 +85,6 @@ jobs:
         with:
           retention-days: 3
           name: package
-          path: 'lib/*.tgz'
+          path: |
+            **/lib/*.tgz
+            !**/node_modules/**

@@ -58,7 +58,7 @@ jobs:
 
           while read -d '' -r file; do
             npm publish --provenance --access public "${file}"
-          done < <(find "./lib" -type f -name '*.tgz' -not -name 'escapace-satie-container-*' -print0 2>/dev/null)
+          done < <(find "." -type f -name '*.tgz' -not -path '**/node_modules/**' -not -name 'escapace-satie-container-*' -not -name 'satie-*' -print0 2>/dev/null)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: publish to npmjs
@@ -72,7 +72,7 @@ jobs:
 
           while read -d '' -r file; do
             npm publish --provenance --access public "${file}"
-          done < <(find "./lib" -type f -name '*.tgz' -not -name 'escapace-satie-container-*' -print0 2>/dev/null)
+          done < <(find "." -type f -name '*.tgz' -not -path '**/node_modules/**' -not -name 'escapace-satie-container-*' -not -name 'satie-*' -print0 2>/dev/null 2>/dev/null)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: checkout
