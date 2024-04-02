@@ -25,12 +25,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 7.5.0
         version: 7.5.0(eslint@8.57.0)(typescript@5.4.3)
-      c8:
-        specifier: 9.1.0
-        version: 9.1.0
-      chai:
-        specifier: 5.1.0
-        version: 5.1.0
       esbuild:
         specifier: 0.20.2
         version: 0.20.2
@@ -67,9 +61,6 @@ importers:
       lint-staged:
         specifier: 15.2.2
         version: 15.2.2
-      lodash-es:
-        specifier: 4.17.21
-        version: 4.17.21
       prettier:
         specifier: 3.2.5
         version: 3.2.5
