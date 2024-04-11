@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-for-of */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 export class CharacterSet {

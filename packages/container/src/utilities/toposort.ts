@@ -69,7 +69,7 @@ const getRootsAndNonRoots = (counts: InDegrees) => {
 }
 
 const reverse = (deps: DirectedAcyclicGraph): DependencyGraph => {
-  const reversedDeps: Map<string, Set<string>> = new Map()
+  const reversedDeps = new Map<string, Set<string>>()
 
   for (const [name, dependsOn] of deps.entries()) {
     let set = reversedDeps.get(name)

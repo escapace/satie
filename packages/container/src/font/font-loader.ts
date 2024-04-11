@@ -25,7 +25,7 @@ const LOCALE_INDEX = new Map(__DATA_LOCALES__)
 const FONTS = new Map(
   __DATA_FONTS__.map((value) => [value.slug, value] as const)
 )
-const SUBSCRIBERS: Set<Callback> = new Set()
+const SUBSCRIBERS = new Set<Callback>()
 
 const fontStretchMapping = new Map([
   [50, 'ultra-condensed'],

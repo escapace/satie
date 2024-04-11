@@ -24,7 +24,7 @@ export const quoteFontFamily = (name: string) => {
     return `"${quotedMatch.groups.name.split(`"`).join(`\"`)}"`
   }
 
-  if (/^"/.test(name)) {
+  if (name.startsWith('"')) {
     // Complete double quotes if incomplete and escape double quotes in middle
     const [, ...restName] = name
     return `"${restName.map((x) => (x === `"` ? `\"` : x)).join('')}"`

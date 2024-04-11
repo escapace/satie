@@ -28,8 +28,8 @@ export type InferLocales = Record<string, InferLocale | string>
 export type Fallback = z.infer<typeof schemaFallback>
 
 export const schemaFallback = z.object({
-  id: z.string().nonempty(),
-  names: z.array(z.string().nonempty()).nonempty(),
+  id: z.string().min(1),
+  names: z.array(z.string().min(1)).nonempty(),
   weight: z
     .literal(100)
     .or(z.literal(200))
@@ -84,12 +84,12 @@ export const schemaFontPlaceholder = z.object({
         )
     ),
   tech: z.optional(z.array(z.enum(['variations']))),
-  testString: z.optional(z.string().nonempty()),
+  testString: z.optional(z.string().min(1)),
   resourceHint: z.optional(z.literal('preload').or(z.literal('prefetch'))),
   unicodeRange: z.optional(
     z
       .string()
-      .nonempty()
+      .min(1)
       .transform((value): string => fontUnicodeRange(value).toHexRangeString())
   )
 })
@@ -151,15 +151,11 @@ export type CSSProperties<T extends {}> = {
 } & T
 
 export interface FeatureQueries<StyleType> {
-  '@supports'?: {
-    [query: string]: StyleType
-  }
+  '@supports'?: Record<string, StyleType>
 }
 
 export interface MediaQueries<StyleType> {
-  '@media'?: {
-    [query: string]: StyleType
-  }
+  '@media'?: Record<string, StyleType>
 }
 
 export type StyleRule<T extends {}> = CSSProperties<T> &
@@ -247,12 +243,8 @@ export interface WebFontLocale {
 }
 
 export interface WebFontsJson {
-  alias: {
-    [x: string]: string
-  }
-  locale: {
-    [x: string]: WebFontLocale
-  }
+  alias: Record<string, string>
+  locale: Record<string, WebFontLocale>
   font: WebFont[]
   fontFace: string
   noScriptStyle: string

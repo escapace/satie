@@ -122,7 +122,7 @@ export const reduceGraph = (
   a: Map<string, string[]>,
   b: Map<string, string[]>
 ): Map<string, string[]> => {
-  const graph: Map<string, string[]> = new Map()
+  const graph = new Map<string, string[]>()
 
   uniq([...a.keys(), ...b.keys()]).forEach((key) => {
     graph.set(key, uniq([...(a.get(key) ?? []), ...(b.get(key) ?? [])]))
@@ -135,9 +135,9 @@ export const flattenConfiguration = (
   locales: InferLocales,
   cwd: string
 ): Configuration => {
-  const fonts: Map<string, FontState> = new Map()
-  const fallbacks: Map<string, FontFallback> = new Map()
-  const fontProperties: Map<string, Required<FontProperties>> = new Map()
+  const fonts = new Map<string, FontState>()
+  const fallbacks = new Map<string, FontFallback>()
+  const fontProperties = new Map<string, Required<FontProperties>>()
 
   const reduceFontFamily = (fontFamily?: {
     fallbacks: Fallback[]

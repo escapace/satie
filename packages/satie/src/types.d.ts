@@ -126,8 +126,8 @@ export declare const schemaFontPlaceholder: z.ZodObject<
           'many'
         >
       >,
-      ('woff' | 'woff2')[],
-      ('woff' | 'woff2')[] | undefined
+      Array<'woff' | 'woff2'>,
+      Array<'woff' | 'woff2'> | undefined
     >
     tech: z.ZodOptional<z.ZodArray<z.ZodEnum<['variations']>, 'many'>>
     testString: z.ZodOptional<z.ZodString>
@@ -140,10 +140,10 @@ export declare const schemaFontPlaceholder: z.ZodObject<
   z.ZodTypeAny,
   {
     source: string
-    format: ('woff' | 'woff2')[]
+    format: Array<'woff' | 'woff2'>
     name?: string | undefined
     display?: 'auto' | 'block' | 'swap' | 'fallback' | 'optional' | undefined
-    tech?: 'variations'[] | undefined
+    tech?: Array<'variations'> | undefined
     testString?: string | undefined
     resourceHint?: 'preload' | 'prefetch' | undefined
     unicodeRange?: string | undefined
@@ -152,8 +152,8 @@ export declare const schemaFontPlaceholder: z.ZodObject<
     source: string
     name?: string | undefined
     display?: 'auto' | 'block' | 'swap' | 'fallback' | 'optional' | undefined
-    format?: ('woff' | 'woff2')[] | undefined
-    tech?: 'variations'[] | undefined
+    format?: Array<'woff' | 'woff2'> | undefined
+    tech?: Array<'variations'> | undefined
     testString?: string | undefined
     resourceHint?: 'preload' | 'prefetch' | undefined
     unicodeRange?: string | undefined
@@ -266,7 +266,7 @@ export declare const schemaFontProperties: z.ZodObject<
           fallbacks: Fallback[]
           fonts: InferFont[]
         },
-        (
+        Array<
           | InputFont
           | {
               id: string
@@ -281,7 +281,7 @@ export declare const schemaFontProperties: z.ZodObject<
               xHeight: number
               xWidthAvg: number
             }
-        )[]
+        >
       >
     >
     fontWeight: z.ZodOptional<z.ZodDefault<z.ZodNumber>>
@@ -309,7 +309,7 @@ export declare const schemaFontProperties: z.ZodObject<
   },
   {
     fontFamily?:
-      | (
+      | Array<
           | InputFont
           | {
               id: string
@@ -324,7 +324,7 @@ export declare const schemaFontProperties: z.ZodObject<
               xHeight: number
               xWidthAvg: number
             }
-        )[]
+        >
       | undefined
     fontWeight?: number | undefined
     fontStretch?: number | undefined
@@ -341,14 +341,10 @@ export type CSSProperties<T extends {}> = {
     | Array<CSSTypeProperties[Property]>
 } & T
 export interface FeatureQueries<StyleType> {
-  '@supports'?: {
-    [query: string]: StyleType
-  }
+  '@supports'?: Record<string, StyleType>
 }
 export interface MediaQueries<StyleType> {
-  '@media'?: {
-    [query: string]: StyleType
-  }
+  '@media'?: Record<string, StyleType>
 }
 export type StyleRule<T extends {}> = CSSProperties<T> &
   MediaQueries<CSSProperties<T> & FeatureQueries<CSSProperties<T>>> &
@@ -377,7 +373,7 @@ export declare const schemaLocale: z.ZodObject<
     z.ZodTypeDef,
     StyleRule<{
       fontFamily?:
-        | (
+        | Array<
             | InputFont
             | {
                 id: string
@@ -392,7 +388,7 @@ export declare const schemaLocale: z.ZodObject<
                 xHeight: number
                 xWidthAvg: number
               }
-          )[]
+          >
         | undefined
       fontWeight?: number | undefined
       fontStretch?: number | undefined
@@ -431,7 +427,7 @@ export declare const schemaLocales: z.ZodObject<
           z.ZodTypeDef,
           StyleRule<{
             fontFamily?:
-              | (
+              | Array<
                   | InputFont
                   | {
                       id: string
@@ -455,7 +451,7 @@ export declare const schemaLocales: z.ZodObject<
                       xHeight: number
                       xWidthAvg: number
                     }
-                )[]
+                >
               | undefined
             fontWeight?: number | undefined
             fontStretch?: number | undefined
@@ -498,7 +494,7 @@ export declare const schemaLocales: z.ZodObject<
             z.ZodTypeDef,
             StyleRule<{
               fontFamily?:
-                | (
+                | Array<
                     | InputFont
                     | {
                         id: string
@@ -522,7 +518,7 @@ export declare const schemaLocales: z.ZodObject<
                         xHeight: number
                         xWidthAvg: number
                       }
-                  )[]
+                  >
                 | undefined
               fontWeight?: number | undefined
               fontStretch?: number | undefined
@@ -567,7 +563,7 @@ export declare const schemaLocales: z.ZodObject<
             z.ZodTypeDef,
             StyleRule<{
               fontFamily?:
-                | (
+                | Array<
                     | InputFont
                     | {
                         id: string
@@ -591,7 +587,7 @@ export declare const schemaLocales: z.ZodObject<
                         xHeight: number
                         xWidthAvg: number
                       }
-                  )[]
+                  >
                 | undefined
               fontWeight?: number | undefined
               fontStretch?: number | undefined
@@ -645,12 +641,8 @@ export interface WebFontLocale {
   style: string
 }
 export interface WebFontsJson {
-  alias: {
-    [x: string]: string
-  }
-  locale: {
-    [x: string]: WebFontLocale
-  }
+  alias: Record<string, string>
+  locale: Record<string, WebFontLocale>
   font: WebFont[]
   fontFace: string
   noScriptStyle: string
