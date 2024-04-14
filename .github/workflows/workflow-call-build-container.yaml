@@ -13,7 +13,7 @@ on:
         type: boolean
         description: "push is a shorthand for --output=type=registry"
         required: false
-        default: 'false'
+        default: false
       platforms:
         type: string
         description: "list of target platforms for build"
