@@ -85,9 +85,9 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           context: git
           tags: |
-            type=semver,pattern={{version}},value=v${{ steps.action-context.outputs.version }}
-            type=semver,pattern={{major}}.{{minor}},value=v${{ steps.action-context.outputs.version }}
-            type=semver,pattern={{major}},value=v${{ steps.action-context.outputs.version }}
+            type=match,pattern=v(.*),group=1,value=v${{ steps.action-context.outputs.version }}
+            type=match,pattern=v(\d.\d),group=1,value=v${{ steps.action-context.outputs.version }}
+            type=match,pattern=v(\d.),group=1,value=v${{ steps.action-context.outputs.version }}
             type=raw,value=latest,enable=${{ fromJSON(steps.action-context.outputs.latest) }}
       - id: node-version
         name: node-version
