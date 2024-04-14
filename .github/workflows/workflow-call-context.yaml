@@ -25,6 +25,18 @@ on:
       version:
         description: 'version'
         value: ${{ jobs.main.outputs.version }}
+      docker-metadata-tags:
+        description: 'docker tags'
+        value: ${{ jobs.main.outputs.docker-metadata-tags }}
+      docker-metadata-annotations:
+        description: 'docker annotations'
+        value: ${{ jobs.main.outputs.docker-metadata-annotations }}
+      docker-metadata-labels:
+        description: 'docker labels'
+        value: ${{ jobs.main.outputs.docker-metadata-labels }}
+      docker-metadata-json:
+        description: 'json output of docker tags and labels'
+        value: ${{ jobs.main.outputs.docker-metadata-json }}
 jobs:
   main:
     permissions:
@@ -39,10 +51,10 @@ jobs:
       prerelease: ${{ fromJSON(steps.action-context.outputs.prerelease) }}
       ref: ${{ steps.ref.outputs.value }}
       version: ${{ steps.action-context.outputs.version }}
-      docker-meta-tags: ${{ steps.docker-meta.outputs.tags }}
-      docker-meta-annotations: ${{ steps.docker-meta.outputs.annotations }}
-      docker-meta-labels: ${{ steps.docker-meta.outputs.labels }}
-      docker-meta-json: ${{ steps.docker-meta.outputs.json }}
+      docker-metadata-tags: ${{ steps.docker-metadata.outputs.tags }}
+      docker-metadata-annotations: ${{ steps.docker-metadata.outputs.annotations }}
+      docker-metadata-labels: ${{ steps.docker-metadata.outputs.labels }}
+      docker-metadata-json: ${{ steps.docker-metadata.outputs.json }}
     steps:
       - id: ref
         name: ref
@@ -63,7 +75,7 @@ jobs:
         with:
           token: ${{ github.token }}
       - name: docker meta
-        id: docker-meta
+        id: docker-metadata
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}

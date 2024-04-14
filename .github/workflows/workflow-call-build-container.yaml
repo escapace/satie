@@ -1,18 +1,39 @@
 on:
   workflow_call:
     inputs:
+      file:
+        type: string
+        description: "path to the dockerfile"
+        default: Dockerfile
       context:
         required: true
         type: string
-        description: 'Path to context archive.'
-      dockerfile:
-        default: 'Dockerfile'
-        type: string
-        description: 'Path to dockerfile.'
-      args:
+        description: "build's context is the set of files located in the specified path or url"
+      push:
+        type: boolean
+        description: "push is a shorthand for --output=type=registry"
         required: false
+        default: 'false'
+      platforms:
         type: string
-        default: ''
+        description: "list of target platforms for build"
+        required: false
+      annotations:
+        type: string
+        description: "list of annotation to set to the image"
+        required: false
+      labels:
+        type: string
+        description: "list of metadata for an image"
+        required: false
+      tags:
+        type: string
+        description: "list of tags"
+        required: false
+      build-args:
+        type: string
+        description: "list of build-time variables"
+        required: false
 jobs:
   main:
     permissions:
@@ -36,51 +57,64 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
-      - name: cache buildx
-        uses: actions/cache@v4
-        with:
-          path: ~/.buildx
-          key: ${{ runner.os }}-buildx-${{ hashFiles(inputs.context) }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-${{ hashFiles(inputs.context) }}
-            ${{ runner.os }}-buildx-
-      - name: filter args
-        id: filter
-        shell: bash
-        run: |
-          declare -A ARGS
-
-          filter () {
-            while [[ $# -gt 0 ]]; do
-              case $1 in
-                --tag|--build-arg)
-                  ARGS["$1 $2"]=0
-                  shift 2
-                  ;;
-                *)
-                  echo "Unknown option $1"
-                  exit 1
-              esac
-            done
-
-            echo "value=${!ARGS[@]}" >> $GITHUB_OUTPUT
-          }
-
-          split () {
-            IFS=$'\n ' read -r -a array <<< "$*"
-
-            echo "${array[@]}"
-          }
-
-          filter $(split ${{ inputs.args }})
-      # TODO: https://github.com/moby/moby/issues/28394
-      # --output type=image,oci-mediatypes=true,compression=zstd,compression-level=3,force-compression=true
+      # - name: cache buildx
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.buildx
+      #     key: ${{ runner.os }}-buildx-${{ hashFiles(inputs.context) }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-${{ hashFiles(inputs.context) }}
+      #       ${{ runner.os }}-buildx-
       - name: build and push
-        run: >-
-          docker buildx build
-          --cache-from type=local,src=$HOME/.buildx
-          --cache-to   type=local,dest=$HOME/.buildx,mode=max
-          --file "${{ inputs.dockerfile }}"
-          --platform linux/amd64,linux/arm64
-          ${{ steps.filter.outputs.value }}
-          --push - < "${{ inputs.context }}"
+        uses: docker/build-push-action@v5
+        with:
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: ${{ inputs.file }}
+          context: ${{ inputs.context }}
+          push: ${{ inputs.push }}
+          platforms: ${{ inputs.platforms }}
+          annotations: ${{ inputs.annotations }}
+          labels: ${{ inputs.labels }}
+          tags: ${{ inputs.tags }}
+          build-args: ${{ inputs.build-args }}
+      # - name: filter args
+      #   id: filter
+      #   shell: bash
+      #   run: |
+      #     declare -A ARGS
+      #
+      #     filter () {
+      #       while [[ $# -gt 0 ]]; do
+      #         case $1 in
+      #           --tag|--build-arg)
+      #             ARGS["$1 $2"]=0
+      #             shift 2
+      #             ;;
+      #           *)
+      #             echo "Unknown option $1"
+      #             exit 1
+      #         esac
+      #       done
+      #
+      #       echo "value=${!ARGS[@]}" >> $GITHUB_OUTPUT
+      #     }
+      #
+      #     split () {
+      #       IFS=$'\n ' read -r -a array <<< "$*"
+      #
+      #       echo "${array[@]}"
+      #     }
+      #
+      #     filter $(split ${{ inputs.args }})
+      # # TODO: https://github.com/moby/moby/issues/28394
+      # # --output type=image,oci-mediatypes=true,compression=zstd,compression-level=3,force-compression=true
+      # - name: build and push
+      #   run: >-
+      #     docker buildx build
+      #     --cache-from type=local,src=$HOME/.buildx
+      #     --cache-to   type=local,dest=$HOME/.buildx,mode=max
+      #     --file "${{ inputs.dockerfile }}"
+      #     --platform linux/amd64,linux/arm64
+      #     ${{ steps.filter.outputs.value }}
+      #     --push - < "${{ inputs.context }}"

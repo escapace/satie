@@ -102,9 +102,13 @@ jobs:
       - ci
     uses: ./.github/workflows/workflow-call-build-container.yaml
     with:
+      push: true
+      platforms: linux/amd64,linux/arm64
+      file: 'package/packages/container/Dockerfile'
       context: 'lib/satie-${{ needs.context.outputs.version }}.tgz'
-      dockerfile: 'package/packages/container/Dockerfile'
-      args: >-
-        --tag ghcr.io/${{ github.repository }}:${{ needs.context.outputs.version }}
-        --build-arg NODE_VERSION=${{ needs.context.outputs.node-version }}
-        --build-arg PNPM_VERSION=${{ needs.context.outputs.pnpm-version }}
+      annotations: ${{ needs.context.outputs.docker-metadata-annotations }}
+      labels: ${{ needs.context.outputs.docker-metadata-labels }}
+      tags: ${{ needs.context.outputs.docker-metadata-tags }}
+      build-args: |
+        NODE_VERSION=${{ needs.context.outputs.node-version }}
+        PNPM_VERSION=${{ needs.context.outputs.pnpm-version }}
