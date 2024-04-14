@@ -87,7 +87,7 @@ jobs:
           tags: |
             type=match,pattern=v(.*),group=1,value=v${{ steps.action-context.outputs.version }}
             type=match,pattern=v(\d.\d),group=1,value=v${{ steps.action-context.outputs.version }}
-            type=match,pattern=v(\d.),group=1,value=v${{ steps.action-context.outputs.version }}
+            type=match,pattern=v(\d),group=1,value=v${{ steps.action-context.outputs.version }}
             type=raw,value=latest,enable=${{ fromJSON(steps.action-context.outputs.latest) }}
       - id: node-version
         name: node-version
