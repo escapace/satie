@@ -10,6 +10,9 @@ on:
       environment:
         description: 'version'
         value: ${{ jobs.main.outputs.environment }}
+      latest:
+        description: 'is latest'
+        value: ${{ jobs.main.outputs.latest }}
       node-version:
         description: 'node.js version'
         value: ${{ jobs.main.outputs.node-version }}
@@ -46,6 +49,7 @@ jobs:
       changelog: ${{ steps.action-context.outputs.changelog }}
       commitish: ${{ steps.action-context.outputs.commitish }}
       environment: ${{ steps.action-context.outputs.environment }}
+      latest: ${{ fromJSON(steps.action-context.outputs.latest) }}
       node-version: ${{ steps.node-version.outputs.value }}
       pnpm-version: ${{ steps.pnpm-version.outputs.value }}
       prerelease: ${{ fromJSON(steps.action-context.outputs.prerelease) }}
@@ -81,11 +85,10 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           context: git
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{version}},value=v${{ steps.action-context.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=v${{ steps.action-context.outputs.version }}
+            type=semver,pattern={{major}},value=v${{ steps.action-context.outputs.version }}
+            type=raw,value=latest,enable=${{ fromJSON(steps.action-context.outputs.latest) }}
       - id: node-version
         name: node-version
         shell: bash
