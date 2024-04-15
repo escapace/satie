@@ -97,7 +97,6 @@ jobs:
   build-container:
     if: needs.context.outputs.environment == 'production'
     needs:
-      - release
       - context
       - ci
     uses: ./.github/workflows/workflow-call-build-container.yaml

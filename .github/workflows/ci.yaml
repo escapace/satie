@@ -34,5 +34,22 @@ jobs:
       ref: ${{ needs.context.outputs.ref }}
       node-version: ${{ needs.context.outputs.node-version }}
       pnpm-version: ${{ needs.context.outputs.pnpm-version }}
+      version: ${{ needs.context.outputs.version }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  build-container:
+    needs:
+      - context
+      - ci
+    uses: ./.github/workflows/workflow-call-build-container.yaml
+    with:
+      push: false
+      platforms: linux/amd64,linux/arm64
+      file: 'package/packages/container/Dockerfile'
+      context: 'lib/satie-${{ needs.context.outputs.version }}.tgz'
+      annotations: ${{ needs.context.outputs.docker-metadata-annotations }}
+      labels: ${{ needs.context.outputs.docker-metadata-labels }}
+      tags: ${{ needs.context.outputs.docker-metadata-tags }}
+      build-args: |
+        NODE_VERSION=${{ needs.context.outputs.node-version }}
+        PNPM_VERSION=${{ needs.context.outputs.pnpm-version }}

@@ -11,7 +11,7 @@ on:
         required: true
         type: string
       version:
-        required: false
+        required: true
         type: string
     secrets:
       CODECOV_TOKEN:
@@ -77,10 +77,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: pnpm pack
-        if: inputs.version != ''
         run: pnpm run pack --version ${{ inputs.version }}
       - name: upload
-        if: inputs.version != ''
         uses: actions/upload-artifact@v4
         with:
           retention-days: 3
