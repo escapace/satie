@@ -8,7 +8,11 @@ on:
       context:
         required: true
         type: string
-        description: "build's context is the set of files located in the specified path or url"
+        description: "build's context is tarball path"
+      context-strip-components:
+        type: number
+        description: "strip number leading components from file names on context extraction"
+        default: 0
       push:
         type: boolean
         description: "push is a shorthand for --output=type=registry"
@@ -57,6 +61,12 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: extract context
+        shell: bash
+        run: |
+          readarray -t array < <(find . -type f -name '*.tgz')
+          tar -xf ${{ input.context }} --strip-components=${{ input.context-strip-components }}
+          printf '%s\n' "${array[@]}" | xargs rm -f
       # - name: cache buildx
       #   uses: actions/cache@v4
       #   with:
@@ -71,7 +81,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: ${{ inputs.file }}
-          context: ${{ inputs.context }}
+          context: .
           push: ${{ inputs.push }}
           platforms: ${{ inputs.platforms }}
           annotations: ${{ inputs.annotations }}
@@ -80,7 +90,7 @@ jobs:
           build-args: ${{ inputs.build-args }}
       # - name: filter args
       #   id: filter
-      #   shell: bash
+          # shell: bash
       #   run: |
       #     declare -A ARGS
       #
