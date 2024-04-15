@@ -65,7 +65,7 @@ jobs:
         shell: bash
         run: |
           readarray -t array < <(find . -type f -name '*.tgz')
-          tar -xf ${{ input.context }} --strip-components=${{ input.context-strip-components }}
+          tar -xf ${{ inputs.context }} --strip-components=${{ inputs.context-strip-components }}
           printf '%s\n' "${array[@]}" | xargs rm -f
       # - name: cache buildx
       #   uses: actions/cache@v4
