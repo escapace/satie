@@ -93,6 +93,8 @@ jobs:
             type=match,pattern=v(\d.\d),group=1,enable=${{ startsWith(steps.action-context.outputs.version, '0') == false && fromJSON(steps.action-context.outputs.prerelease) == false }},value=v${{ steps.action-context.outputs.version }}
             type=match,pattern=v(\d),group=1,enable=${{ startsWith(steps.action-context.outputs.version, '0') == false && fromJSON(steps.action-context.outputs.prerelease) == false }},value=v${{ steps.action-context.outputs.version }}
             type=raw,value=latest,enable=${{ fromJSON(steps.action-context.outputs.latest) && fromJSON(steps.action-context.outputs.prerelease) == false }}
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
       - id: node-version
         name: node-version
         shell: bash
