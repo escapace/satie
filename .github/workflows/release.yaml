@@ -102,8 +102,10 @@ jobs:
     uses: ./.github/workflows/workflow-call-build-container.yaml
     permissions:
       packages: write
+      id-token: write
     with:
       push: true
+      cosign: true
       platforms: linux/amd64,linux/arm64
       file: 'package/packages/container/Dockerfile'
       context: 'lib/satie-${{ needs.context.outputs.version }}.tgz'

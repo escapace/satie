@@ -38,13 +38,17 @@ on:
         type: string
         description: "list of build-time variables"
         required: false
-
-# TODO: https://github.blog/2021-12-06-safeguard-container-signing-capability-actions/
+      cosign:
+        type: boolean
+        description: "sign the resulting docker image(s)"
+        required: false
+        default: false
 
 jobs:
   main:
     # permissions:
     #   packages: write
+    #   id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: download context archive
@@ -79,6 +83,7 @@ jobs:
       #       ${{ runner.os }}-buildx-${{ hashFiles(inputs.context) }}
       #       ${{ runner.os }}-buildx-
       - name: build and push
+        id: build-and-push
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -93,3 +98,16 @@ jobs:
           build-args: ${{ inputs.build-args }}
           sbom: false
           provenance: false
+      - name: install cosign
+        if: inputs.cosign == true
+        uses: sigstore/cosign-installer@v3.5.0
+        # with:
+        #   cosign-release: 'v2.1.1'
+      - name: sign the docker image
+        if: inputs.cosign == true
+        run: |
+          echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+        env:
+          # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
+          TAGS: ${{ inputs.tags }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
