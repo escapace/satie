@@ -43,8 +43,8 @@ on:
 
 jobs:
   main:
-    permissions:
-      packages: write
+    # permissions:
+    #   packages: write
     runs-on: ubuntu-latest
     steps:
       - name: download context archive
