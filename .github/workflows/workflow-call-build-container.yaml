@@ -9,10 +9,10 @@ on:
         required: true
         type: string
         description: "build's context is tarball path"
-      context-strip-components:
-        type: number
-        description: "strip number leading components from file names on context extraction"
-        default: 0
+      # context-strip-components:
+      #   type: number
+      #   description: "strip number leading components from file names on context extraction"
+      #   default: 0
       push:
         type: boolean
         description: "push is a shorthand for --output=type=registry"
@@ -65,7 +65,7 @@ jobs:
         shell: bash
         run: |
           readarray -t array < <(find . -type f -name '*.tgz')
-          tar -xf ${{ inputs.context }} --strip-components=${{ inputs.context-strip-components }}
+          tar -xf ${{ inputs.context }}
           printf '%s\n' "${array[@]}" | xargs rm -f
       # - name: cache buildx
       #   uses: actions/cache@v4
@@ -78,53 +78,13 @@ jobs:
       - name: build and push
         uses: docker/build-push-action@v5
         with:
+          context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: ${{ inputs.file }}
-          context: .
           push: ${{ inputs.push }}
           platforms: ${{ inputs.platforms }}
           annotations: ${{ inputs.annotations }}
           labels: ${{ inputs.labels }}
           tags: ${{ inputs.tags }}
           build-args: ${{ inputs.build-args }}
-      # - name: filter args
-      #   id: filter
-          # shell: bash
-      #   run: |
-      #     declare -A ARGS
-      #
-      #     filter () {
-      #       while [[ $# -gt 0 ]]; do
-      #         case $1 in
-      #           --tag|--build-arg)
-      #             ARGS["$1 $2"]=0
-      #             shift 2
-      #             ;;
-      #           *)
-      #             echo "Unknown option $1"
-      #             exit 1
-      #         esac
-      #       done
-      #
-      #       echo "value=${!ARGS[@]}" >> $GITHUB_OUTPUT
-      #     }
-      #
-      #     split () {
-      #       IFS=$'\n ' read -r -a array <<< "$*"
-      #
-      #       echo "${array[@]}"
-      #     }
-      #
-      #     filter $(split ${{ inputs.args }})
-      # # TODO: https://github.com/moby/moby/issues/28394
-      # # --output type=image,oci-mediatypes=true,compression=zstd,compression-level=3,force-compression=true
-      # - name: build and push
-      #   run: >-
-      #     docker buildx build
-      #     --cache-from type=local,src=$HOME/.buildx
-      #     --cache-to   type=local,dest=$HOME/.buildx,mode=max
-      #     --file "${{ inputs.dockerfile }}"
-      #     --platform linux/amd64,linux/arm64
-      #     ${{ steps.filter.outputs.value }}
-      #     --push - < "${{ inputs.context }}"

@@ -106,7 +106,6 @@ jobs:
       platforms: linux/amd64,linux/arm64
       file: 'package/packages/container/Dockerfile'
       context: 'lib/satie-${{ needs.context.outputs.version }}.tgz'
-      context-strip-components: 1
       annotations: ${{ needs.context.outputs.docker-metadata-annotations }}
       labels: ${{ needs.context.outputs.docker-metadata-labels }}
       tags: ${{ needs.context.outputs.docker-metadata-tags }}
