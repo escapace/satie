@@ -38,6 +38,9 @@ on:
         type: string
         description: "list of build-time variables"
         required: false
+
+# TODO: https://github.blog/2021-12-06-safeguard-container-signing-capability-actions/
+
 jobs:
   main:
     permissions:
@@ -88,3 +91,5 @@ jobs:
           labels: ${{ inputs.labels }}
           tags: ${{ inputs.tags }}
           build-args: ${{ inputs.build-args }}
+          sbom: false
+          provenance: false
