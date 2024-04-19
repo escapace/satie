@@ -26,8 +26,8 @@ importers:
         specifier: 9.0.0
         version: 9.0.0
       eslint-config-escapace:
-        specifier: 4.1.5
-        version: 4.1.5(eslint@9.0.0)(typescript@5.4.4)
+        specifier: 4.1.6
+        version: 4.1.6(eslint@9.0.0)(typescript@5.4.4)
       execa:
         specifier: 8.0.1
         version: 8.0.1
@@ -2864,10 +2864,10 @@ packages:
     engines: { node: '>=10' }
     dev: true
 
-  /eslint-config-escapace@4.1.5(eslint@9.0.0)(typescript@5.4.4):
+  /eslint-config-escapace@4.1.6(eslint@9.0.0)(typescript@5.4.4):
     resolution:
       {
-        integrity: sha512-1eL612WjvRWiTAg2Y/bWzSHOYX8jW9fCxbs1ZqCqfC/kbmMmQFn09YjDjle00szazTocm4zvU7krkcEZDR7MMA==
+        integrity: sha512-tOxZ8L+o4YcysYAEsYIBLwlBJDpGQe4qWYlHG8lFnNofDQflbIvTEAVgAAgleuWkZb4yXtPmO3BoAuPXeE5IkQ==
       }
     engines: { node: '>=20.12.0', pnpm: '>=8.15.6' }
     peerDependencies:

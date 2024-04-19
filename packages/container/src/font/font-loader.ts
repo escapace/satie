@@ -31,7 +31,7 @@ const fontStretchMapping = new Map([
   [100, 'normal'],
   [112.5, 'semi-expanded'],
   [125, 'expanded'],
-  [150, 'extra-expande'],
+  [150, 'extra-expanded'],
   [200, 'ultra-expanded'],
   [50, 'ultra-condensed'],
   [62.5, 'extra-condensed'],
