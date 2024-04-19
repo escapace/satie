@@ -1,12 +1,12 @@
 import { assert } from 'chai'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { satie } from './satie'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 describe('src/satie.spec.ts', function () {
-  this.timeout(60000)
+  this.timeout(60_000)
 
   it('happy-path', async () => {
     assert.isFunction(satie)

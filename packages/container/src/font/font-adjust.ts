@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { FontFaceAdjustments } from '../types'
+import type { FontFaceAdjustments } from '../types'
 import type { FontMetrics } from './font-metrics'
 import { BigNumber } from 'bignumber.js'
 

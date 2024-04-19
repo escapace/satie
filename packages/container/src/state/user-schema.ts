@@ -9,12 +9,12 @@ import { fontUnicodeRange } from '../font/font-unicode-range'
 // "ital" font-style: italic
 // "opsz" font-optical-sizing
 
-export type InputFont = z.input<typeof schemaFontPlaceholder> & {
+export type InputFont = {
   prefer?: InputFont[]
-}
-export type InferFont = z.infer<typeof schemaFontPlaceholder> & {
+} & z.input<typeof schemaFontPlaceholder>
+export type InferFont = {
   prefer?: InferFont[]
-}
+} & z.infer<typeof schemaFontPlaceholder>
 
 export type InputRule = z.input<typeof schemaRule>
 export type InferRule = z.infer<typeof schemaRule>
@@ -28,8 +28,18 @@ export type InferLocales = Record<string, InferLocale | string>
 export type Fallback = z.infer<typeof schemaFallback>
 
 export const schemaFallback = z.object({
+  ascent: z.number(),
+  // subfamilyName: z.string().nonempty(),
+  capHeight: z.number(),
+  descent: z.number(),
   id: z.string().min(1),
+  // familyName: z.string().nonempty(),
+  // postscriptName: z.string().nonempty(),
+  // fullName: z.string().nonempty(),
+  italic: z.boolean(),
+  lineGap: z.number(),
   names: z.array(z.string().min(1)).nonempty(),
+  unitsPerEm: z.number(),
   weight: z
     .literal(100)
     .or(z.literal(200))
@@ -40,32 +50,11 @@ export const schemaFallback = z.object({
     .or(z.literal(700))
     .or(z.literal(800))
     .or(z.literal(900)),
-  italic: z.boolean(),
-  // familyName: z.string().nonempty(),
-  // postscriptName: z.string().nonempty(),
-  // fullName: z.string().nonempty(),
-  // subfamilyName: z.string().nonempty(),
-  capHeight: z.number(),
-  ascent: z.number(),
-  descent: z.number(),
-  lineGap: z.number(),
-  unitsPerEm: z.number(),
   xHeight: z.number(),
   xWidthAvg: z.number()
 })
 
 export const schemaFontPlaceholder = z.object({
-  name: z
-    .string()
-    .optional()
-    .refine((value) => {
-      if (value === undefined) {
-        return true
-      }
-
-      return /^[a-z-]+$/i.test(value)
-    }),
-  source: z.string(),
   display: z.optional(
     z
       .literal('auto')
@@ -83,9 +72,20 @@ export const schemaFontPlaceholder = z.object({
           (value) => (value === 'woff2' ? 0 : 1)
         )
     ),
+  name: z
+    .string()
+    .optional()
+    .refine((value) => {
+      if (value === undefined) {
+        return true
+      }
+
+      return /^[a-z-]+$/i.test(value)
+    }),
+  resourceHint: z.optional(z.literal('preload').or(z.literal('prefetch'))),
+  source: z.string(),
   tech: z.optional(z.array(z.enum(['variations']))),
   testString: z.optional(z.string().min(1)),
-  resourceHint: z.optional(z.literal('preload').or(z.literal('prefetch'))),
   unicodeRange: z.optional(
     z
       .string()
@@ -134,20 +134,20 @@ export const schemaFontStyle = z.enum(['normal', 'italic']).default('normal')
 // 'fontVariationSetting'
 export const schemaFontProperties = z.object({
   fontFamily: schemaFontFamily.optional(),
-  fontWeight: schemaFontWeight.optional(),
   fontStretch: schemaFontStretch.optional(),
   fontStyle: schemaFontStyle.optional(),
-  fontVariationSettings: schemaFontVariationSettings.optional()
+  fontVariationSettings: schemaFontVariationSettings.optional(),
+  fontWeight: schemaFontWeight.optional()
 })
 
 export type InputFontProperties = z.input<typeof schemaFontProperties>
 export type InferFontProperties = z.infer<typeof schemaFontProperties>
-export type CSSTypeProperties = Properties<number | (string & {})>
+export type CSSTypeProperties = Properties<({} & string) | number>
 
 export type CSSProperties<T extends {}> = {
   [Property in Exclude<keyof CSSTypeProperties, keyof T>]?:
-    | CSSTypeProperties[Property]
     | Array<CSSTypeProperties[Property]>
+    | CSSTypeProperties[Property]
 } & T
 
 export interface FeatureQueries<StyleType> {
@@ -159,8 +159,8 @@ export interface MediaQueries<StyleType> {
 }
 
 export type StyleRule<T extends {}> = CSSProperties<T> &
-  MediaQueries<CSSProperties<T> & FeatureQueries<CSSProperties<T>>> &
-  FeatureQueries<CSSProperties<T> & MediaQueries<CSSProperties<T>>>
+  FeatureQueries<CSSProperties<T> & MediaQueries<CSSProperties<T>>> &
+  MediaQueries<CSSProperties<T> & FeatureQueries<CSSProperties<T>>>
 
 const schemaRule: z.ZodType<
   StyleRule<InferFontProperties>,
@@ -213,30 +213,30 @@ export interface ResourceHint {
 }
 
 export type WebFontState =
-  | 'font-loaded'
-  | 'font-already-loaded'
-  | 'font-unknown'
-  | 'font-not-supported'
   | 'error'
+  | 'font-already-loaded'
+  | 'font-loaded'
+  | 'font-not-supported'
+  | 'font-unknown'
 
 export interface WebFont {
-  slug: string
-  prefer?: string[]
-  tech?: string[]
   fontFace?: Array<{
     fontFamily: string
-    fontStretch?: number | [number, number]
+    fontStretch?: [number, number] | number
     fontStyle?: 'italic'
-    fontWeight?: number | [number, number]
+    fontWeight?: [number, number] | number
   }>
+  prefer?: string[]
   resourceHint?: ResourceHint[]
-  testString?: string
+  slug: string
   state?: WebFontState
+  tech?: string[]
+  testString?: string
 }
 
 export interface WebFontLocale {
-  fontFace: string
   font: WebFont[]
+  fontFace: string
   noScriptStyle: string
   order: string[] | undefined
   style: string
@@ -244,9 +244,9 @@ export interface WebFontLocale {
 
 export interface WebFontsJson {
   alias: Record<string, string>
-  locale: Record<string, WebFontLocale>
   font: WebFont[]
   fontFace: string
+  locale: Record<string, WebFontLocale>
   noScriptStyle: string
   order: string[] | undefined
   script: string

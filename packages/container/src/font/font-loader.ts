@@ -8,7 +8,7 @@ interface Font extends Omit<WebFont, 'state'> {
   state?: Promise<WebFontState>
 }
 
-declare const __DATA_LOCALES__: Array<readonly [string, string[] | string]>
+declare const __DATA_LOCALES__: Array<readonly [string, string | string[]]>
 declare const __DATA_FONTS__: Font[]
 
 type Callback = (webFonts: WebFont[]) => unknown
@@ -17,7 +17,7 @@ declare global {
   interface Window {
     FontFaceObserver: typeof FontFaceObserver
     webFontLoader: (locale: string) => Promise<WebFont[]>
-    webFontLoaderSubscribe: (cb: Callback) => () => void
+    webFontLoaderSubscribe: (callback: Callback) => () => void
   }
 }
 
@@ -28,22 +28,24 @@ const FONTS = new Map(
 const SUBSCRIBERS = new Set<Callback>()
 
 const fontStretchMapping = new Map([
-  [50, 'ultra-condensed'],
-  [62.5, 'extra-condensed'],
-  [75, 'condensed'],
-  [87.5, 'semi-condensed'],
   [100, 'normal'],
   [112.5, 'semi-expanded'],
   [125, 'expanded'],
   [150, 'extra-expande'],
-  [200, 'ultra-expanded']
+  [200, 'ultra-expanded'],
+  [50, 'ultra-condensed'],
+  [62.5, 'extra-condensed'],
+  [75, 'condensed'],
+  [87.5, 'semi-condensed']
 ])
 
 const fontStretchMappingKeys = Array.from(fontStretchMapping.keys())
 
 const closest = (array: number[], value: number): number =>
-  array.reduce(function (prev, curr) {
-    return Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
+  array.reduce(function (previous, current) {
+    return Math.abs(current - value) < Math.abs(previous - value)
+      ? current
+      : previous
   })
 
 const getDataFontsLoaded = () =>
@@ -114,13 +116,13 @@ const createPromise = async (slug: string): Promise<WebFontState> => {
             const style = fontFace.fontStyle ?? undefined
 
             await new FontFaceObserver(fontFace.fontFamily, {
-              weight,
               stretch,
-              style
+              style,
+              weight
             }).load(
               typeof font.testString === 'string' ? font.testString : null,
               // TODO: custom timeout
-              10000
+              10_000
             )
           })
         )
@@ -149,7 +151,7 @@ const iterateFonts = async (): Promise<Font[]> =>
             : undefined
         }
 
-        return undefined
+        return
       })
     )
   ).filter((value): value is Font => value !== undefined)
@@ -167,25 +169,25 @@ const updateSubscribers = async () => {
   const fonts = await normalize(await iterateFonts())
 
   if (fonts.length > 0) {
-    SUBSCRIBERS.forEach((cb) => cb(fonts))
+    SUBSCRIBERS.forEach((callback) => callback(fonts))
   }
 
   return fonts
 }
 
-export const webFontLoaderSubscribe = (cb: Callback): (() => void) => {
-  if (!SUBSCRIBERS.has(cb)) {
-    SUBSCRIBERS.add(cb)
+export const webFontLoaderSubscribe = (callback: Callback): (() => void) => {
+  if (!SUBSCRIBERS.has(callback)) {
+    SUBSCRIBERS.add(callback)
 
     void iterateFonts().then(async (fonts) => {
       if (fonts.length !== 0) {
-        cb(await normalize(fonts))
+        callback(await normalize(fonts))
       }
     })
   }
 
   return () => {
-    SUBSCRIBERS.delete(cb)
+    SUBSCRIBERS.delete(callback)
   }
 }
 

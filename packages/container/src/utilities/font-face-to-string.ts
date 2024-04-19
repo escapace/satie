@@ -1,5 +1,5 @@
 import { compact } from 'lodash-es'
-import { FontFace } from '../types'
+import type { FontFace } from '../types'
 import { quoteFontFamily } from './quote-font-family'
 
 export const fontFaceToString = (value: FontFace): string =>

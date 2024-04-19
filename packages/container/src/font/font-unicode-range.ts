@@ -2,35 +2,26 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 export class CharacterSet {
-  size = 0
   data: Record<number, boolean> = {}
+  size = 0
 
-  add(...args: number[]) {
-    for (let i = 0; i < args.length; i += 1) {
-      const codePoint = args[i]
-
-      if (!this.data[codePoint]) {
-        this.data[codePoint] = true
-        this.size += 1
-      }
-    }
-  }
-
-  constructor(input?: string | number | Array<number | [number, number]>) {
+  constructor(input?: Array<[number, number] | number> | number | string) {
     if (typeof input === 'string') {
-      for (let i = 0; i < input.length; i += 1) {
-        const codePoint = input.charCodeAt(i)
+      for (let index = 0; index < input.length; index += 1) {
+        const codePoint = input.charCodeAt(index)
 
-        if ((codePoint & 0xf800) === 0xd800 && i < input.length) {
-          const nextCodePoint = input.charCodeAt(i + 1)
-          if ((nextCodePoint & 0xfc00) === 0xdc00) {
+        if ((codePoint & 0xf8_00) === 0xd8_00 && index < input.length) {
+          const nextCodePoint = input.charCodeAt(index + 1)
+          if ((nextCodePoint & 0xfc_00) === 0xdc_00) {
             this.add(
-              ((codePoint & 0x3ff) << 10) + (nextCodePoint & 0x3ff) + 0x10000
+              ((codePoint & 0x3_ff) << 10) +
+                (nextCodePoint & 0x3_ff) +
+                0x1_00_00
             )
           } else {
             this.add(codePoint)
           }
-          i += 1
+          index += 1
         } else {
           this.add(codePoint)
         }
@@ -40,39 +31,31 @@ export class CharacterSet {
     } else if (Array.isArray(input)) {
       const value = this.expandRange(input)
 
-      for (let i = 0; i < value.length; i += 1) {
-        this.add(value[i])
+      for (let index = 0; index < value.length; index += 1) {
+        this.add(value[index])
       }
     }
   }
 
-  toArray() {
-    const result: number[] = []
+  add(...arguments_: number[]) {
+    for (let index = 0; index < arguments_.length; index += 1) {
+      const codePoint = arguments_[index]
 
-    for (const codePoint in this.data) {
-      if (
-        // this.data.hasOwnProperty(codePoint) &&
-        this.data[codePoint]
-      ) {
-        result.push(parseInt(codePoint, 10))
+      if (!this.data[codePoint]) {
+        this.data[codePoint] = true
+        this.size += 1
       }
     }
-
-    result.sort(function (a, b) {
-      return a - b
-    })
-
-    return result
   }
 
   compressRange(codePoints: number[]) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result: any[] = []
 
-    for (let i = 0; i < codePoints.length; i += 1) {
-      const previous = i > 0 ? codePoints[i - 1] : null
-      const next = i < codePoints.length - 1 ? codePoints[i + 1] : null
-      const current = codePoints[i]
+    for (let index = 0; index < codePoints.length; index += 1) {
+      const previous = index > 0 ? codePoints[index - 1] : null
+      const next = index < codePoints.length - 1 ? codePoints[index + 1] : null
+      const current = codePoints[index]
 
       if (
         (current - 1 !== previous || previous === null) &&
@@ -100,43 +83,18 @@ export class CharacterSet {
       }
     }
 
-    return result as Array<number | [number, number]>
+    return result as Array<[number, number] | number>
   }
 
-  toRange() {
-    return this.compressRange(this.toArray())
-  }
-
-  toHexRangeString() {
-    return this.toRange()
-      .map(function (value) {
-        if (Array.isArray(value)) {
-          return (
-            'U+' +
-            value[0].toString(16).toUpperCase() +
-            '-' +
-            value[1].toString(16).toUpperCase()
-          )
-        } else {
-          return 'U+' + value.toString(16).toUpperCase()
-        }
-      })
-      .join(',')
-  }
-
-  getSize() {
-    return this.size
-  }
-
-  expandRange(range: Array<number | [number, number]>) {
+  expandRange(range: Array<[number, number] | number>) {
     const result: number[] = []
 
-    for (let i = 0; i < range.length; i += 1) {
-      const current = range[i]
+    for (let index = 0; index < range.length; index += 1) {
+      const current = range[index]
 
       if (Array.isArray(current)) {
-        for (let j = current[0]; j < current[1] + 1; j += 1) {
-          result.push(j)
+        for (let index = current[0]; index < current[1] + 1; index += 1) {
+          result.push(index)
         }
       } else {
         result.push(current)
@@ -146,8 +104,48 @@ export class CharacterSet {
     return result
   }
 
+  getSize() {
+    return this.size
+  }
+
   isEmpty() {
     return this.size === 0
+  }
+
+  toArray() {
+    const result: number[] = []
+
+    for (const codePoint in this.data) {
+      if (
+        // this.data.hasOwnProperty(codePoint) &&
+        this.data[codePoint]
+      ) {
+        result.push(parseInt(codePoint, 10))
+      }
+    }
+
+    result.sort(function (a, b) {
+      return a - b
+    })
+
+    return result
+  }
+
+  toHexRangeString() {
+    return this.toRange()
+      .map(function (value) {
+        return Array.isArray(value)
+          ? 'U+' +
+              value[0].toString(16).toUpperCase() +
+              '-' +
+              value[1].toString(16).toUpperCase()
+          : 'U+' + value.toString(16).toUpperCase()
+      })
+      .join(',')
+  }
+
+  toRange() {
+    return this.compressRange(this.toArray())
   }
 }
 
@@ -155,9 +153,9 @@ export const fontUnicodeRange = (input: string): CharacterSet => {
   const ranges = input.split(/\s*,\s*/)
   const result = new CharacterSet()
 
-  for (let i = 0; i < ranges.length; i++) {
-    const match = /^(u\+([0-9a-f?]{1,6})(?:-([0-9a-f]{1,6}))?)$/i.exec(
-      ranges[i]
+  for (let index = 0; index < ranges.length; index++) {
+    const match = /^(u\+([\d?a-f]{1,6})(?:-([\da-f]{1,6}))?)$/i.exec(
+      ranges[index]
     )
     let start = null
     let end = null
@@ -169,11 +167,7 @@ export const fontUnicodeRange = (input: string): CharacterSet => {
       } else {
         start = parseInt(match[2], 16)
 
-        if (match[3]) {
-          end = parseInt(match[3], 16)
-        } else {
-          end = start
-        }
+        end = match[3] ? parseInt(match[3], 16) : start
       }
 
       if (start !== end) {

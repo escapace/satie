@@ -1,14 +1,14 @@
 import { browserslistToTargets } from '@yeuxjs/browserslist-to-targets'
 import { findUp } from 'find-up'
-import { existsSync } from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import { existsSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import {
   DEFAULT_JSON_FILE,
   DEFAULT_OUTPUT_DIR,
   DEFAULT_PUBLIC_PATH
 } from '../constants'
-import { Options, State } from '../types'
+import type { Options, State } from '../types'
 import { createConfiguration } from './create-configuration'
 
 export const createState = async (options: Options): Promise<State> => {
@@ -35,9 +35,9 @@ export const createState = async (options: Options): Promise<State> => {
   }
 
   const processDirectory = options.cwd ?? process.cwd()
-  const { configuration, configurationFile, configurationDirectory } =
+  const { configuration, configurationDirectory, configurationFile } =
     await createConfiguration(processDirectory)
-  const outputDir = path.resolve(
+  const outputDirectory = path.resolve(
     processDirectory,
     options.outputDir ?? DEFAULT_OUTPUT_DIR
   )
@@ -58,7 +58,7 @@ export const createState = async (options: Options): Promise<State> => {
     configurationDirectory,
     configurationFile,
     jsonFile,
-    outputDir,
+    outputDir: outputDirectory,
     processDirectory,
     publicPath,
     runtimeDirectory,

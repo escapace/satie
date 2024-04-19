@@ -32,4 +32,4 @@ const combination = <T>(collection: ArrayLike<T>, n: number) => {
 }
 
 export const combinations = <T>(value: T[]) =>
-  flatMap(value, (_, i, a) => combination(a, i + 1))
+  flatMap(value, (_, index, a) => combination(a, index + 1))

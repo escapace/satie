@@ -1,10 +1,10 @@
-import {
+import type {
   CSSProperties,
   Fallback as IFallback,
   InferFont,
   InferFontProperties
 } from './state/user-schema'
-import { Targets } from 'lightningcss'
+import type { Targets } from 'lightningcss'
 
 export interface FontFallback {
   font: IFallback
@@ -19,13 +19,13 @@ export interface FontFaceAdjustments {
 }
 
 export interface FontFace extends FontFaceAdjustments {
-  fontStyle: 'normal' | 'italic'
+  fontDisplay?: InferFont['display']
   fontFamily: string
-  fontWeight: number | [number, number]
-  fontStretch: number | [number, number]
+  fontStretch: [number, number] | number
+  fontStyle: 'italic' | 'normal'
+  fontWeight: [number, number] | number
   src: string
   unicodeRange?: InferFont['unicodeRange']
-  fontDisplay?: InferFont['display']
 }
 
 // export interface LightningCSSTargets {
@@ -46,29 +46,29 @@ export const enum TypeFontState {
 }
 
 export interface FontStateInitial {
-  type: TypeFontState.Initial
-  slug: string
   font: InferFont
   fontFaces: Map<string, FontFace>
+  slug: string
+  type: TypeFontState.Initial
 }
 
 export interface FontStateWritten extends Omit<FontStateInitial, 'type'> {
-  type: TypeFontState.Written
   files: string[]
+  type: TypeFontState.Written
 }
 
 export type FontState = FontStateInitial | FontStateWritten
 
 export interface Options {
-  cwd?: string
   cli?: boolean
+  cwd?: string
   jsonFile?: string
   outputDir?: string
   publicPath?: string
 }
 
 export interface AtRule {
-  type: '@supports' | '@media'
+  type: '@media' | '@supports'
   value: string
 }
 
@@ -95,30 +95,30 @@ export interface FontProperties
 }
 
 export interface Style {
-  id: string
-  parent?: string
-  fontProperties?: string
   atRules: AtRule[]
-  properties: CSSProperties<{}>
-  locale: string
   // fontPropertiesKeys: Array<keyof Required<FontProperties>>
   classname: string
-  graph?: Map<string, string[]>
-  style?: string
-  noScriptStyle?: string
   fallbackStyle?: string
-  noScriptStyleProperties?: CSSProperties<{}>
   fallbackStyleProperties?: CSSProperties<{}>
+  fontProperties?: string
+  graph?: Map<string, string[]>
+  id: string
+  locale: string
+  noScriptStyle?: string
+  noScriptStyleProperties?: CSSProperties<{}>
+  parent?: string
+  properties: CSSProperties<{}>
+  style?: string
 }
 
 export interface Configuration {
-  fonts: Map<string, FontState>
   fallbackFonts: Map<string, FontFallback>
   fontProperties: Map<string, Required<FontProperties>>
-  styles: Style[]
-  locales: Record<string, Style[]>
+  fonts: Map<string, FontState>
   localeFromAlias: Map<string, string[]>
+  locales: Record<string, Style[]>
   localeToAlias: Map<string, string[]>
+  styles: Style[]
 }
 
 export interface State {
@@ -126,16 +126,16 @@ export interface State {
   configurationDirectory: string
   configurationFile: string
   jsonFile: string
-  processDirectory: string
   outputDir: string
+  processDirectory: string
   publicPath: string
   runtimeDirectory: string
   runtimeFontLoaderPath: string
   runtimeFontStripPath: string
   targets: {
     browserslist: string[]
-    lightningcss: Targets
     esbuild: string[]
+    lightningcss: Targets
   }
 }
 

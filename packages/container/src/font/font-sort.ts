@@ -1,8 +1,8 @@
 import { uniq, uniqBy } from 'lodash-es'
-import { InferFont } from '../state/user-schema'
+import type { InferFont } from '../state/user-schema'
 import { toposort } from '../utilities/toposort'
 import { fontSlug } from './font-slug'
-import { FontStateInitial, TypeFontState } from '../types'
+import { type FontStateInitial, TypeFontState } from '../types'
 
 export interface FontsSorted {
   fonts: FontStateInitial[]
@@ -45,10 +45,10 @@ export const fontSort = (initial: InferFont[], cwd: string): FontsSorted => {
 
       if (!fonts.has(slug)) {
         fonts.set(slug, {
-          type: TypeFontState.Initial,
-          slug,
           font,
-          fontFaces: new Map()
+          fontFaces: new Map(),
+          slug,
+          type: TypeFontState.Initial
         })
       }
 

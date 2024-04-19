@@ -1,8 +1,8 @@
-import { createHash as cryptoHash } from 'crypto'
-import { readFileSync } from 'fs'
+import { createHash as cryptoHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
 import { pick } from 'lodash-es'
-import path from 'path'
-import { InferFont } from '../state/user-schema'
+import path from 'node:path'
+import type { InferFont } from '../state/user-schema'
 import type { TupleUnion } from '../types'
 import { createHash } from '../utilities/create-hash'
 

@@ -20,7 +20,7 @@ import {
   uniq,
   uniqBy
 } from 'lodash-es'
-import path from 'path'
+import path from 'node:path'
 import stringify from 'safe-stable-stringify'
 import type { ValuesType } from 'utility-types'
 import { fontAdjust } from './font/font-adjust'
@@ -38,13 +38,13 @@ import {
   reduceGraph,
   schemaFontPropertiesKeys
 } from './state/flatten-configuration'
-import {
+import type {
   CSSProperties,
   WebFont,
   WebFontLocale,
   WebFontsJson
 } from './state/user-schema'
-import {
+import type {
   FontProperties,
   FontStateWritten,
   Options,
@@ -70,7 +70,7 @@ const stylePropertiesToString = (
   properties?: CSSProperties<{}>
 ) => {
   if (isEmpty(properties)) {
-    return undefined
+    return
   }
 
   const atRulesOpen = style.atRules.map(
@@ -94,7 +94,7 @@ const selectorParent = (style: Style, state: State) =>
 
 const selectorStyleProperties = (
   style: Style,
-  type: 'noScriptStyleProperties' | 'fallbackStyleProperties',
+  type: 'fallbackStyleProperties' | 'noScriptStyleProperties',
   state: State
 ): CSSProperties<{}> | undefined => {
   const parent = selectorParent(style, state)
@@ -131,11 +131,10 @@ const selectorStyleProperties = (
 const selectorFontProperties = (
   style: Style,
   state: State
-): Required<FontProperties> | undefined => {
-  return style.fontProperties === undefined
+): Required<FontProperties> | undefined =>
+  style.fontProperties === undefined
     ? undefined
     : state.configuration.fontProperties.get(style.fontProperties)!
-}
 
 const selectorFontVariationSettings = (style: Style, state: State) => {
   const fontProperties = selectorFontProperties(style, state)
@@ -143,45 +142,43 @@ const selectorFontVariationSettings = (style: Style, state: State) => {
   return fontProperties?.fontVariationSettings === undefined
     ? undefined
     : fontProperties.fontVariationSettings === 'normal'
-    ? 'normal'
-    : sortBy(
-        uniqBy(
-          Object.entries(fontProperties.fontVariationSettings),
+      ? 'normal'
+      : sortBy(
+          uniqBy(
+            Object.entries(fontProperties.fontVariationSettings),
+            ([key]) => key
+          ),
           ([key]) => key
-        ),
-        ([key]) => key
-      )
-        .map(([key, value]) => `"${key}" ${value}`)
-        .join(', ')
+        )
+          .map(([key, value]) => `"${key}" ${value}`)
+          .join(', ')
 }
 
 const selectorFontFamilies = (
   style: Style,
   state: State
 ): Array<{
-  slug: string
   fontFamily: string
-}> => {
-  return compact(
+  slug: string
+}> =>
+  compact(
     selectorFontProperties(style, state)?.fontFamily?.fonts.map((slug) => {
       const value = state.configuration.fonts.get(slug)?.fontFaces.get(style.id)
 
       if (value !== undefined) {
-        return { slug, fontFamily: value.fontFamily }
+        return { fontFamily: value.fontFamily, slug }
       }
 
-      return undefined
+      return
     })
   )
-}
 
 const selectorFallbackFontFamilies = (style: Style, state: State): string[] => {
   const fontProperties = selectorFontProperties(style, state)
 
   return compact(
-    fontProperties?.fontFamily?.fallbacks.map(
-      (slug) =>
-        state.configuration.fallbackFonts.get(slug)?.fontFaces.get(style.id)
+    fontProperties?.fontFamily?.fallbacks.map((slug) =>
+      state.configuration.fallbackFonts.get(slug)?.fontFaces.get(style.id)
     )
   ).map((value) => value.fontFamily)
 }
@@ -217,10 +214,10 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
       )
 
       if (fonts === undefined && fallbackFonts === undefined) {
-        return undefined
+        return
       }
 
-      return { fonts, fallbackFonts }
+      return { fallbackFonts, fonts }
     })
   )
 
@@ -245,8 +242,8 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
     )
       .sort((a, b) =>
         a.fontFamily.localeCompare(b.fontFamily, 'en-us', {
-          usage: 'sort',
-          sensitivity: 'variant'
+          sensitivity: 'variant',
+          usage: 'sort'
         })
       )
       .map((value) => fontFaceToString(value))
@@ -273,7 +270,6 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
     )
 
     const output: WebFont = {
-      slug: font.slug,
       fontFace:
         fontFaces.length === 0
           ? undefined
@@ -282,20 +278,18 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
                 pickBy(
                   {
                     fontFamily: value.fontFamily,
-                    fontWeight:
-                      value.fontWeight === 400 ? undefined : value.fontWeight,
+                    fontStretch:
+                      value.fontStretch === 100 ? undefined : value.fontStretch,
                     fontStyle:
                       value.fontStyle === 'normal'
                         ? undefined
                         : value.fontStyle,
-                    fontStretch:
-                      value.fontStretch === 100 ? undefined : value.fontStretch
+                    fontWeight:
+                      value.fontWeight === 400 ? undefined : value.fontWeight
                   },
                   (value) => value !== undefined
                 ) as ValuesType<Required<WebFont>['fontFace']>
             ),
-      testString: font.font.testString,
-      tech: font.font.tech,
       prefer: Array.isArray(font.font.prefer)
         ? uniq(
             fontSort(font.font.prefer, state.configurationDirectory).fonts.map(
@@ -303,7 +297,10 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
             )
           )
         : undefined,
-      resourceHint: fontResourceHint(font.slug, state)
+      resourceHint: fontResourceHint(font.slug, state),
+      slug: font.slug,
+      tech: font.font.tech,
+      testString: font.font.testString
     }
 
     return pickBy(output, (value) => value !== undefined) as WebFont
@@ -313,8 +310,8 @@ const toWebFontLocale = (styles: Style[], state: State): WebFontLocale => {
     font: outputFont,
     fontFace,
     noScriptStyle,
-    style,
-    order
+    order,
+    style
   }
 
   return pickBy(output, (value) => value !== undefined) as WebFontLocale
@@ -403,10 +400,10 @@ export const satie = async (options: Options = {}) => {
       style.id,
       await fontFace(
         {
-          type: 'font',
           font: primaryFont,
           fontProperties,
-          publicPath: state.publicPath
+          publicPath: state.publicPath,
+          type: 'font'
         },
         state
       )
@@ -417,16 +414,16 @@ export const satie = async (options: Options = {}) => {
         style.id,
         await fontFace(
           {
-            type: 'font',
-            font: secondaryFont,
-            fontProperties,
-            publicPath: state.publicPath,
             adjustments: fontAdjust(
               primaryFontMetrics,
               fontMetrics(
                 (await fontOpen(secondaryFont, fontProperties, state)).font
               )
-            )
+            ),
+            font: secondaryFont,
+            fontProperties,
+            publicPath: state.publicPath,
+            type: 'font'
           },
           state
         )
@@ -438,11 +435,11 @@ export const satie = async (options: Options = {}) => {
         style.id,
         await fontFace(
           {
-            type: 'fallback',
+            adjustments: fontAdjust(primaryFontMetrics, fallbackFont.font),
             font: fallbackFont,
             fontProperties,
             publicPath: state.publicPath,
-            adjustments: fontAdjust(primaryFontMetrics, fallbackFont.font)
+            type: 'fallback'
           },
           state
         )
@@ -485,14 +482,14 @@ export const satie = async (options: Options = {}) => {
     const isRoot = selectorParent(style, state) === undefined
 
     const sharedStyleProperties: CSSProperties<{}> = {
-      fontSynthesis: isRoot ? 'none' : undefined,
-      fontWeight: fontProperties?.fontWeight,
       fontStretch:
         fontProperties?.fontStretch === undefined
           ? undefined
           : `${fontProperties.fontStretch}%`,
       fontStyle: fontProperties?.fontStyle,
+      fontSynthesis: isRoot ? 'none' : undefined,
       fontVariationSettings: selectorFontVariationSettings(style, state),
+      fontWeight: fontProperties?.fontWeight,
       ...style.properties
     }
 

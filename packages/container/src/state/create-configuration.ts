@@ -10,10 +10,10 @@ import {
   pickBy
 } from 'lodash-es'
 import { resolvePath } from 'mlly'
-import path, { extname } from 'path'
-import { fileURLToPath, pathToFileURL } from 'url'
-import { TextDecoder } from 'util'
-import { SourceTextModule, createContext } from 'vm'
+import path, { extname } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { TextDecoder } from 'node:util'
+import { SourceTextModule, createContext } from 'node:vm'
 import { flattenConfiguration } from './flatten-configuration'
 import { schemaLocales } from './user-schema'
 
@@ -23,8 +23,8 @@ export const resolve = async (
 ): Promise<string | undefined> => {
   try {
     const value = await resolvePath(id, {
-      extensions: ['.mjs', '.cjs', '.js', '.json'],
       conditions: ['node', 'import', 'require'],
+      extensions: ['.mjs', '.cjs', '.js', '.json'],
       url: basedir === undefined ? undefined : pathToFileURL(basedir)
     })
 
@@ -75,10 +75,11 @@ export const createConfiguration = async (processDirectory: string) => {
   const configurationDirectory = path.dirname(configFile)
 
   const { outputFiles } = await build({
-    entryPoints: [configFile],
-    bundle: true,
-    minify: false,
+    absWorkingDir: configurationDirectory,
     alias,
+    bundle: true,
+    entryPoints: [configFile],
+    format: 'esm',
     // external: ['@escapace/satie'],
     loader: {
       '.js': 'js',
@@ -87,11 +88,10 @@ export const createConfiguration = async (processDirectory: string) => {
       '.tsx': 'tsx'
       // '.json': 'json'
     },
-    target: [`node${process.version.slice(1)}`],
-    absWorkingDir: configurationDirectory,
-    write: false,
+    minify: false,
     platform: 'node',
-    format: 'esm'
+    target: [`node${process.version.slice(1)}`],
+    write: false
   })
 
   const contents = new TextDecoder('utf-8').decode(outputFiles[0].contents)

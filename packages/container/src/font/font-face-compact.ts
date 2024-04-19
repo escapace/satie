@@ -1,6 +1,6 @@
 import { filter, isEqual, mapValues, omit } from 'lodash-es'
-import { InferFont } from '../state/user-schema'
-import { FontFace, TupleUnion } from '../types'
+import type { InferFont } from '../state/user-schema'
+import type { FontFace, TupleUnion } from '../types'
 import { createHash } from '../utilities/create-hash'
 
 const fontDisplayCompact = (value: InferFont['display']) => {
@@ -26,8 +26,8 @@ const fontDisplayCompact = (value: InferFont['display']) => {
 export const fontFaceCompact = (
   fontFaces: { [k: string]: FontFace },
   isFallback: boolean
-): Array<[string, FontFace]> => {
-  return Object.entries(
+): Array<[string, FontFace]> =>
+  Object.entries(
     mapValues(fontFaces, (current, id): FontFace => {
       const relevant = filter(omit(fontFaces, [id]), (candidate): boolean => {
         const relevantKeys: Array<keyof FontFace> = [
@@ -44,9 +44,14 @@ export const fontFaceCompact = (
 
       const fontFace: FontFace = {
         ...current,
-        fontStyle: 'normal',
-        fontWeight: 400,
+        fontDisplay: isFallback
+          ? undefined
+          : [
+              current.fontDisplay,
+              ...relevant.map((value) => value.fontDisplay)
+            ].sort(fontDisplayCompact)[0],
         fontStretch: 100,
+        fontStyle: 'normal',
         // fontWeight: isFallback
         //   ? 400
         //   : reduceFontFaceWeightStretch([
@@ -58,14 +63,9 @@ export const fontFaceCompact = (
         //   : reduceFontFaceWeightStretch([
         //       current.fontStretch,
         //       ...relevant.map((value) => value.fontStretch)
+        fontWeight: 400,
         //     ]),
-        unicodeRange: isFallback ? undefined : current.unicodeRange,
-        fontDisplay: isFallback
-          ? undefined
-          : [
-              current.fontDisplay,
-              ...relevant.map((value) => value.fontDisplay)
-            ].sort(fontDisplayCompact)[0]
+        unicodeRange: isFallback ? undefined : current.unicodeRange
       }
 
       const hash = createHash(fontFace)
@@ -73,4 +73,3 @@ export const fontFaceCompact = (
       return { ...fontFace, fontFamily: `${current.fontFamily}-${hash}` }
     })
   )
-}

@@ -1,4 +1,4 @@
-import { Targets, transform } from 'lightningcss'
+import { type Targets, transform } from 'lightningcss'
 
 // export const minifyCss = (value: string, targets: Targets) => {
 //   const { code } = transform({
@@ -31,8 +31,6 @@ import { Targets, transform } from 'lightningcss'
 import CleanCSS from 'clean-css'
 export const minifyCss = (value: string, targets: Targets) => {
   const { code } = transform({
-    targets,
-    filename: 'style.css',
     code: Buffer.from(
       new CleanCSS({
         level: {
@@ -66,7 +64,9 @@ export const minifyCss = (value: string, targets: Targets) => {
         }
       }).minify(value).styles
     ),
-    minify: true
+    filename: 'style.css',
+    minify: true,
+    targets
   })
 
   return code.toString()

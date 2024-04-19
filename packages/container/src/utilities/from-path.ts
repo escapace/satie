@@ -1,14 +1,14 @@
 export const fromPath = (
-  arr: Array<string | number>,
+  array: Array<number | string>,
   quote: '"' | "'" = "'",
   forceQuote = false
 ) => {
   const regexp = new RegExp('(\\\\|' + quote + ')', 'g') // regex => /(\\|')/g
 
-  return arr
+  return array
     .map(function (value, key) {
       let property = value.toString()
-      if (!forceQuote && /^[A-z_]\w*$/.exec(property) != null) {
+      if (!forceQuote && /^[A-z]\w*$/.exec(property) != null) {
         // str with only A-z0-9_ chars will display `foo.bar`
         return key !== 0 ? '.' + property : property
       } else if (!forceQuote && /^\d+$/.exec(property) != null) {

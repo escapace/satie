@@ -7,7 +7,7 @@ export type TaskList = Array<Set<string>>
 export const toposort = (dag: DirectedAcyclicGraph): TaskList => {
   const inDegrees = countInDegrees(dag)
 
-  let { roots, nonRoots } = getRootsAndNonRoots(inDegrees)
+  let { nonRoots, roots } = getRootsAndNonRoots(inDegrees)
 
   const sorted: TaskList = []
 
@@ -65,7 +65,7 @@ const getRootsAndNonRoots = (counts: InDegrees) => {
       nonRoots.add(id)
     }
   }
-  return { roots, nonRoots }
+  return { nonRoots, roots }
 }
 
 const reverse = (deps: DirectedAcyclicGraph): DependencyGraph => {

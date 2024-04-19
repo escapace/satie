@@ -13,7 +13,7 @@ export type {
 import type { WebFont } from './types'
 
 export type WebFontLoaderSubscribe = (
-  cb: (webFonts: WebFont[]) => void
+  callback: (webFonts: WebFont[]) => void
 ) => () => void
 
 export type WebFontLoader = (locale: string) => Promise<WebFont[]>
@@ -23,7 +23,7 @@ export declare const webFontLoader: WebFontLoader
 
 declare global {
   interface Window {
-    webFontLoaderSubscribe: WebFontLoaderSubscribe
     webFontLoader: WebFontLoader
+    webFontLoaderSubscribe: WebFontLoaderSubscribe
   }
 }

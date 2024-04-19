@@ -18,7 +18,7 @@
 //     : string
 
 export const quoteFontFamily = (name: string) => {
-  const quotedMatch = name.match(/^['"](?<name>.*)['"]$/)
+  const quotedMatch = name.match(/^["'](?<name>.*)["']$/)
   if (quotedMatch != null && quotedMatch.groups?.name) {
     // Escape double quotes in middle of name
     return `"${quotedMatch.groups.name.split(`"`).join(`\"`)}"`
@@ -30,7 +30,7 @@ export const quoteFontFamily = (name: string) => {
     return `"${restName.map((x) => (x === `"` ? `\"` : x)).join('')}"`
   }
 
-  if (!/^[a-zA-Z\d\-_]+$/.test(name)) {
+  if (!/^[\w\-]+$/.test(name)) {
     // Wrap in quotes if contains any characters that are not letters,
     // numbers, hyphens or underscores
     return `"${name.split(`"`).join(`\"`)}"`

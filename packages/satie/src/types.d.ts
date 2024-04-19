@@ -1,11 +1,11 @@
 import type { Properties } from 'csstype'
-import { z } from 'zod'
-export type InputFont = z.input<typeof schemaFontPlaceholder> & {
+import type { z } from 'zod'
+export type InputFont = {
   prefer?: InputFont[]
-}
-export type InferFont = z.infer<typeof schemaFontPlaceholder> & {
+} & z.input<typeof schemaFontPlaceholder>
+export type InferFont = {
   prefer?: InferFont[]
-}
+} & z.infer<typeof schemaFontPlaceholder>
 export type InputRule = z.input<typeof schemaRule>
 export type InferRule = z.infer<typeof schemaRule>
 export type InputLocale = Record<string, InputRule>
@@ -15,8 +15,14 @@ export type InferLocales = Record<string, InferLocale | string>
 export type Fallback = z.infer<typeof schemaFallback>
 export declare const schemaFallback: z.ZodObject<
   {
+    ascent: z.ZodNumber
+    capHeight: z.ZodNumber
+    descent: z.ZodNumber
     id: z.ZodString
+    italic: z.ZodBoolean
+    lineGap: z.ZodNumber
     names: z.ZodArray<z.ZodString, 'atleastone'>
+    unitsPerEm: z.ZodNumber
     weight: z.ZodUnion<
       [
         z.ZodUnion<
@@ -55,52 +61,40 @@ export declare const schemaFallback: z.ZodObject<
         z.ZodLiteral<900>
       ]
     >
-    italic: z.ZodBoolean
-    capHeight: z.ZodNumber
-    ascent: z.ZodNumber
-    descent: z.ZodNumber
-    lineGap: z.ZodNumber
-    unitsPerEm: z.ZodNumber
     xHeight: z.ZodNumber
     xWidthAvg: z.ZodNumber
   },
   'strip',
   z.ZodTypeAny,
   {
-    id: string
-    names: [string, ...string[]]
-    weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-    italic: boolean
-    capHeight: number
     ascent: number
+    capHeight: number
     descent: number
+    id: string
+    italic: boolean
     lineGap: number
+    names: [string, ...string[]]
     unitsPerEm: number
+    weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
     xHeight: number
     xWidthAvg: number
   },
   {
-    id: string
-    names: [string, ...string[]]
-    weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-    italic: boolean
-    capHeight: number
     ascent: number
+    capHeight: number
     descent: number
+    id: string
+    italic: boolean
     lineGap: number
+    names: [string, ...string[]]
     unitsPerEm: number
+    weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
     xHeight: number
     xWidthAvg: number
   }
 >
 export declare const schemaFontPlaceholder: z.ZodObject<
   {
-    name: z.ZodEffects<
-      z.ZodOptional<z.ZodString>,
-      string | undefined,
-      string | undefined
-    >
-    source: z.ZodString
     display: z.ZodOptional<
       z.ZodUnion<
         [
@@ -121,41 +115,44 @@ export declare const schemaFontPlaceholder: z.ZodObject<
     >
     format: z.ZodEffects<
       z.ZodOptional<
-        z.ZodArray<
-          z.ZodUnion<[z.ZodLiteral<'woff'>, z.ZodLiteral<'woff2'>]>,
-          'many'
-        >
+        z.ZodArray<z.ZodUnion<[z.ZodLiteral<'woff'>, z.ZodLiteral<'woff2'>]>>
       >,
       Array<'woff' | 'woff2'>,
       Array<'woff' | 'woff2'> | undefined
     >
-    tech: z.ZodOptional<z.ZodArray<z.ZodEnum<['variations']>, 'many'>>
-    testString: z.ZodOptional<z.ZodString>
+    name: z.ZodEffects<
+      z.ZodOptional<z.ZodString>,
+      string | undefined,
+      string | undefined
+    >
     resourceHint: z.ZodOptional<
       z.ZodUnion<[z.ZodLiteral<'preload'>, z.ZodLiteral<'prefetch'>]>
     >
+    source: z.ZodString
+    tech: z.ZodOptional<z.ZodArray<z.ZodEnum<['variations']>>>
+    testString: z.ZodOptional<z.ZodString>
     unicodeRange: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>
   },
   'strip',
   z.ZodTypeAny,
   {
-    source: string
+    display?: 'auto' | 'block' | 'fallback' | 'optional' | 'swap' | undefined
     format: Array<'woff' | 'woff2'>
     name?: string | undefined
-    display?: 'auto' | 'block' | 'swap' | 'fallback' | 'optional' | undefined
+    resourceHint?: 'prefetch' | 'preload' | undefined
+    source: string
     tech?: Array<'variations'> | undefined
     testString?: string | undefined
-    resourceHint?: 'preload' | 'prefetch' | undefined
     unicodeRange?: string | undefined
   },
   {
-    source: string
-    name?: string | undefined
-    display?: 'auto' | 'block' | 'swap' | 'fallback' | 'optional' | undefined
+    display?: 'auto' | 'block' | 'fallback' | 'optional' | 'swap' | undefined
     format?: Array<'woff' | 'woff2'> | undefined
+    name?: string | undefined
+    resourceHint?: 'prefetch' | 'preload' | undefined
+    source: string
     tech?: Array<'variations'> | undefined
     testString?: string | undefined
-    resourceHint?: 'preload' | 'prefetch' | undefined
     unicodeRange?: string | undefined
   }
 >
@@ -177,8 +174,14 @@ export declare const schemaFontProperties: z.ZodObject<
               z.ZodType<InferFont, z.ZodTypeDef, InputFont>,
               z.ZodObject<
                 {
+                  ascent: z.ZodNumber
+                  capHeight: z.ZodNumber
+                  descent: z.ZodNumber
                   id: z.ZodString
+                  italic: z.ZodBoolean
+                  lineGap: z.ZodNumber
                   names: z.ZodArray<z.ZodString, 'atleastone'>
+                  unitsPerEm: z.ZodNumber
                   weight: z.ZodUnion<
                     [
                       z.ZodUnion<
@@ -220,71 +223,63 @@ export declare const schemaFontProperties: z.ZodObject<
                       z.ZodLiteral<900>
                     ]
                   >
-                  italic: z.ZodBoolean
-                  capHeight: z.ZodNumber
-                  ascent: z.ZodNumber
-                  descent: z.ZodNumber
-                  lineGap: z.ZodNumber
-                  unitsPerEm: z.ZodNumber
                   xHeight: z.ZodNumber
                   xWidthAvg: z.ZodNumber
                 },
                 'strip',
                 z.ZodTypeAny,
                 {
-                  id: string
-                  names: [string, ...string[]]
-                  weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-                  italic: boolean
-                  capHeight: number
                   ascent: number
+                  capHeight: number
                   descent: number
+                  id: string
+                  italic: boolean
                   lineGap: number
+                  names: [string, ...string[]]
                   unitsPerEm: number
+                  weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
                   xHeight: number
                   xWidthAvg: number
                 },
                 {
-                  id: string
-                  names: [string, ...string[]]
-                  weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-                  italic: boolean
-                  capHeight: number
                   ascent: number
+                  capHeight: number
                   descent: number
+                  id: string
+                  italic: boolean
                   lineGap: number
+                  names: [string, ...string[]]
                   unitsPerEm: number
+                  weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
                   xHeight: number
                   xWidthAvg: number
                 }
               >
             ]
-          >,
-          'many'
+          >
         >,
         {
           fallbacks: Fallback[]
           fonts: InferFont[]
         },
         Array<
-          | InputFont
           | {
-              id: string
-              names: [string, ...string[]]
-              weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-              italic: boolean
-              capHeight: number
               ascent: number
+              capHeight: number
               descent: number
+              id: string
+              italic: boolean
               lineGap: number
+              names: [string, ...string[]]
               unitsPerEm: number
+              weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
               xHeight: number
               xWidthAvg: number
             }
+          | InputFont
         >
       >
     >
-    fontWeight: z.ZodOptional<z.ZodDefault<z.ZodNumber>>
     fontStretch: z.ZodOptional<z.ZodDefault<z.ZodNumber>>
     fontStyle: z.ZodOptional<z.ZodDefault<z.ZodEnum<['normal', 'italic']>>>
     fontVariationSettings: z.ZodOptional<
@@ -292,6 +287,7 @@ export declare const schemaFontProperties: z.ZodObject<
         [z.ZodLiteral<'normal'>, z.ZodRecord<z.ZodString, z.ZodNumber>]
       >
     >
+    fontWeight: z.ZodOptional<z.ZodDefault<z.ZodNumber>>
   },
   'strip',
   z.ZodTypeAny,
@@ -302,43 +298,43 @@ export declare const schemaFontProperties: z.ZodObject<
           fonts: InferFont[]
         }
       | undefined
-    fontWeight?: number | undefined
     fontStretch?: number | undefined
     fontStyle?: 'italic' | 'normal' | undefined
     fontVariationSettings?: 'normal' | Record<string, number> | undefined
+    fontWeight?: number | undefined
   },
   {
     fontFamily?:
       | Array<
-          | InputFont
           | {
-              id: string
-              names: [string, ...string[]]
-              weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-              italic: boolean
-              capHeight: number
               ascent: number
+              capHeight: number
               descent: number
+              id: string
+              italic: boolean
               lineGap: number
+              names: [string, ...string[]]
               unitsPerEm: number
+              weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
               xHeight: number
               xWidthAvg: number
             }
+          | InputFont
         >
       | undefined
-    fontWeight?: number | undefined
     fontStretch?: number | undefined
     fontStyle?: 'italic' | 'normal' | undefined
     fontVariationSettings?: 'normal' | Record<string, number> | undefined
+    fontWeight?: number | undefined
   }
 >
 export type InputFontProperties = z.input<typeof schemaFontProperties>
 export type InferFontProperties = z.infer<typeof schemaFontProperties>
-export type CSSTypeProperties = Properties<number | (string & {})>
+export type CSSTypeProperties = Properties<({} & string) | number>
 export type CSSProperties<T extends {}> = {
   [Property in Exclude<keyof CSSTypeProperties, keyof T>]?:
-    | CSSTypeProperties[Property]
     | Array<CSSTypeProperties[Property]>
+    | CSSTypeProperties[Property]
 } & T
 export interface FeatureQueries<StyleType> {
   '@supports'?: Record<string, StyleType>
@@ -347,8 +343,8 @@ export interface MediaQueries<StyleType> {
   '@media'?: Record<string, StyleType>
 }
 export type StyleRule<T extends {}> = CSSProperties<T> &
-  MediaQueries<CSSProperties<T> & FeatureQueries<CSSProperties<T>>> &
-  FeatureQueries<CSSProperties<T> & MediaQueries<CSSProperties<T>>>
+  FeatureQueries<CSSProperties<T> & MediaQueries<CSSProperties<T>>> &
+  MediaQueries<CSSProperties<T> & FeatureQueries<CSSProperties<T>>>
 declare const schemaRule: z.ZodType<
   StyleRule<InferFontProperties>,
   z.ZodTypeDef,
@@ -365,35 +361,35 @@ export declare const schemaLocale: z.ZodObject<
             fonts: InferFont[]
           }
         | undefined
-      fontWeight?: number | undefined
       fontStretch?: number | undefined
       fontStyle?: 'italic' | 'normal' | undefined
       fontVariationSettings?: 'normal' | Record<string, number> | undefined
+      fontWeight?: number | undefined
     }>,
     z.ZodTypeDef,
     StyleRule<{
       fontFamily?:
         | Array<
-            | InputFont
             | {
-                id: string
-                names: [string, ...string[]]
-                weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
-                italic: boolean
-                capHeight: number
                 ascent: number
+                capHeight: number
                 descent: number
+                id: string
+                italic: boolean
                 lineGap: number
+                names: [string, ...string[]]
                 unitsPerEm: number
+                weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
                 xHeight: number
                 xWidthAvg: number
               }
+            | InputFont
           >
         | undefined
-      fontWeight?: number | undefined
       fontStretch?: number | undefined
       fontStyle?: 'italic' | 'normal' | undefined
       fontVariationSettings?: 'normal' | Record<string, number> | undefined
+      fontWeight?: number | undefined
     }>
   >,
   {},
@@ -416,22 +412,27 @@ export declare const schemaLocales: z.ZodObject<
                   fonts: InferFont[]
                 }
               | undefined
-            fontWeight?: number | undefined
             fontStretch?: number | undefined
             fontStyle?: 'italic' | 'normal' | undefined
             fontVariationSettings?:
               | 'normal'
               | Record<string, number>
               | undefined
+            fontWeight?: number | undefined
           }>,
           z.ZodTypeDef,
           StyleRule<{
             fontFamily?:
               | Array<
-                  | InputFont
                   | {
+                      ascent: number
+                      capHeight: number
+                      descent: number
                       id: string
+                      italic: boolean
+                      lineGap: number
                       names: [string, ...string[]]
+                      unitsPerEm: number
                       weight:
                         | 100
                         | 200
@@ -442,24 +443,19 @@ export declare const schemaLocales: z.ZodObject<
                         | 700
                         | 800
                         | 900
-                      italic: boolean
-                      capHeight: number
-                      ascent: number
-                      descent: number
-                      lineGap: number
-                      unitsPerEm: number
                       xHeight: number
                       xWidthAvg: number
                     }
+                  | InputFont
                 >
               | undefined
-            fontWeight?: number | undefined
             fontStretch?: number | undefined
             fontStyle?: 'italic' | 'normal' | undefined
             fontVariationSettings?:
               | 'normal'
               | Record<string, number>
               | undefined
+            fontWeight?: number | undefined
           }>
         >,
         {},
@@ -483,22 +479,27 @@ export declare const schemaLocales: z.ZodObject<
                     fonts: InferFont[]
                   }
                 | undefined
-              fontWeight?: number | undefined
               fontStretch?: number | undefined
               fontStyle?: 'italic' | 'normal' | undefined
               fontVariationSettings?:
                 | 'normal'
                 | Record<string, number>
                 | undefined
+              fontWeight?: number | undefined
             }>,
             z.ZodTypeDef,
             StyleRule<{
               fontFamily?:
                 | Array<
-                    | InputFont
                     | {
+                        ascent: number
+                        capHeight: number
+                        descent: number
                         id: string
+                        italic: boolean
+                        lineGap: number
                         names: [string, ...string[]]
+                        unitsPerEm: number
                         weight:
                           | 100
                           | 200
@@ -509,24 +510,19 @@ export declare const schemaLocales: z.ZodObject<
                           | 700
                           | 800
                           | 900
-                        italic: boolean
-                        capHeight: number
-                        ascent: number
-                        descent: number
-                        lineGap: number
-                        unitsPerEm: number
                         xHeight: number
                         xWidthAvg: number
                       }
+                    | InputFont
                   >
                 | undefined
-              fontWeight?: number | undefined
               fontStretch?: number | undefined
               fontStyle?: 'italic' | 'normal' | undefined
               fontVariationSettings?:
                 | 'normal'
                 | Record<string, number>
                 | undefined
+              fontWeight?: number | undefined
             }>
           >,
           {},
@@ -552,22 +548,27 @@ export declare const schemaLocales: z.ZodObject<
                     fonts: InferFont[]
                   }
                 | undefined
-              fontWeight?: number | undefined
               fontStretch?: number | undefined
               fontStyle?: 'italic' | 'normal' | undefined
               fontVariationSettings?:
                 | 'normal'
                 | Record<string, number>
                 | undefined
+              fontWeight?: number | undefined
             }>,
             z.ZodTypeDef,
             StyleRule<{
               fontFamily?:
                 | Array<
-                    | InputFont
                     | {
+                        ascent: number
+                        capHeight: number
+                        descent: number
                         id: string
+                        italic: boolean
+                        lineGap: number
                         names: [string, ...string[]]
+                        unitsPerEm: number
                         weight:
                           | 100
                           | 200
@@ -578,24 +579,19 @@ export declare const schemaLocales: z.ZodObject<
                           | 700
                           | 800
                           | 900
-                        italic: boolean
-                        capHeight: number
-                        ascent: number
-                        descent: number
-                        lineGap: number
-                        unitsPerEm: number
                         xHeight: number
                         xWidthAvg: number
                       }
+                    | InputFont
                   >
                 | undefined
-              fontWeight?: number | undefined
               fontStretch?: number | undefined
               fontStyle?: 'italic' | 'normal' | undefined
               fontVariationSettings?:
                 | 'normal'
                 | Record<string, number>
                 | undefined
+              fontWeight?: number | undefined
             }>
           >,
           {},
@@ -614,37 +610,37 @@ export interface ResourceHint {
   type: string
 }
 export type WebFontState =
-  | 'font-loaded'
-  | 'font-already-loaded'
-  | 'font-unknown'
-  | 'font-not-supported'
   | 'error'
+  | 'font-already-loaded'
+  | 'font-loaded'
+  | 'font-not-supported'
+  | 'font-unknown'
 export interface WebFont {
-  slug: string
-  prefer?: string[]
-  tech?: string[]
   fontFace?: Array<{
     fontFamily: string
-    fontStretch?: number | [number, number]
+    fontStretch?: [number, number] | number
     fontStyle?: 'italic'
-    fontWeight?: number | [number, number]
+    fontWeight?: [number, number] | number
   }>
+  prefer?: string[]
   resourceHint?: ResourceHint[]
-  testString?: string
+  slug: string
   state?: WebFontState
+  tech?: string[]
+  testString?: string
 }
 export interface WebFontLocale {
-  fontFace: string
   font: WebFont[]
+  fontFace: string
   noScriptStyle: string
   order: string[] | undefined
   style: string
 }
 export interface WebFontsJson {
   alias: Record<string, string>
-  locale: Record<string, WebFontLocale>
   font: WebFont[]
   fontFace: string
+  locale: Record<string, WebFontLocale>
   noScriptStyle: string
   order: string[] | undefined
   script: string

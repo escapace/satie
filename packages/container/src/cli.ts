@@ -9,7 +9,7 @@ import {
   DEFAULT_PUBLIC_PATH
 } from './constants'
 import { satie } from './satie'
-import { Options } from './types'
+import type { Options } from './types'
 
 const help = (code: 0 | 1 = 0, message?: string): never => {
   console.log(`Usage: satie [options]
@@ -48,25 +48,25 @@ Examples:
 
 const options = (): Options => {
   try {
-    const args = arg({
+    const arguments_ = arg({
+      '--help': Boolean,
       '--json-file': String,
       '--output-dir': String,
       '--public-path': String,
-      '--help': Boolean,
       '-h': '--help'
     })
 
-    if (args['--help'] === true) {
+    if (arguments_['--help'] === true) {
       return help()
     }
 
     return {
-      jsonFile: args['--json-file'],
-      outputDir: args['--output-dir'],
-      publicPath: args['--public-path']
+      jsonFile: arguments_['--json-file'],
+      outputDir: arguments_['--output-dir'],
+      publicPath: arguments_['--public-path']
     }
-  } catch (e) {
-    return help(1, isError(e) ? e.message : undefined)
+  } catch (error) {
+    return help(1, isError(error) ? error.message : undefined)
   }
 }
 

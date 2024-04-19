@@ -1,5 +1,5 @@
 import urljoin from 'url-join'
-import {
+import type {
   FontFace,
   FontFaceAdjustments,
   FontFallback,
@@ -9,48 +9,46 @@ import {
 } from '../types'
 import { fontOpen } from './font-open'
 
-const fontSrc = ({ slug, font }: FontState, publicPath: string): string =>
+const fontSource = ({ font, slug }: FontState, publicPath: string): string =>
   font.format
     .map((format) => ({
       ...font,
       format,
       url: urljoin(publicPath, `${font.name ?? slug}.${format}`)
     }))
-    .flatMap(({ url, format, tech }) => {
-      if ((tech ?? []).includes('variations')) {
-        return [
-          `url("${url}") format("${format}-variations")`
-          // `url("${url}") format("${format}") tech("variations")`
-        ]
-      } else {
-        return `url("${url}") format("${format}")`
-      }
-    })
+    .flatMap(({ format, tech, url }) =>
+      (tech ?? []).includes('variations')
+        ? [
+            `url("${url}") format("${format}-variations")`
+            // `url("${url}") format("${format}") tech("variations")`
+          ]
+        : `url("${url}") format("${format}")`
+    )
     .join(', ')
 
 interface FontFaceOptionsFallback {
-  type: 'fallback'
-  font: FontFallback
-  publicPath: string
-  fontProperties: Omit<Required<FontProperties>, 'fontFamily'>
   adjustments?: FontFaceAdjustments
+  font: FontFallback
+  fontProperties: Omit<Required<FontProperties>, 'fontFamily'>
+  publicPath: string
+  type: 'fallback'
 }
 
 interface FontFaceOptionsFont {
-  type: 'font'
-  font: FontState
-  publicPath: string
-  fontProperties: Omit<Required<FontProperties>, 'fontFamily'>
   adjustments?: FontFaceAdjustments
+  font: FontState
+  fontProperties: Omit<Required<FontProperties>, 'fontFamily'>
+  publicPath: string
+  type: 'font'
 }
 
 export const fontFace = async (
-  options: FontFaceOptionsFont | FontFaceOptionsFallback,
+  options: FontFaceOptionsFallback | FontFaceOptionsFont,
   state: State
 ): Promise<FontFace> => {
   if (options.type === 'font') {
     const { font } = options.font
-    const { fontWeight, fontStretch, fontStyle } = options.fontProperties
+    const { fontStretch, fontStyle, fontWeight } = options.fontProperties
 
     const isVariable = font.tech?.includes('variations') === true
 
@@ -60,15 +58,8 @@ export const fontFace = async (
       : undefined
 
     return {
-      src: fontSrc(options.font, options.publicPath),
+      fontDisplay: font.display,
       fontFamily: font.name ?? options.font.slug,
-      fontWeight:
-        variationAxes?.wght === undefined
-          ? fontWeight
-          : [
-              Math.max(variationAxes.wght.min, 1),
-              Math.min(variationAxes.wght.max, 1000)
-            ],
       fontStretch:
         variationAxes?.wdth === undefined
           ? fontStretch
@@ -77,20 +68,27 @@ export const fontFace = async (
               Math.min(variationAxes.wdth.max, 200)
             ],
       fontStyle,
+      fontWeight:
+        variationAxes?.wght === undefined
+          ? fontWeight
+          : [
+              Math.max(variationAxes.wght.min, 1),
+              Math.min(variationAxes.wght.max, 1000)
+            ],
+      src: fontSource(options.font, options.publicPath),
       unicodeRange: font.unicodeRange,
-      fontDisplay: font.display,
       ...options.adjustments
     }
   } else {
     const { font } = options.font
-    const { fontWeight, fontStretch, fontStyle } = options.fontProperties
+    const { fontStretch, fontStyle, fontWeight } = options.fontProperties
 
     return {
-      src: font.names.map((name) => `local(${name})`).join(', '),
       fontFamily: font.id,
-      fontWeight,
       fontStretch,
       fontStyle,
+      fontWeight,
+      src: font.names.map((name) => `local(${name})`).join(', '),
       ...options.adjustments
     }
   }

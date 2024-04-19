@@ -1,8 +1,8 @@
-import { Font as FontKitFont, open as fontKitOpen } from 'fontkit'
+import { type Font as FontKitFont, open as fontKitOpen } from 'fontkit'
 import { compact, find, isEmpty, mapValues, uniq } from 'lodash-es'
-import path from 'path'
+import path from 'node:path'
 import { z } from 'zod'
-import { FontProperties, FontState, State } from '../types'
+import type { FontProperties, FontState, State } from '../types'
 
 // "wght" font-weight
 // "wdth" font-stretch
@@ -11,10 +11,10 @@ import { FontProperties, FontState, State } from '../types'
 // "opsz" font-optical-sizing
 
 const schemaFontKitVariationAxis = z.object({
-  name: z.string().nonempty(),
-  min: z.number().int(),
   default: z.number().int(),
-  max: z.number().int()
+  max: z.number().int(),
+  min: z.number().int(),
+  name: z.string().nonempty()
 })
 
 const schemaFontKitVariationAxes = z.record(schemaFontKitVariationAxis)
@@ -25,8 +25,8 @@ export type FontKitVariationAxes = z.infer<typeof schemaFontKitVariationAxes>
 export const isWithin = (x: number, min: number, max: number) =>
   x >= min && x <= max
 
-export const clamp = (num: number, min: number, max: number) =>
-  Math.min(Math.max(num, min), max)
+export const clamp = (number_: number, min: number, max: number) =>
+  Math.min(Math.max(number_, min), max)
 
 export const fontOpen = async (
   fontState: Omit<FontState, 'type'>,
@@ -98,7 +98,7 @@ export const fontOpen = async (
       ? font
       : font.getVariation(variation)
 
-    return { font: variableFont, variationAxes, variation }
+    return { font: variableFont, variation, variationAxes }
   }
 
   return { font }

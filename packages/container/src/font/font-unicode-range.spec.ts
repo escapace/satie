@@ -100,8 +100,8 @@ describe('src/utilities/character-set.spec.ts', () => {
       const cs = new CharacterSet('中国')
 
       expect(cs.data).to.eql({
-        20013: true,
-        22269: true
+        20_013: true,
+        22_269: true
       })
     })
 
@@ -109,10 +109,10 @@ describe('src/utilities/character-set.spec.ts', () => {
       const cs = new CharacterSet('a\uD834\uDF06bc')
 
       expect(cs.data).to.eql({
+        119_558: true,
         97: true,
         98: true,
-        99: true,
-        119558: true
+        99: true
       })
     })
 
@@ -325,7 +325,7 @@ describe('src/utilities/character-set.spec.ts', () => {
     })
 
     it('should return false when not empty', () => {
-      const cs = new CharacterSet(119558)
+      const cs = new CharacterSet(119_558)
 
       expect(cs.isEmpty()).to.eql(false)
     })
@@ -556,7 +556,7 @@ describe('src/utilities/character-set.spec.ts', () => {
     })
 
     it('should return encoded ranges outside the BMP', () => {
-      const cs = new CharacterSet([[0x10000, 0x10fff]])
+      const cs = new CharacterSet([[0x1_00_00, 0x1_0f_ff]])
 
       expect(cs.toHexRangeString()).to.eql('U+10000-10FFF')
     })

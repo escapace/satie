@@ -1,8 +1,8 @@
 import { execa } from 'execa'
 import { mkdirp, pathExists } from 'fs-extra'
 import { compact, includes, map } from 'lodash-es'
-import path from 'path'
-import { State, TypeFontState } from '../types'
+import path from 'node:path'
+import { type State, TypeFontState } from '../types'
 
 export const fontWrite = async (slug: string, state: State): Promise<void> => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -70,7 +70,7 @@ export const fontWrite = async (slug: string, state: State): Promise<void> => {
 
   state.configuration.fonts.set(slug, {
     ...fontState,
-    type: TypeFontState.Written,
-    files
+    files,
+    type: TypeFontState.Written
   })
 }

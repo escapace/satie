@@ -1,7 +1,7 @@
 import { compact } from 'lodash-es'
 import urljoin from 'url-join'
-import { ResourceHint } from '../state/user-schema'
-import { FontStateWritten, State } from '../types'
+import type { ResourceHint } from '../state/user-schema'
+import type { FontStateWritten, State } from '../types'
 
 export const fontResourceHint = (
   slug: string,
@@ -22,13 +22,13 @@ export const fontResourceHint = (
       ? undefined
       : {
           as: 'font',
+          crossorigin: 'anonymous',
           href: urljoin(
             state.publicPath,
             `${font.name ?? slug}.${font.format[0]}`
           ),
           rel: font.resourceHint,
-          type: `font/${font.format[0]}`,
-          crossorigin: 'anonymous'
+          type: `font/${font.format[0]}`
         }
   ])
 

@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'node:crypto'
 import {
   compact,
   defaults,
@@ -13,7 +13,7 @@ import {
   uniq
 } from 'lodash-es'
 import { fontSort } from '../font/font-sort'
-import {
+import type {
   AtRule,
   Configuration,
   FontFallback,
@@ -24,12 +24,12 @@ import {
 import { createHash } from '../utilities/create-hash'
 import { toposortReverse } from '../utilities/toposort'
 import {
-  CSSProperties,
-  Fallback,
-  InferFont,
-  InferFontProperties,
-  InferLocales,
-  StyleRule,
+  type CSSProperties,
+  type Fallback,
+  type InferFont,
+  type InferFontProperties,
+  type InferLocales,
+  type StyleRule,
   schemaFontProperties
 } from './user-schema'
 
@@ -40,11 +40,11 @@ import {
 // "opsz" font-optical-sizing
 
 interface FlattenedStyleRule {
+  atRules: AtRule[]
+  fontProperties: InferFontProperties[]
   id: string
   parent?: string
-  atRules: AtRule[]
   properties: CSSProperties<{}>
-  fontProperties: InferFontProperties[]
   // fontPropertiesKeys: Style['fontPropertiesKeys']
 }
 
@@ -81,10 +81,10 @@ const flattenStyleRule = (
   const properties: CSSProperties<{}> = currentProperties
 
   const current: FlattenedStyleRule = {
-    id: randomUUID(),
-    parent: parent?.id,
     atRules: [...(parent?.atRules ?? [])],
     fontProperties,
+    id: randomUUID(),
+    parent: parent?.id,
     properties
     // fontPropertiesKeys
   }
@@ -107,7 +107,7 @@ const flattenStyleRule = (
             atRules: [
               ...current.atRules,
               {
-                type: type as '@supports' | '@media',
+                type: type as '@media' | '@supports',
                 value
               }
             ]
@@ -144,7 +144,7 @@ export const flattenConfiguration = (
     fonts: InferFont[]
   }) => {
     if (fontFamily === undefined) {
-      return undefined
+      return
     }
 
     const _fallbacks = fontFamily.fallbacks.map((value) => {
@@ -186,11 +186,11 @@ export const flattenConfiguration = (
         const value = reduceFontFamily(p.fontFamily)
 
         return {
-          graph: value?.graph,
           fontProperties: {
             ...p,
             fontFamily: value?.fontFamily
-          }
+          },
+          graph: value?.graph
         }
       }
     )
@@ -200,17 +200,17 @@ export const flattenConfiguration = (
     )
 
     if (fontPropertiesArray.length === 0) {
-      return undefined
+      return
     }
 
     const p = defaults({}, ...fontPropertiesArray.reverse()) as FontProperties
 
     const _fontProperties: Required<FontProperties> = {
       fontFamily: p.fontFamily,
-      fontWeight: p.fontWeight ?? 400,
-      fontStyle: p.fontStyle ?? 'normal',
       fontStretch: p.fontStretch ?? 100,
-      fontVariationSettings: p.fontVariationSettings ?? 'normal'
+      fontStyle: p.fontStyle ?? 'normal',
+      fontVariationSettings: p.fontVariationSettings ?? 'normal',
+      fontWeight: p.fontWeight ?? 400
     }
 
     const id = createHash(_fontProperties)
@@ -222,11 +222,11 @@ export const flattenConfiguration = (
     const graph = compact(
       fontPropertiesAndGraphArray.map((value) => value?.graph)
     ).reduce(
-      (prev, next) => reduceGraph(prev, next),
+      (previous, next) => reduceGraph(previous, next),
       new Map<string, string[]>()
     )
 
-    return { id, graph }
+    return { graph, id }
   }
 
   const styles: Style[] = flatMap(locales, (value, locale) => {
@@ -234,19 +234,19 @@ export const flattenConfiguration = (
       return []
     }
 
-    return flatMap(value, (styleRule, classname) => {
-      return flattenStyleRule(styleRule).map((value) => {
+    return flatMap(value, (styleRule, classname) =>
+      flattenStyleRule(styleRule).map((value) => {
         const reducedFontProperties = reduceFontProperties(value.fontProperties)
 
         return {
-          locale,
           classname,
+          locale,
           ...value,
           fontProperties: reducedFontProperties?.id,
           graph: reducedFontProperties?.graph
         }
       })
-    })
+    )
   })
 
   const sortedStyles = compact(
@@ -281,22 +281,22 @@ export const flattenConfiguration = (
   const [localeFromAlias, localeToAlias] = map(locales, (value, key) => {
     if (typeof value === 'string') {
       if (!has(allLocales, value)) {
-        return undefined
+        return
       }
 
       if (value === key) {
-        return undefined
+        return
       }
 
       return [key, value] as const
     }
 
-    return undefined
+    return
   })
     .filter((value): value is [string, string] => value !== undefined)
     .reduce(
-      (acc, value) => {
-        acc.forEach((map, index) => {
+      (accumulator, value) => {
+        accumulator.forEach((map, index) => {
           const [k, v] = index === 0 ? value : [...value].reverse()
 
           const array = map.has(k)
@@ -310,18 +310,18 @@ export const flattenConfiguration = (
           }
         })
 
-        return acc
+        return accumulator
       },
       [new Map<string, string[]>(), new Map<string, string[]>()]
     )
 
   return {
-    fonts,
     fallbackFonts: fallbacks,
-    styles: sortedStyles,
     fontProperties,
-    locales: allLocales,
+    fonts,
     localeFromAlias,
-    localeToAlias
+    locales: allLocales,
+    localeToAlias,
+    styles: sortedStyles
   }
 }

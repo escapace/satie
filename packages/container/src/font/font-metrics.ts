@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Font as FontKitFont } from 'fontkit'
+import type { Font as FontKitFont } from 'fontkit'
 import { omit } from 'lodash-es'
 
 export const enum TypeFontIssue {
@@ -8,35 +8,36 @@ export const enum TypeFontIssue {
 }
 
 export interface FontIssue {
-  type: TypeFontIssue
   description: string
+  type: TypeFontIssue
 }
 
 export interface FontMetrics {
-  familyName: string
-  fullName: string
-  postscriptName: string
-  subfamilyName: string
-
   /** The height of the ascenders above baseline */
   ascent: number
-  /** The descent of the descenders below baseline */
-  descent: number
-  /** The amount of space included between lines */
-  lineGap: number
-  /** The size of the font’s internal coordinate grid */
-  unitsPerEm: number
   /** The height of capital letters above the baseline */
   capHeight: number
+  /** The descent of the descenders below baseline */
+  descent: number
+  familyName: string
+
+  fullName: string
+  issues?: FontIssue[]
+  /** The amount of space included between lines */
+  lineGap: number
+  postscriptName: string
+  subfamilyName: string
+  /** The size of the font’s internal coordinate grid */
+  unitsPerEm: number
   /** The height of the main body of lower case letters above baseline */
   xHeight: number
   /** The average width of lowercase characters (currently derived from latin character frequencies in English language) */
   xWidthAvg: number
-  issues?: FontIssue[]
 }
 
 // Ref: https://en.wikipedia.org/wiki/Letter_frequency#Relative_frequencies_of_letters_in_other_languages
 const WEIGHTINGS = {
+  ' ': 0.1818,
   a: 0.0668,
   b: 0.0122,
   c: 0.0228,
@@ -62,8 +63,7 @@ const WEIGHTINGS = {
   w: 0.0193,
   x: 0.0012,
   y: 0.0162,
-  z: 0.0006,
-  ' ': 0.1818
+  z: 0.0006
 }
 const sampleString = Object.keys(WEIGHTINGS).join('')
 
@@ -82,17 +82,16 @@ interface FontIssueWithTest extends FontIssue {
 const issueReducer = (metrics: FontMetrics): FontIssue[] => {
   const issues: FontIssueWithTest[] = [
     {
-      type: TypeFontIssue.Error,
       description: 'capHeight is missing.',
-      test: (font) => !('capHeight' in font) || !font.capHeight
+      test: (font) => !('capHeight' in font) || !font.capHeight,
+      type: TypeFontIssue.Error
     },
     {
-      type: TypeFontIssue.Error,
       description: 'xHeight is missing.',
-      test: (font) => !('xHeight' in font) || !font.xHeight
+      test: (font) => !('xHeight' in font) || !font.xHeight,
+      type: TypeFontIssue.Error
     },
     {
-      type: TypeFontIssue.Error,
       description: 'capHeight is less than xHeight.',
       test: (font) => {
         if (
@@ -104,10 +103,10 @@ const issueReducer = (metrics: FontMetrics): FontIssue[] => {
           return font.capHeight < font.xHeight
         }
         return false
-      }
+      },
+      type: TypeFontIssue.Error
     },
     {
-      type: TypeFontIssue.Error,
       description: 'capHeight is less than half ascent.',
       test: (font) => {
         if (
@@ -119,7 +118,8 @@ const issueReducer = (metrics: FontMetrics): FontIssue[] => {
           return font.capHeight < font.ascent / 2
         }
         return false
-      }
+      },
+      type: TypeFontIssue.Error
     }
   ]
 
@@ -134,35 +134,35 @@ export const fontMetrics = (font: FontKitFont): FontMetrics => {
   const {
     ascent,
     descent,
-    lineGap,
-    unitsPerEm,
-    postscriptName,
-    fullName,
     familyName,
-    subfamilyName
+    fullName,
+    lineGap,
+    postscriptName,
+    subfamilyName,
+    unitsPerEm
   } = font
 
   let { capHeight, xHeight } = font
 
-  if (typeof xHeight === 'undefined') {
+  if (xHeight === undefined) {
     const glyph = font.glyphForCodePoint(120)
 
     xHeight = glyph.bbox.maxY - glyph.bbox.minY
 
     issues.push({
-      type: TypeFontIssue.Warning,
-      description: `xHeight is missing, relying on 'x' character height.`
+      description: `xHeight is missing, relying on 'x' character height.`,
+      type: TypeFontIssue.Warning
     })
   }
 
-  if (typeof capHeight === 'undefined') {
+  if (capHeight === undefined) {
     const glyph = font.glyphForCodePoint(72)
 
     capHeight = glyph.bbox.maxY - glyph.bbox.minY
 
     issues.push({
-      type: TypeFontIssue.Warning,
-      description: `capHeight is missing, relying on 'H' character height.`
+      description: `capHeight is missing, relying on 'H' character height.`,
+      type: TypeFontIssue.Warning
     })
   }
 
@@ -176,12 +176,12 @@ export const fontMetrics = (font: FontKitFont): FontMetrics => {
 
     try {
       charWidth = glyph.advanceWidth
-    } catch (e) {
+    } catch (error) {
       issues.push({
-        type: TypeFontIssue.Warning,
         description: `advanceWidth is not available for character '${
           character === ' ' ? '<space>' : character
-        }', relying on xAvgCharWidth instead.`
+        }', relying on xAvgCharWidth instead.`,
+        type: TypeFontIssue.Warning
       })
     }
 
@@ -189,14 +189,14 @@ export const fontMetrics = (font: FontKitFont): FontMetrics => {
   }, 0)
 
   const metrics = {
-    familyName,
-    postscriptName,
-    fullName,
-    subfamilyName,
-    capHeight,
     ascent,
+    capHeight,
     descent,
+    familyName,
+    fullName,
     lineGap,
+    postscriptName,
+    subfamilyName,
     unitsPerEm,
     xHeight,
     xWidthAvg: Math.round(weightedWidth)

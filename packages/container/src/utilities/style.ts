@@ -1,9 +1,9 @@
-import { Targets, transform } from 'lightningcss'
+import { type Targets, transform } from 'lightningcss'
 import { forEach } from 'lodash-es'
-import { StyleRule } from '../state/user-schema'
+import type { StyleRule } from '../state/user-schema'
 
-function dashify(str: string) {
-  return str
+function dashify(string_: string) {
+  return string_
     .replace(/([A-Z])/g, '-$1')
     .replace(/^ms-/, '-ms-')
     .toLowerCase()
@@ -53,10 +53,10 @@ ${iterateProperties(rule, '  ')}
 }`
 
   const { code } = transform({
-    targets,
-    filename: 'style.css',
     code: Buffer.from(css),
-    minify: false
+    filename: 'style.css',
+    minify: false,
+    targets
   })
 
   return code.toString()
