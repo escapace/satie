@@ -10,7 +10,7 @@
   "devDependencies": {
     "@commitlint/cli": "19.2.1",
     "@commitlint/config-conventional": "19.1.0",
-    "@escapace/pnpm-pack": "0.1.0",
+    "@escapace/pnpm-pack": "0.2.0",
     "@ls-lint/ls-lint": "2.2.3",
     "esbuild": "0.20.2",
     "eslint": "9.0.0",
