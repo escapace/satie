@@ -75,7 +75,7 @@ jobs:
           ref: ${{ steps.ref.outputs.value }}
           fetch-depth: 0
       - id: action-context
-        uses: escapace/action-context@v0.8.0
+        uses: escapace/action-context@v0.10.1
         with:
           token: ${{ github.token }}
       - name: docker meta
