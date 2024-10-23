@@ -15,7 +15,7 @@
     "esbuild": "0.20.2",
     "eslint": "9.0.0",
     "eslint-config-escapace": "4.1.6",
-    "execa": "8.0.1",
+    "execa": "9.4.1",
     "fast-glob": "3.3.2",
     "fs-extra": "11.2.0",
     "globals": "15.0.0",
