@@ -14,7 +14,7 @@
     "@ls-lint/ls-lint": "2.3.0",
     "eslint": "9.31.0",
     "eslint-config-escapace": "5.10.1",
-    "knip": "5.57.1",
+    "knip": "6.35.0",
     "lefthook": "1.11.13",
     "prettier": "3.5.3",
     "prettier-config-escapace": "1.2.1",
